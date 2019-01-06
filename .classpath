@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/natty/Desktop/CTRE/CTRE/java/lib/CTRE_Phoenix.jar"/>
+	<classpathentry kind="lib" path="C:/Users/natty/Desktop/CTRE/CTRE/java/lib/CTRE_Phoenix-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/natty/wpilib/java/current/lib/WPILib.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
