@@ -22,6 +22,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 public class DriveWithControllers extends Command {
 
     public DriveWithControllers() {
+        setInterruptible(true);
         requires(RobotMap.drive);
     }
 

@@ -50,8 +50,8 @@ public class Drivetrain extends Subsystem {
 			}
 			
 			if (Math.abs(right)>1) {
-				right/=Math.abs(right);
 				left/=Math.abs(right);
+				right/=Math.abs(right);
 			}
 		}
 		
