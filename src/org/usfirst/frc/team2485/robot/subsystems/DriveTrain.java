@@ -44,7 +44,8 @@ public class Drivetrain extends Subsystem {
 		} else {
 			left=throttle+steering*throttle;
 			right=throttle-steering*throttle;
-			if (Math.abs(left)>1) {
+			//scale the speeds down so they are in range (-1,1)
+			if (Math.abs(left)>1) { 
 				right/=Math.abs(left);
 				left/=Math.abs(left);
 			}
@@ -70,6 +71,33 @@ public class Drivetrain extends Subsystem {
     public void stop() {
     	RobotMap.driveLeft.set(0);
     	RobotMap.driveRight.set(0);
-    }
+	}
+	
+	public double getSurfaceAngle() {
+		double phi = RobotMap.gyroWrapper.pidGet(); //gyro angle
+		double theta = 0; //the surface angle 
+
+		if (phi < 0) {
+			phi = 2*Math.PI - Math.abs(phi);
+		}
+
+		if (phi >= Math.toRadians(345.625) || phi < Math.toRadians(14.375)) {
+			theta = Math.toRadians(90); 
+		} else if (phi >= Math.toRadians(14.375) || phi < Math.toRadians(59.375)) {
+			theta = Math.toRadians(118.75);
+		} else if (phi >= Math.toRadians(59.375) || phi < Math.toRadians(120.625)) {
+			theta = Math.toRadians(0);
+		} else if (phi >= Math.toRadians(120.625) || phi < Math.toRadians(180)) {
+			theta = Math.toRadians(61.25);
+		} else if (phi >= Math.toRadians(180) || phi < Math.toRadians(239.375)) {
+			theta = Math.toRadians(298.75);
+		} else if (phi >= Math.toRadians(239.375) || phi < Math.toRadians(300.625)) {
+			theta = Math.toRadians(0);
+		} else if (phi >= Math.toRadians(300.625) || phi < Math.toRadians(345.625)) {
+			theta = Math.toRadians(241.25);
+		} 
+
+		return theta;
+	}
 }
 

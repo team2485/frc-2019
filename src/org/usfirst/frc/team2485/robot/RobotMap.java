@@ -25,23 +25,29 @@ public class RobotMap {
 	public static TalonSRX driveLeftTalon1; 
 	public static TalonSRX driveLeftTalon2; 
 	public static TalonSRX driveLeftTalon3; 
+
 	public static TalonSRX driveRightTalon1;
 	public static TalonSRX driveRightTalon2;
 	public static TalonSRX driveRightTalon3;
+
 	public static TalonSRXWrapper driveLeftTalonWrapper1;
 	public static TalonSRXWrapper driveLeftTalonWrapper2;
 	public static TalonSRXWrapper driveLeftTalonWrapper3;
+
 	public static TalonSRXWrapper driveRightTalonWrapper1;
 	public static TalonSRXWrapper driveRightTalonWrapper2;
 	public static TalonSRXWrapper driveRightTalonWrapper3;
+
 	public static TalonSRXWrapper[] driveRightTalonWrappers;
 	public static TalonSRXWrapper[] driveLeftTalonWrappers;
 	
 	public static SpeedControllerWrapper driveLeft;
 	public static SpeedControllerWrapper driveRight;
 	
-
 	public static Drivetrain drive;
+
+	public static PigeonIMU gyro;
+	public static PigeonWrapperRateAndAngle gyroWrapper;
 	
 
 	// For example to map the left and right motors, you could define the
@@ -57,9 +63,11 @@ public class RobotMap {
 		driveLeftTalon1 = new TalonSRX(1);
 		driveLeftTalon2 = new TalonSRX(2);
 		driveLeftTalon3 = new TalonSRX(3);
+
 		driveRightTalon1 = new TalonSRX(4);
 		driveRightTalon2 = new TalonSRX(5);
 		driveRightTalon3 = new TalonSRX(6);
+
 		driveLeftTalonWrapper1 = new TalonSRXWrapper(ControlMode.PercentOutput,driveLeftTalon1);
 		driveLeftTalonWrapper2 = new TalonSRXWrapper(ControlMode.PercentOutput,driveLeftTalon2);
 		driveLeftTalonWrapper3 = new TalonSRXWrapper(ControlMode.PercentOutput,driveLeftTalon3);
@@ -75,12 +83,14 @@ public class RobotMap {
 		driveRightTalonWrappers[1]= driveRightTalonWrapper2;
 		driveRightTalonWrappers[2]= driveRightTalonWrapper3;
 		
-
-		
 		driveLeft = new SpeedControllerWrapper(driveLeftTalonWrappers);
 		driveRight = new SpeedControllerWrapper(driveRightTalonWrappers);				
 		
 		drive = new Drivetrain();
+
+		gyro = new PigeonIMU(7);
+
+		gyroWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
 
 	}
 }
