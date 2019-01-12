@@ -10,8 +10,12 @@ package org.usfirst.frc.team2485.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import  org.usfirst.frc.team2485.util.TalonSRXWrapper;
+import org.usfirst.frc.team2485.util.AutoPath;
 import  org.usfirst.frc.team2485.util.SpeedControllerWrapper;
+import  org.usfirst.frc.team2485.util.MRI_Color_Sensor;
 import org.usfirst.frc.team2485.robot.subsystems.Drivetrain;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -41,7 +45,13 @@ public class RobotMap {
 	public static SpeedControllerWrapper driveRight;
 	
 
-	public static Drivetrain drive;
+
+	//Sensors
+	public static ColorSensor colorSensor; 
+
+
+
+	public static DriveTrain driveTrain;
 	
 
 	// For example to map the left and right motors, you could define the
@@ -78,9 +88,16 @@ public class RobotMap {
 
 		
 		driveLeft = new SpeedControllerWrapper(driveLeftTalonWrappers);
-		driveRight = new SpeedControllerWrapper(driveRightTalonWrappers);				
+		driveRight = new SpeedControllerWrapper(driveRightTalonWrappers);
 		
-		drive = new Drivetrain();
+		//Sensors
+		colorSensor = new ColorSensor();
+		colorSensor.setI2cAddress(/*some number*/);
+		
+	
+		 
+		
+		driveTrain = new DriveTrain();
 
 	}
 }
