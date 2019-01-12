@@ -99,5 +99,13 @@ public class Drivetrain extends Subsystem {
 
 		return theta;
 	}
+
+	public point getAutoAlignEndpoint() {
+		double lidarDist = RobotMap.lidar.getPID();
+
+
+
+
+	}
 }
 

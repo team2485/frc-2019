@@ -50,6 +50,7 @@ public class RobotMap {
 	public static PigeonIMU gyro;
 	public static PigeonWrapperRateAndAngle gyroWrapper;
 	
+	public static LidarWrapper lidar;
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -89,10 +90,11 @@ public class RobotMap {
 		
 		drive = new Drivetrain();
 
-		gyro = new PigeonIMU(7);
+		gyro = new PigeonIMU(0); //port unknown
 
 		gyroWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
 
+		lidar = new LidarWrapper(8); //port unknown
 	}
 }
 =======
