@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import  org.usfirst.frc.team2485.util.TalonSRXWrapper;
 import org.usfirst.frc.team2485.util.AutoPath;
 import  org.usfirst.frc.team2485.util.SpeedControllerWrapper;
-import  org.usfirst.frc.team2485.util.MRI_Color_Sensor;
+
 import org.usfirst.frc.team2485.robot.subsystems.Drivetrain;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
