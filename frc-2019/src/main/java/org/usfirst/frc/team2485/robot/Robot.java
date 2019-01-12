@@ -7,11 +7,16 @@
 
 package org.usfirst.frc.team2485.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,9 +25,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.properties file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
 	
-
+	
+	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -111,5 +118,16 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+
+	public void updateSmartDashboard() {
+		SmartDashboard.putNumber(RobotMap.colorSensor.red());
+		SmartDashboard.putNumber(RobotMap.colorSensor.green());
+		SmartDashboard.putNumber(RobotMap.colorSensor.blue());
+		SmartDashboard.putNumber(RobotMap.colorSensor.alpha());
+		SmartDashboard.putNumber(RobotMap.colorSensor.argb());
+		
+		
+
 	}
 }
