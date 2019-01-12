@@ -16,13 +16,19 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
 import  org.usfirst.frc.team2485.util.LidarWrapper;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.I2C.Port;
+import java.nio.ByteBuffer;
+
+
+
 
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 
 
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import edu.wpi.first.wpilibj.I2C;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -51,6 +57,8 @@ public class RobotMap {
 
 	public static TalonSRXWrapper[] driveRightTalonWrappers;
 	public static TalonSRXWrapper[] driveLeftTalonWrappers;
+	
+	public static byte[] colorSensorOutput;
 
 
 	
@@ -62,7 +70,7 @@ public class RobotMap {
 	
 	public static LidarWrapper lidar;
 
-	public static ColorSensor colorSensor; 
+	public static I2C colorSensor; 
 
 
 
@@ -109,13 +117,12 @@ public class RobotMap {
 
 		gyroWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
 
-		colorSensor = new ColorSensor();
-		colorSensor.setI2cAddress(/*some number*/);
+		colorSensor = new I2C(I2C.Port.kOnboard, 0x3C);
 
 		driveTrain = new DriveTrain();
 
 		
 
-		lidar = new LidarWrapper(8); //port unknown
+		lidar = new LidarWrapper(I2C.Port.kOnboard); //port unknown
 	}
 }

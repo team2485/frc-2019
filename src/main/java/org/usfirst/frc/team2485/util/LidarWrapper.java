@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.SensorBase;
+import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  * @author Jeremy McCulloch
  * @author Nicholas Contreras
  */
-public class LidarWrapper extends SensorBase implements PIDSource {
+public class LidarWrapper extends SendableBase implements PIDSource {
 
 	private I2C m_i2c;
 	private PIDSourceType pidSourceType;

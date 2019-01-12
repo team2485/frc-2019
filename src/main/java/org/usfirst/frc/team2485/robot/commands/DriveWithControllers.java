@@ -12,7 +12,7 @@ import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
 
-import org.usfirst.frc.team2485.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -23,7 +23,7 @@ public class DriveWithControllers extends Command {
 
     public DriveWithControllers() {
         setInterruptible(true);
-        requires(RobotMap.drive);
+        requires(RobotMap.driveTrain);
     }
 
     // Called just before this Command runs the first time
@@ -38,7 +38,7 @@ public class DriveWithControllers extends Command {
     	double steeringUA=OI.xbox.getRawAxis(1);
     	boolean quickTurn=OI.xbox.getRawButton(3);
     	
-    	RobotMap.drive.simpleDrive(forwardThrottleUA-backThrottleUA,steeringUA,quickTurn);
+    	RobotMap.driveTrain.simpleDrive(forwardThrottleUA-backThrottleUA,steeringUA,quickTurn);
     }
 
     // Make this return true when this Command no longer needs to run execute()

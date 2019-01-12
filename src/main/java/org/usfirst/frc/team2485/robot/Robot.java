@@ -121,11 +121,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void updateSmartDashboard() {
-		SmartDashboard.putNumber(RobotMap.colorSensor.red());
-		SmartDashboard.putNumber(RobotMap.colorSensor.green());
-		SmartDashboard.putNumber(RobotMap.colorSensor.blue());
-		SmartDashboard.putNumber(RobotMap.colorSensor.alpha());
-		SmartDashboard.putNumber(RobotMap.colorSensor.argb());
+		SmartDashboard.putBoolean("Color Sensor", RobotMap.colorSensor.read(0x04,1,RobotMap.colorSensorOutput));
 		
 		
 

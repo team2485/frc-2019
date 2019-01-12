@@ -16,6 +16,8 @@ import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import org.usfirst.frc.team2485.util.AutoPath.Pair;
+
 
 public class DriveTrain extends Subsystem {
 
@@ -100,11 +102,11 @@ public class DriveTrain extends Subsystem {
 		return theta;
 	}
 
-	public Point getAutoAlignEndpoint() {
-		double lidarDist = RobotMap.lidar.getPID();
+	public Pair getAutoAlignEndpoint() {
+		double lidarDist = RobotMap.lidar.getDistance();
 
 
-
+		return null;
 
 	}
 }
