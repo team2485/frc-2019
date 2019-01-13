@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
+import  org.usfirst.frc.team2485.robot.subsystems.Intake;
 
 
 
@@ -57,13 +58,27 @@ public class RobotMap {
 
 	public static TalonSRXWrapper[] driveRightTalonWrappers;
 	public static TalonSRXWrapper[] driveLeftTalonWrappers;
-	
-	public static byte[] colorSensorOutput;
 
-
-	
 	public static SpeedControllerWrapper driveLeft;
 	public static SpeedControllerWrapper driveRight;
+	
+	//Color Sensor
+	public static byte[] colorSensorOutput;
+
+	//Intake
+	public static TalonSRX leftIntakeTalon;
+	public static TalonSRX rightIntakeTalon;
+
+	public static TalonSRXWrapper leftIntakeTalonWrapper;
+	public static TalonSRXWrapper rightIntakeTalonWrapper;
+
+	public static TalonSRXWrapper[] leftIntakeTalonWrappers;
+	public static TalonSRXWrapper[] rightIntakeTalonWrappers;
+
+	public static SpeedControllerWrapper intakeLeft;
+	public static SpeedControllerWrapper intakeRight;
+
+
 
 	public static PigeonIMU gyro;
 	public static PigeonWrapperRateAndAngle gyroWrapper;
@@ -72,9 +87,8 @@ public class RobotMap {
 
 	public static I2C colorSensor; 
 
-
-
 	public static DriveTrain driveTrain;
+	public static Intake intake;
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -121,6 +135,18 @@ public class RobotMap {
 
 		driveTrain = new DriveTrain();
 
+		//Intake Motors
+		leftIntakeTalon = new TalonSRX(1);
+		rightIntakeTalon = new TalonSRX(2);
+
+		leftIntakeTalonWrapper = new TalonSRXWrapper(ControlMode.PercentOutput,leftIntakeTalon);
+		rightIntakeTalonWrapper = new TalonSRXWrapper(ControlMode.PercentOutput,rightIntakeTalon);
+		
+		leftIntakeTalonWrappers[1000]= leftIntakeTalonWrapper; //Unknown port
+		rightIntakeTalonWrappers[100]= rightIntakeTalonWrapper; //Unknown port
+
+		intakeRight = new SpeedControllerWrapper(rightIntakeTalonWrappers);
+		intakeLeft = new SpeedControllerWrapper(leftIntakeTalonWrappers);
 		
 
 		lidar = new LidarWrapper(I2C.Port.kOnboard); //port unknown
