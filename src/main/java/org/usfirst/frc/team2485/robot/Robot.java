@@ -41,6 +41,13 @@ import org.opencv.imgproc.Imgproc;
  */
 
 public class Robot extends TimedRobot {
+
+	public static xbox = new Joystick(0);
+	public static Solenoid solenoid1 = new Solenoid(0);
+	public static Solenoid solenoid2 = new Solenoid(1);
+	public static Solenoid solenoid3 = new Solenoid(2)
+	
+
 	
 	private static final int IMG_WIDTH = 128;
 	private static final int IMG_HEIGHT = 96;
@@ -148,6 +155,19 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+
+		if (xbox.getRawButton(2)) {
+			solenoid1.set(true);
+			try {
+				Thread.sleep(500);
+			} catch(InterruptedException e) {
+
+			}
+			
+			solenoid2.set(true);
+			solenoid3.set(true);
+		}
+
 	}
 
 	/**
