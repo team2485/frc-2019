@@ -17,10 +17,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import org.usfirst.frc.team2485.util.AutoPath.Pair;
+import org.usfirst.frc.team2485.util.FastMath;
+
 
 
 public class DriveTrain extends Subsystem {
-
+	private static final double THETA_CAMERA = 60;
+	private static final double CAMERA_PIXEL_WIDTH = 320;
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
@@ -104,10 +107,23 @@ public class DriveTrain extends Subsystem {
 
 	public Pair getAutoAlignEndpoint() {
 		double lidarDist = RobotMap.lidar.getDistance();
+		double thetaSurface = getSurfaceAngle();
+		double phi = RobotMap.gyroWrapper.pidGet();
+		double cx1 = 0; //change
+		double cx2 = 0; //change
+		double thetaCamera = THETA_CAMERA; //angle of end of field of view to plane parallel to robot
+		double thetaFieldOfView = Math.PI - thetaCamera*2; //total field of view angle
+		double fovWidth = FastMath.sin(thetaFieldOfView/2)*lidarDist*2; //width in inches of total field of view (assuming lidar dist as height)
+		double thetaRobotToSurface = thetaSurface - phi; //angle between plane of surface and plane parallel to front of robot
+		double cx = (cx1+cx2)/2; //distance to alignment line in pixels (x-axis)
+		double Px = cx*fovWidth/CAMERA_PIXEL_WIDTH; //distance to alignment line in inches (x-axis)
+		double cy = FastMath.tan(thetaRobotToSurface)*Px; 
+		double Py = cy + lidarDist;
+		
 
 
-		return null;
-
+		return new Pair(Px, Py);
+ 
 	}
 }
 
