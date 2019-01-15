@@ -9,15 +9,21 @@ package org.usfirst.frc.team2485.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-
-	
+import  org.usfirst.frc.team2485.robot.subsystems.Intake;
+import  org.usfirst.frc.team2485.robot.commands.HardEject;
+import  org.usfirst.frc.team2485.robot.commands.HardIntake;
+import  org.usfirst.frc.team2485.robot.commands.StopIntake;
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
 	public static Joystick xbox; 
-	public static JoystickButton buttonX; 
+	public static JoystickButton buttonX;
+	public static JoystickButton intakeButton;
+	public static JoystickButton ejectButton;
+	public static JoystickButton stopIntakeButton;
+
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	//// joystick.
@@ -49,5 +55,13 @@ public class OI {
 	public void init(){
 		xbox = new Joystick(1);
 		buttonX = new JoystickButton(xbox,3);
+		//These button choices are random, I don't know where to assign them-Adam T-W
+		intakeButton = new JoystickButton(xbox, 1);
+		ejectButton = new JoystickButton(xbox, 2);
+		stopIntakeButton = new JoystickButton(xbox, 4);
+				
+		intakeButton.whenPressed(new HardIntake());
+		ejectButton.whenPressed(new HardEject());
+		stopIntakeButton.whenPressed(new StopIntake());
 	}
 }
