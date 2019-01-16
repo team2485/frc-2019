@@ -20,14 +20,13 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.I2C.Port;
 import java.nio.ByteBuffer;
 
-
+import edu.wpi.first.wpilibj.Solenoid;
 
 
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
+import  org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
-
-
 
 import edu.wpi.first.wpilibj.I2C;
 
@@ -90,6 +89,15 @@ public class RobotMap {
 	public static DriveTrain driveTrain;
 	public static Intake intake;
 
+	public static Solenoid centerSolenoidIn; 
+	public static Solenoid centerSolenoidOut; 
+	public static Solenoid sideSolenoidIn;
+	public static Solenoid sideSolenoidOut;
+	public static Solenoid suctionSolenoid;
+
+	public static HatchIntake  hatchIntake;
+
+
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
@@ -124,7 +132,7 @@ public class RobotMap {
 		driveRightTalonWrappers[2]= driveRightTalonWrapper3;
 		
 		driveLeft = new SpeedControllerWrapper(driveLeftTalonWrappers);
-		driveRight = new SpeedControllerWrapper(driveRightTalonWrappers);				
+		driveRight = new SpeedControllerWrapper(driveRightTalonWrappers);	
 		
 
 		gyro = new PigeonIMU(0); //port unknown
@@ -150,5 +158,15 @@ public class RobotMap {
 		
 
 		lidar = new LidarWrapper(I2C.Port.kOnboard); //port unknown
+
+		centerSolenoidIn = new Solenoid(1);
+		centerSolenoidOut = new Solenoid(2);
+		sideSolenoidIn = new Solenoid(3);
+		sideSolenoidOut = new Solenoid(4);
+		suctionSolenoid = new Solenoid(5);
+
+		hatchIntake = new HatchIntake(); 
+
+
 	}
 }
