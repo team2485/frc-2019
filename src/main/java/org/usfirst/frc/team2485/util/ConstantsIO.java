@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.security.KeyException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -21,44 +22,41 @@ import org.usfirst.frc.team2485.robot.Robot;
 public class ConstantsIO {
 	public static final String ROBO_RIO_CONSTANTS_FILE_PATH = "/home/lvuser/constants.txt";
 
-	
-
 	public static HashMap<String, String> data;
 
-	public static double kP_DriveDistance;
-	public static double kI_DriveDistance;
-	public static double kD_DriveDistance;
-	public static double kF_DriveDistance;
-	//for now, only P. P is constant rn, but could be a variable value if we want  it to be.
+	public static HashMap<String, Double> constants;
 
-	//drive vel.
-	public static double kP_DriveVelocity;
-	public static double kI_DriveVelocity;
-	public static double kD_DriveVelocity;
-	public static double kF_DriveVelocity;
-	//for now, only use P and I
+	public static String[] keys = {"kP_DriveDistance", "kP_DriveVelocity", "kI_DriveVelocity", "kP_DriveAngle", 
+		"kP_AngularVelocity", "kI_AngularVelocity", "kF_AngularVelocity", "kRamp_VelocityRate"};
 
-	public static double kP_DriveAngle;
-	public static double kI_DriveAngle;
-	public static double kD_DriveAngle;
-	public static double kF_DriveAngle;
-	//for now, only P
+	// public static double kP_DriveDistance;
+	// public static double kI_DriveDistance;
+	// public static double kD_DriveDistance;
+	// public static double kF_DriveDistance;
+	// //for now, only P. P is constant rn, but could be a variable value if we want  it to be.
 
-	public static double kP_AngularVelocity;
-	public static double kI_AngularVelocity;
-	public static double kD_AngularVelocity;
-	public static double kF_AngularVelocity;
-	//for now, only PIF
+	// //drive vel.
+	// public static double kP_DriveVelocity;
+	// public static double kI_DriveVelocity;
+	// public static double kD_DriveVelocity;
+	// public static double kF_DriveVelocity;
+	// //for now, only use P and I
 
+	// public static double kP_DriveAngle;
+	// public static double kI_DriveAngle;
+	// public static double kD_DriveAngle;
+	// public static double kF_DriveAngle;
+	// //for now, only P
 
-	//ramp
-	public static double kRamp_VelocityRate;
-
-
-
+	// public static double kP_AngularVelocity;
+	// public static double kI_AngularVelocity;
+	// public static double kD_AngularVelocity;
+	// public static double kF_AngularVelocity;
+	// //for now, only PIF
 
 
-
+	// //ramp
+	// public static double kRamp_VelocityRate;
 	
 	public static void init() {
 
@@ -82,24 +80,19 @@ public class ConstantsIO {
 			}
 		}
 
+		for (String key : keys) {
+			if (data.containsKey(key)) {
+				double value = Double.parseDouble(data.get(key));
+				constants.put(key, value);
+			} else {
+				// throw new NullPointerException("Key " + key + " not found in ConstantsIO.");
+				constants.put(key, 0.0);
+			}	
+		}
+	}
 
-
-		//		createUnMatchedConstants();
-		
-	//	kRamp_AcceleratingForward = Double.parseDouble(data.get("kRamp_AcceleratingForward"));
-		
-		
-		
-//		kUpSpeed_WristAngVel = Double.parseDouble(data.get("kUpSpeed_WristAngVel"));
-//		kDownSpeed_WristAngVel = Double.parseDouble(data.get("kDownSpeed_WristAngVel"));
-//		kUpSpeed_ElbowAngVel = Double.parseDouble(data.get("kUpSpeed_ElbowAngVel"));
-//		kDownSpeed_ElbowAngVel = Double.parseDouble(data.get("kDownSpeed_ElbowAngVel"));
-//		
-		
-	
-
-		
-		
+	public static double get(String key) {
+		return constants.get(key);
 	}
 
 	@SuppressWarnings("unused")

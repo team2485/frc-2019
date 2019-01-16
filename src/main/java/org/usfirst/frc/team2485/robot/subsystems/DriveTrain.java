@@ -104,18 +104,20 @@ public class DriveTrain extends Subsystem {
 					+ RobotMap.driveRightEncoderWrapperDistance.pidGet()) / 2;
 		});
 
+		distancePID.setPID(ConstantsIO.get("kP_DriveDistance"), 0, 0);
 		distancePID.setSources(distancePIDSource);
 		distancePID.setOutputRange(-MAX_VEL, MAX_VEL);
 		distancePID.setOutputs(distanceTN);
 
 		velocityRampRate.setSetpointSource(distanceTN);
-		velocityRampRate.setRampRates(ConstantsIO.kRamp_VelocityRate, ConstantsIO.kRamp_VelocityRate);
+		velocityRampRate.setRampRates(ConstantsIO.get("kRamp_VelocityRate"), ConstantsIO.get("kRamp_VelocityRate"));
 		velocityRampRate.setOutputs(velocitySetpointTN);
 
 		velocityPIDSource.setPidSource(() -> {
 			return (RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet()) / 2;
 		});
 
+		velocityPID.setPID(ConstantsIO.get("kP_DriveVelocity"), ConstantsIO.get("kI_DriveVelocity"), 0);
 		velocityPID.setSources(velocityPIDSource);
 		velocityPID.setSetpointSource(velocitySetpointTN);
 		velocityPID.setOutputs(velocityTN);
@@ -127,27 +129,21 @@ public class DriveTrain extends Subsystem {
 			return RobotMap.gyroAngleWrapper.pidGet();
 		});
 
-
+		anglePID.setPID(ConstantsIO.get("kP_DriveAngle"), 0, 0);
 		anglePID.setSources(anglePIDSource);
-
 		anglePID.setContinuous(true);
 		anglePID.setInputRange(-MAX_ANG, MAX_ANG);
 		anglePID.setOutputRange(-MAX_ANGVEL, MAX_ANGVEL);
-
 		anglePID.setOutputs(angleTN);
-
-
 
 		angVelPIDSource.setPidSource(()-> {
 			return RobotMap.gyroRateWrapper.pidGet();
 		});
 
+		angVelPID.setPID(ConstantsIO.get("kP_AngularVelocity"), ConstantsIO.get("kI_AngularVelocity"), 0, ConstantsIO.get("kF_AngularVelocity"));
 		angVelPID.setSources(angVelPIDSource);
-
 		angVelPID.setSetpointSource(angleTN);
-
 		angVelPID.setOutputRange(0, MAX_CURR);
-
 		angVelPID.setOutputs(angVelTN);
 
 		leftCurrentPIDSource.setPidSource(() ->{
@@ -159,24 +155,10 @@ public class DriveTrain extends Subsystem {
 		});
 
 		leftMotorSetter.setSources(leftCurrentPIDSource);
-
 		rightMotorSetter.setSources(rightCurrentPIDSource);
-
 		leftMotorSetter.setOutputs(RobotMap.driveLeft);
-
 		rightMotorSetter.setOutputs(RobotMap.driveRight);
 
-
-
-
-
-
-
-
-
-
-		
-		
 	}
 
 	public void updateConstants(){
