@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
+import org.usfirst.frc.team2485.util.WarlordsPIDController;
+import org.usfirst.frc.team2485.util.RampRate;
+import org.usfirst.frc.team2485.util.TransferNode;
+import org.usfirst.frc.team2485.util.PIDSourceWrapper;
+import org.usfirst.frc.team2485.util.MotorSetter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -20,7 +25,58 @@ import org.usfirst.frc.team2485.util.AutoPath.Pair;
 
 
 public class DriveTrain extends Subsystem {
+	public WarlordsPIDController distancePID;
+	private WarlordsPIDController velocityPID;
+	public WarlordsPIDController anglePID;
+	private WarlordsPIDController angVelPID;
 
+	private RampRate velocityRampRate;
+
+	public TransferNode distanceTN;
+	public TransferNode velocityTN;
+	public TransferNode angVelTN;
+
+	public PIDSourceWrapper kp_distancePIDSource;
+	private PIDSourceWrapper encoderAvgVelocityPIDSource;
+	public PIDSourceWrapper minVelocityORSource;
+	public PIDSourceWrapper maxVelocityORSource;
+	private PIDSourceWrapper minAngleORSource;
+	private PIDSourceWrapper maxAngleORSource;
+
+	private PIDSourceWrapper leftCurrentPIDSource;
+	private PIDSourceWrapper rightCurrentPIDSource;
+
+	private MotorSetter leftMotorSetter;
+	private MotorSetter rightMotorSetter;
+
+	public DriveTrain(){
+		distancePID = new WarlordsPIDController();
+		velocityPID = new WarlordsPIDController();
+		anglePID = new WarlordsPIDController();
+		angVelPID = new WarlordsPIDController();
+
+		velocityRampRate = new RampRate();
+		
+		distanceTN = new TransferNode(0);
+		velocityTN = new TransferNode(0);
+		angVelTN = new TransferNode(0);
+
+		kp_distancePIDSource = new PIDSourceWrapper();
+		encoderAvgVelocityPIDSource = new PIDSourceWrapper();
+		minVelocityORSource = new PIDSourceWrapper();
+		maxVelocityORSource = new PIDSourceWrapper();
+		minAngleORSource = new PIDSourceWrapper();
+		maxAngleORSource = new PIDSourceWrapper();
+
+		leftCurrentPIDSource = new PIDSourceWrapper();
+		rightCurrentPIDSource = new PIDSourceWrapper();
+
+		leftMotorSetter = new MotorSetter();
+		rightMotorSetter = new MotorSetter();
+		
+		
+	}
+	
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
@@ -28,9 +84,26 @@ public class DriveTrain extends Subsystem {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     	setDefaultCommand(new DriveWithControllers());
-    }
-    
+	}
+	
+	
+    public void enablePID(boolean PID){
+		if(PID){
+		velocityPID.enable();
+		anglePID.enable();
+		distancePID.enable();
+		velocityRampRate.enable();
+		angVelPID.enable();
+		} else {
+			velocityPID.disable();
+		anglePID.disable();
+		distancePID.disable();
+		velocityRampRate.disable();
+		angVelPID.disable();
+		}
+	}
     public void simpleDrive(double x, double y, boolean quickTurn) {
+		enablePID(false);
     	
     	double steering = ThresholdHandler.deadbandAndScale(x, 0.2, 0, 1);
 		
@@ -63,7 +136,7 @@ public class DriveTrain extends Subsystem {
 		
 		RobotMap.driveRight.set(right);
 		
-    }
+	}
     
     public void driveAtSpeed(double speed) {
     	RobotMap.driveLeft.set(speed);
