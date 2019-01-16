@@ -22,12 +22,17 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import org.usfirst.frc.team2485.util.AutoPath.Pair;
+import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
-
 
 public class DriveTrain extends Subsystem {
 	private static final double THETA_CAMERA = 60;
 	private static final double CAMERA_PIXEL_WIDTH = 320;
+
+	private static final double MAX_VEL = 10; //change
+	private static final double MAX_ANGVEL = 10; //change
+	private static final double MAX_ANG = Math.PI; 
+	private static final double MAX_CURR = 10; 
 
 	public WarlordsPIDController distancePID;
 	private WarlordsPIDController velocityPID;
@@ -36,14 +41,19 @@ public class DriveTrain extends Subsystem {
 
 	private RampRate velocityRampRate;
 
-	public TransferNode distanceTN;
-	public TransferNode velocityTN;
-	public TransferNode angVelTN;
+	private TransferNode distanceTN;
+	private TransferNode velocitySetpointTN;
+	private TransferNode velocityTN;
+	private TransferNode angVelTN;
+	private TransferNode angleTN;
 
-	public PIDSourceWrapper kp_distancePIDSource;
-	private PIDSourceWrapper encoderAvgVelocityPIDSource;
-	public PIDSourceWrapper minVelocityORSource;
-	public PIDSourceWrapper maxVelocityORSource;
+	//public PIDSourceWrapper kp_distancePIDSource;
+	private PIDSourceWrapper distancePIDSource;
+	private PIDSourceWrapper velocityPIDSource;
+	private PIDSourceWrapper anglePIDSource;
+	private PIDSourceWrapper angVelPIDSource;
+	private PIDSourceWrapper minVelocityORSource;
+	private PIDSourceWrapper maxVelocityORSource;
 	private PIDSourceWrapper minAngleORSource;
 	private PIDSourceWrapper maxAngleORSource;
 
@@ -52,6 +62,9 @@ public class DriveTrain extends Subsystem {
 
 	private MotorSetter leftMotorSetter;
 	private MotorSetter rightMotorSetter;
+
+
+
 
 	public DriveTrain(){
 		distancePID = new WarlordsPIDController();
@@ -62,11 +75,18 @@ public class DriveTrain extends Subsystem {
 		velocityRampRate = new RampRate();
 		
 		distanceTN = new TransferNode(0);
+		velocitySetpointTN = new TransferNode(0);
 		velocityTN = new TransferNode(0);
 		angVelTN = new TransferNode(0);
+		angleTN = new TransferNode(0);
 
-		kp_distancePIDSource = new PIDSourceWrapper();
-		encoderAvgVelocityPIDSource = new PIDSourceWrapper();
+		//kp_distancePIDSource = new PIDSourceWrapper();
+		distancePIDSource = new PIDSourceWrapper();
+		velocityPIDSource = new PIDSourceWrapper();
+		anglePIDSource = new PIDSourceWrapper();
+		angVelPIDSource = new PIDSourceWrapper();
+
+
 		minVelocityORSource = new PIDSourceWrapper();
 		maxVelocityORSource = new PIDSourceWrapper();
 		minAngleORSource = new PIDSourceWrapper();
@@ -77,7 +97,89 @@ public class DriveTrain extends Subsystem {
 
 		leftMotorSetter = new MotorSetter();
 		rightMotorSetter = new MotorSetter();
+
+		//distancePID.setSetpointSource()
+		distancePIDSource.setPidSource(() -> {
+			return (RobotMap.driveLeftEncoderWrapperDistance.pidGet()
+					+ RobotMap.driveRightEncoderWrapperDistance.pidGet()) / 2;
+		});
+
+		distancePID.setSources(distancePIDSource);
+		distancePID.setOutputRange(-MAX_VEL, MAX_VEL);
+		distancePID.setOutputs(distanceTN);
+
+		velocityRampRate.setSetpointSource(distanceTN);
+		velocityRampRate.setRampRates(ConstantsIO.kRamp_VelocityRate, ConstantsIO.kRamp_VelocityRate);
+		velocityRampRate.setOutputs(velocitySetpointTN);
+
+		velocityPIDSource.setPidSource(() -> {
+			return (RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet()) / 2;
+		});
+
+		velocityPID.setSources(velocityPIDSource);
+		velocityPID.setSetpointSource(velocitySetpointTN);
+		velocityPID.setOutputs(velocityTN);
+		velocityPID.setOutputRange(0, MAX_CURR);
+		// output range of velocity PID is negative to positive current max
+
+
+		anglePIDSource.setPidSource(()-> {
+			return RobotMap.gyroAngleWrapper.pidGet();
+		});
+
+
+		anglePID.setSources(anglePIDSource);
+
+		anglePID.setContinuous(true);
+		anglePID.setInputRange(-MAX_ANG, MAX_ANG);
+		anglePID.setOutputRange(-MAX_ANGVEL, MAX_ANGVEL);
+
+		anglePID.setOutputs(angleTN);
+
+
+
+		angVelPIDSource.setPidSource(()-> {
+			return RobotMap.gyroRateWrapper.pidGet();
+		});
+
+		angVelPID.setSources(angVelPIDSource);
+
+		angVelPID.setSetpointSource(angleTN);
+
+		angVelPID.setOutputRange(0, MAX_CURR);
+
+		angVelPID.setOutputs(angVelTN);
+
+		leftCurrentPIDSource.setPidSource(() ->{
+			return velocityTN.pidGet() + angVelTN.pidGet();
+		});
+
+		rightCurrentPIDSource.setPidSource(() ->{
+			return velocityTN.pidGet() - angVelTN.pidGet();
+		});
+
+		leftMotorSetter.setSources(leftCurrentPIDSource);
+
+		rightMotorSetter.setSources(rightCurrentPIDSource);
+
+		leftMotorSetter.setOutputs(RobotMap.driveLeft);
+
+		rightMotorSetter.setOutputs(RobotMap.driveRight);
+
+
+
+
+
+
+
+
+
+
 		
+		
+	}
+
+	public void updateConstants(){
 		
 	}
 	

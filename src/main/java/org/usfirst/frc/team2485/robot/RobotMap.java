@@ -20,13 +20,10 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.I2C.Port;
 import java.nio.ByteBuffer;
 
-
-
-
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
-
+import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
 
 
 import edu.wpi.first.wpilibj.I2C;
@@ -47,6 +44,8 @@ public class RobotMap {
 	public static TalonSRX driveRightTalon1;
 	public static TalonSRX driveRightTalon2;
 	public static TalonSRX driveRightTalon3;
+
+
 
 	public static TalonSRXWrapper driveLeftTalonWrapper1;
 	public static TalonSRXWrapper driveLeftTalonWrapper2;
@@ -75,13 +74,21 @@ public class RobotMap {
 	public static TalonSRXWrapper[] leftIntakeTalonWrappers;
 	public static TalonSRXWrapper[] rightIntakeTalonWrappers;
 
+	public static TalonSRXEncoderWrapper driveLeftEncoderWrapperRate;
+	public static TalonSRXEncoderWrapper driveRightEncoderWrapperRate;
+	public static TalonSRXEncoderWrapper driveLeftEncoderWrapperDistance;
+	public static TalonSRXEncoderWrapper driveRightEncoderWrapperDistance;
+
 	public static SpeedControllerWrapper intakeLeft;
 	public static SpeedControllerWrapper intakeRight;
+
+	
 
 
 
 	public static PigeonIMU gyro;
-	public static PigeonWrapperRateAndAngle gyroWrapper;
+	public static PigeonWrapperRateAndAngle gyroRateWrapper;
+	public static PigeonWrapperRateAndAngle gyroAngleWrapper;
 	
 	public static LidarWrapper lidar;
 
@@ -89,6 +96,8 @@ public class RobotMap {
 
 	public static DriveTrain driveTrain;
 	public static Intake intake;
+
+
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -129,7 +138,11 @@ public class RobotMap {
 
 		gyro = new PigeonIMU(0); //port unknown
 
-		gyroWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
+		gyroRateWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
+		gyroAngleWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kDisplacement, Units.RADS);
+		
+
+
 
 		colorSensor = new I2C(I2C.Port.kOnboard, 0x3C);
 
