@@ -8,12 +8,26 @@
 package org.usfirst.frc.team2485.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.CameraServer;
+
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
+
+import  org.usfirst.frc.team2485.util.Pipeline;
+
+
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 
 
 
@@ -28,7 +42,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
 	
+	private static final int IMG_WIDTH = 128;
+	private static final int IMG_HEIGHT = 96;
 	
+	private VisionThread visionThread;
+	public static double centerX = 0.0;
+
+	
+	private final Object imgLock = new Object();
+	
+	UsbCamera camera;
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -41,6 +64,20 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+	    		
+		 visionThread = new VisionThread(camera, new Pipeline(), pipeline -> {
+		        if (!pipeline.filterContoursOutput().isEmpty()) {
+		            Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+		            synchronized (imgLock) {
+		                centerX = r.x + (r.width / 2);
+		                System.out.println("Center X: " + centerX);
+		            }
+		        }
+		    });
+		    visionThread.start();
 	}
 
 	/**
