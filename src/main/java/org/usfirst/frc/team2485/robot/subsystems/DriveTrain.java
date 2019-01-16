@@ -255,7 +255,7 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public double getSurfaceAngle() {
-		double phi = RobotMap.gyroWrapper.pidGet(); //gyro angle
+		double phi = RobotMap.gyroAngleWrapper.pidGet(); //gyro angle
 		double theta = 0; //the surface angle 
 
 		if (phi < 0) {
@@ -284,7 +284,7 @@ public class DriveTrain extends Subsystem {
 	public Pair getAutoAlignEndpoint() {
 		double lidarDist = RobotMap.lidar.getDistance();
 		double thetaSurface = getSurfaceAngle();
-		double phi = RobotMap.gyroWrapper.pidGet();
+		double phi = RobotMap.gyroAngleWrapper.pidGet();
 		double cx1 = 0; //change
 		double cx2 = 0; //change
 		double thetaCamera = THETA_CAMERA; //angle of end of field of view to plane parallel to robot
