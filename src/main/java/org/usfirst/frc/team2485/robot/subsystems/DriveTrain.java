@@ -34,9 +34,9 @@ public class DriveTrain extends Subsystem {
 	private static final double MAX_ANG = Math.PI; 
 	private static final double MAX_CURR = 10; 
 
-	public WarlordsPIDController distancePID;
+	private WarlordsPIDController distancePID;
 	private WarlordsPIDController velocityPID;
-	public WarlordsPIDController anglePID;
+	private WarlordsPIDController anglePID;
 	private WarlordsPIDController angVelPID;
 
 	private RampRate velocityRampRate;
@@ -98,30 +98,29 @@ public class DriveTrain extends Subsystem {
 		leftMotorSetter = new MotorSetter();
 		rightMotorSetter = new MotorSetter();
 
+		updateConstants();
+
 		//distancePID.setSetpointSource()
 		distancePIDSource.setPidSource(() -> {
 			return (RobotMap.driveLeftEncoderWrapperDistance.pidGet()
 					+ RobotMap.driveRightEncoderWrapperDistance.pidGet()) / 2;
 		});
 
-		distancePID.setPID(ConstantsIO.get("kP_DriveDistance"), 0, 0);
 		distancePID.setSources(distancePIDSource);
 		distancePID.setOutputRange(-MAX_VEL, MAX_VEL);
 		distancePID.setOutputs(distanceTN);
 
 		velocityRampRate.setSetpointSource(distanceTN);
-		velocityRampRate.setRampRates(ConstantsIO.get("kRamp_VelocityRate"), ConstantsIO.get("kRamp_VelocityRate"));
 		velocityRampRate.setOutputs(velocitySetpointTN);
 
 		velocityPIDSource.setPidSource(() -> {
 			return (RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet()) / 2;
 		});
 
-		velocityPID.setPID(ConstantsIO.get("kP_DriveVelocity"), ConstantsIO.get("kI_DriveVelocity"), 0);
 		velocityPID.setSources(velocityPIDSource);
 		velocityPID.setSetpointSource(velocitySetpointTN);
 		velocityPID.setOutputs(velocityTN);
-		velocityPID.setOutputRange(0, MAX_CURR);
+		velocityPID.setOutputRange(-MAX_CURR, MAX_CURR);
 		// output range of velocity PID is negative to positive current max
 
 
@@ -129,7 +128,6 @@ public class DriveTrain extends Subsystem {
 			return RobotMap.gyroAngleWrapper.pidGet();
 		});
 
-		anglePID.setPID(ConstantsIO.get("kP_DriveAngle"), 0, 0);
 		anglePID.setSources(anglePIDSource);
 		anglePID.setContinuous(true);
 		anglePID.setInputRange(-MAX_ANG, MAX_ANG);
@@ -140,10 +138,9 @@ public class DriveTrain extends Subsystem {
 			return RobotMap.gyroRateWrapper.pidGet();
 		});
 
-		angVelPID.setPID(ConstantsIO.get("kP_AngularVelocity"), ConstantsIO.get("kI_AngularVelocity"), 0, ConstantsIO.get("kF_AngularVelocity"));
 		angVelPID.setSources(angVelPIDSource);
 		angVelPID.setSetpointSource(angleTN);
-		angVelPID.setOutputRange(0, MAX_CURR);
+		angVelPID.setOutputRange(-MAX_CURR, MAX_CURR);
 		angVelPID.setOutputs(angVelTN);
 
 		leftCurrentPIDSource.setPidSource(() ->{
@@ -161,7 +158,13 @@ public class DriveTrain extends Subsystem {
 
 	}
 
-	public void updateConstants(){
+	public void updateConstants() {
+		
+		distancePID.setPID(ConstantsIO.get("kP_DriveDistance"), 0, 0);
+		velocityPID.setPID(ConstantsIO.get("kP_DriveVelocity"), ConstantsIO.get("kI_DriveVelocity"), 0);
+		velocityRampRate.setRampRates(ConstantsIO.get("kRamp_VelocityRate"), ConstantsIO.get("kRamp_VelocityRate"));
+		anglePID.setPID(ConstantsIO.get("kP_DriveAngle"), 0, 0);
+		angVelPID.setPID(ConstantsIO.get("kP_AngularVelocity"), ConstantsIO.get("kI_AngularVelocity"), 0, ConstantsIO.get("kF_AngularVelocity"));
 		
 	}
 	

@@ -26,8 +26,11 @@ public class ConstantsIO {
 
 	public static HashMap<String, Double> constants;
 
-	public static String[] keys = {"kP_DriveDistance", "kP_DriveVelocity", "kI_DriveVelocity", "kP_DriveAngle", 
-		"kP_AngularVelocity", "kI_AngularVelocity", "kF_AngularVelocity", "kRamp_VelocityRate"};
+	public static String[] keys = {
+		"kP_DriveDistance", "kP_DriveVelocity", "kI_DriveVelocity", 
+		"kP_DriveAngle", "kP_AngularVelocity", "kI_AngularVelocity", "kF_AngularVelocity", "kRamp_VelocityRate", 
+		"kP_WristAngle", "kP_WristAngularVelocity", "kI_WristAngularVelocity", "kF_WristAngularVelocity"
+	};
 
 	// public static double kP_DriveDistance;
 	// public static double kI_DriveDistance;
