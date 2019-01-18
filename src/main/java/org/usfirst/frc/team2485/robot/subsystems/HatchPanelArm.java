@@ -68,8 +68,8 @@ public class HatchPanelArm extends Subsystem {
     }
 
     public void updateConstants(){
-        anglePID.setPID(ConstantsIO.get("kP_WristAngle"), 0, 0);
-        angVelPID.setPID(ConstantsIO.get("kP_WristAngularVelocity"), ConstantsIO.get("kI_WristAngularVelocity"), 0, ConstantsIO.get("kF_WristAngularVelocity"));
+        anglePID.setPID(ConstantsIO.kP_WristAng, 0, 0);
+        angVelPID.setPID(ConstantsIO.kP_WristAngVel, ConstantsIO.kI_WristAngVel, 0, ConstantsIO.kF_WristAngVel);
         
     }
 

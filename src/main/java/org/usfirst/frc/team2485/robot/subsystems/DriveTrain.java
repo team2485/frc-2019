@@ -160,11 +160,11 @@ public class DriveTrain extends Subsystem {
 
 	public void updateConstants() {
 		
-		distancePID.setPID(ConstantsIO.get("kP_DriveDistance"), 0, 0);
-		velocityPID.setPID(ConstantsIO.get("kP_DriveVelocity"), ConstantsIO.get("kI_DriveVelocity"), 0);
-		velocityRampRate.setRampRates(ConstantsIO.get("kRamp_VelocityRate"), ConstantsIO.get("kRamp_VelocityRate"));
-		anglePID.setPID(ConstantsIO.get("kP_DriveAngle"), 0, 0);
-		angVelPID.setPID(ConstantsIO.get("kP_AngularVelocity"), ConstantsIO.get("kI_AngularVelocity"), 0, ConstantsIO.get("kF_AngularVelocity"));
+		distancePID.setPID(ConstantsIO.kPMax_Distance, 0, 0);
+		velocityPID.setPID(ConstantsIO.kP_DriveVelocity, ConstantsIO.kI_DriveVelocity, 0);
+		velocityRampRate.setRampRates(ConstantsIO.kUpRamp_Velocity, ConstantsIO.kDownRamp_Velocity);
+		anglePID.setPID(ConstantsIO.kP_DriveAngle, 0, 0);
+		angVelPID.setPID(ConstantsIO.kP_AngVelTeleop, ConstantsIO.kI_AngVelTeleop, 0, ConstantsIO.kF_AngVelTeleop);
 		
 	}
 	
@@ -239,7 +239,7 @@ public class DriveTrain extends Subsystem {
     	RobotMap.driveRight.set(0);
 	}
 	
-	public double getSurfaceAngle() {
+	public static double getThetaSurface() {
 		double phi = RobotMap.gyroAngleWrapper.pidGet(); //gyro angle
 		double theta = 0; //the surface angle 
 
@@ -266,9 +266,9 @@ public class DriveTrain extends Subsystem {
 		return theta;
 	}
 
-	public Pair getAutoAlignEndpoint() {
+	public static Pair getAutoAlignEndpoint() {
 		double lidarDist = RobotMap.lidar.getDistance();
-		double thetaSurface = getSurfaceAngle();
+		double thetaSurface = getThetaSurface();
 		double phi = RobotMap.gyroAngleWrapper.pidGet();
 		double cx1 = 0; //change
 		double cx2 = 0; //change
@@ -286,6 +286,43 @@ public class DriveTrain extends Subsystem {
 
 		return new Pair(Px, Py);
  
+	}
+
+
+	public static Pair[] generateControlPoints() {
+		Pair endpoint = getAutoAlignEndpoint();
+		Pair startpoint = new Pair(0,0);
+		double thetaAlignmentLine = (Math.PI/2) - getThetaSurface();
+		double Pc1y = (endpoint.getY() - startpoint.getY())*ConstantsIO.kPath;
+		double Pc1x = startpoint.getX();
+		double hEndpointControl1 = Math.sqrt(Math.pow((endpoint.getY()-Pc1y), 2)+(Math.pow(endpoint.getX()-Pc1x, 2)));
+		double thetaEndpointControl1 = FastMath.asin((endpoint.getY()-Pc1y)/hEndpointControl1);
+		double Pc2x = hEndpointControl1 * FastMath.cos(thetaEndpointControl1);
+		double phi = RobotMap.gyroAngleWrapper.pidGet();
+		double thetaRobotToSurface = getThetaSurface() - phi;
+
+		Pair[] controlPoints;
+		double Pc2y = Pc1y + FastMath.tan(thetaRobotToSurface)*(Pc2x-Pc1x);
+		if ((phi > thetaAlignmentLine && Pc1x < Pc2x) || (phi < thetaAlignmentLine && Pc2x < Pc1x)) {
+			controlPoints = new Pair[2];
+			controlPoints[0] = new Pair(Pc1x, Pc1y);
+			controlPoints[1] = new Pair(Pc2x, Pc2y);
+		} else {
+			double thetaAcrossHypotenuse = Math.PI - thetaRobotToSurface;
+			double hypot = Math.sqrt(Math.pow((endpoint.getY()-startpoint.getY()), 2) + Math.pow((endpoint.getX()-startpoint.getX()), 2));
+			double thetaInvented = FastMath.acos(endpoint.getY()/hypot);
+			double thetaComplement = Math.PI/2 - thetaInvented;
+			double endpointConnectedSide =  FastMath.sin(thetaComplement)*hypot/FastMath.sin(thetaAcrossHypotenuse);
+			double thetaEndpoint = Math.PI - thetaComplement - thetaAcrossHypotenuse;
+			double thetaRobotToSurfaceComplement = Math.PI/2 - thetaRobotToSurface;
+			double cx = endpoint.getX() - (FastMath.cos(thetaRobotToSurfaceComplement) * endpointConnectedSide);
+			double yEndpointTriangle = FastMath.sin(thetaRobotToSurfaceComplement) * endpointConnectedSide;
+			double cy = endpoint.getY() - yEndpointTriangle;
+			controlPoints = new Pair[1];
+			controlPoints[0] = new Pair(cx, cy);
+
+		}
+		return controlPoints;
 	}
 }
 
