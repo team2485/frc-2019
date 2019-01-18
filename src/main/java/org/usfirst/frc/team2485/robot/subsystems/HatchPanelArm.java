@@ -9,7 +9,7 @@ import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.util.MotorSetter;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 
-public class Wrist extends Subsystem {
+public class HatchPanelArm extends Subsystem {
 
     private static final double MAX_ANG = Math.PI; //change
     private static final double MIN_ANG = -Math.PI; //change
@@ -24,7 +24,7 @@ public class Wrist extends Subsystem {
 
 	private MotorSetter motorSetter;
 
-    public Wrist() {
+    public HatchPanelArm() {
 
         anglePID = new WarlordsPIDController();
         angVelPID = new WarlordsPIDController();
@@ -41,7 +41,7 @@ public class Wrist extends Subsystem {
         updateConstants();
 
         anglePIDSource.setPidSource(() -> {
-            return RobotMap.wristEncoderWrapperDistance.pidGet();
+            return RobotMap.hatchPanelArmEncoderWrapperDistance.pidGet();
         });
 
         anglePID.setSources(anglePIDSource);
@@ -50,7 +50,7 @@ public class Wrist extends Subsystem {
         anglePID.setOutputs(angleTN);
 
         angVelPIDSource.setPidSource(() -> {
-            return RobotMap.wristEncoderWrapperRate.pidGet();
+            return RobotMap.hatchPanelArmEncoderWrapperRate.pidGet();
         });
 
         angVelPID.setSetpointSource(angleTN);
@@ -63,7 +63,7 @@ public class Wrist extends Subsystem {
         });
 
         motorSetter.setSources(currentPIDSource);
-        motorSetter.setOutputs(RobotMap.wristSC);
+        motorSetter.setOutputs(RobotMap.hatchPanelArmSC);
 
     }
 

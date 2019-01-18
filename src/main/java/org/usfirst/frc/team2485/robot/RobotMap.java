@@ -25,9 +25,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
-import  org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
+import  org.usfirst.frc.team2485.robot.subsystems.HatchPanelIntake;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
-import  org.usfirst.frc.team2485.robot.subsystems.Wrist;
+import  org.usfirst.frc.team2485.robot.subsystems.HatchPanelArm;
 import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
 
 
@@ -86,13 +86,13 @@ public class RobotMap {
 	public static SpeedControllerWrapper intakeRight;
 
 	
-	//Wrist
+	//Hatch Panel Arm
 
-	public static TalonSRX wristTalon;
-	public static TalonSRXWrapper wristTalonWrapper;
-	public static TalonSRXEncoderWrapper wristEncoderWrapperDistance;
-	public static TalonSRXEncoderWrapper wristEncoderWrapperRate;
-	public static SpeedControllerWrapper wristSC;
+	public static TalonSRX hatchPanelArmTalon;
+	public static TalonSRXWrapper hatchPanelArmWrapper;
+	public static TalonSRXEncoderWrapper hatchPanelArmEncoderWrapperDistance;
+	public static TalonSRXEncoderWrapper hatchPanelArmEncoderWrapperRate;
+	public static SpeedControllerWrapper hatchPanelArmSC;
 
 
 	public static PigeonIMU gyro;
@@ -113,8 +113,8 @@ public class RobotMap {
 	//Subsystems
 	public static DriveTrain driveTrain;
 	public static Intake intake;
-	public static HatchIntake hatchIntake;
-	public static Wrist wrist;
+	public static HatchPanelIntake hatchPanelIntake;
+	public static HatchPanelArm hatchPanelArm;
 
 
 	// For example to map the left and right motors, you could define the
@@ -188,13 +188,13 @@ public class RobotMap {
 		sideSolenoidOut = new Solenoid(4);
 		suctionSolenoid = new Solenoid(5);
 
-		hatchIntake = new HatchIntake(); 
-		wrist = new Wrist();
+		hatchPanelIntake = new HatchPanelIntake(); 
+		hatchPanelArm = new HatchPanelArm();
 
-		wristTalon = new TalonSRX(9);
-		wristTalonWrapper = new TalonSRXWrapper(ControlMode.PercentOutput, wristTalon);
-		wristEncoderWrapperDistance = new TalonSRXEncoderWrapper(wristTalon, PIDSourceType.kDisplacement);
-		wristEncoderWrapperRate = new TalonSRXEncoderWrapper(wristTalon, PIDSourceType.kRate);
-		wristSC = new SpeedControllerWrapper(wristTalonWrapper);
+		hatchPanelArmTalon = new TalonSRX(9);
+		hatchPanelArmWrapper = new TalonSRXWrapper(ControlMode.PercentOutput, hatchPanelArmTalon);
+		hatchPanelArmEncoderWrapperDistance = new TalonSRXEncoderWrapper(hatchPanelArmTalon, PIDSourceType.kDisplacement);
+		hatchPanelArmEncoderWrapperRate = new TalonSRXEncoderWrapper(hatchPanelArmTalon, PIDSourceType.kRate);
+		hatchPanelArmSC = new SpeedControllerWrapper(hatchPanelArmWrapper);
 	}
 }
