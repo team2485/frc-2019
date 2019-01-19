@@ -9,9 +9,11 @@ package org.usfirst.frc.team2485.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import  org.usfirst.frc.team2485.util.TalonSRXWrapper;
-import  org.usfirst.frc.team2485.util.SpeedControllerWrapper;
+import org.usfirst.frc.team2485.util.TalonSRXWrapper;
+import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
@@ -25,7 +27,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
-import  org.usfirst.frc.team2485.robot.subsystems.HatchPanelIntake;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
 import  org.usfirst.frc.team2485.robot.subsystems.HatchPanelArm;
 import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
@@ -113,8 +114,12 @@ public class RobotMap {
 	//Subsystems
 	public static DriveTrain driveTrain;
 	public static Intake intake;
+<<<<<<< HEAD
 	public static CargoIntake cargoIntake;
 	public static HatchPanelIntake hatchPanelIntake;
+=======
+	public static HatchIntake hatchIntake;
+>>>>>>> eca66f556dacfdd6ee2b4fa9981f149e5b9bd6bc
 	public static HatchPanelArm hatchPanelArm;
 
 	public static TalonSRX cargoIntakeTalon;
@@ -191,7 +196,7 @@ public class RobotMap {
 		sideSolenoidOut = new Solenoid(4);
 		suctionSolenoid = new Solenoid(5);
 
-		hatchPanelIntake = new HatchPanelIntake(); 
+		hatchIntake = new HatchIntake(); 
 		hatchPanelArm = new HatchPanelArm();
 
 		hatchPanelArmTalon = new TalonSRX(9);

@@ -10,22 +10,20 @@ package org.usfirst.frc.team2485.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class CargoIntake extends Command {
-
+  //constants
   long intakeTime; 
   long minTimeSpike; //in milliseconds
   double intakePWM; //positive
-  long start;
-
   long startTimeSpike;
   double minSpikeRatio = 1.05;
   double minSpikeDecrease = 1.02;
+  
+  //non-constants
+  long start;
   double lastCurrent;
   double currentCurrent;
-  //double baseSpike;
-
   boolean firstSpikeCompleted;
   boolean isSpiking;
-
   boolean spike = false;
   public CargoIntake() {
     // Use requires() here to declare subsystem dependencies
@@ -78,6 +76,10 @@ public class CargoIntake extends Command {
     else if(spike){
       firstSpikeCompleted = true;
       return false;
+    }
+
+    if (system.currentTimeMillis() - start > intakeTime) {
+      return true;
     }
 
     lastCurrent = currentCurrent;
