@@ -16,7 +16,25 @@ public class HatchRelease extends InstantCommand {
         //button stuff 
         HatchIntake.suctionOff();
         HatchIntake.centerOff();
+
+        try {
+            Thread.sleep(250);
+        }
+        catch (Exception e) {
+            System.out.println("Failed");
+        }
+
         HatchIntake.sideOn();
+
+        try {
+            Thread.sleep(250);
+        }
+        catch (Exception e) {
+            System.out.println("Failed");
+        }
+
+        HatchIntake.sideOff();
+ 
     }
 
 }

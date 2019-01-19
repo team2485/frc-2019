@@ -17,12 +17,15 @@ public class HatchLoadingStationIntake extends InstantCommand {
         HatchIntake.sideOff();
         
         HatchIntake.centerOn();
+
         try {
             Thread.sleep(500);
         }
         catch (Exception e) {
             System.out.println("Failed");
         }
+
+        HatchIntake.centerOff();
 
         
 
