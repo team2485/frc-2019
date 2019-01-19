@@ -113,9 +113,12 @@ public class RobotMap {
 	//Subsystems
 	public static DriveTrain driveTrain;
 	public static Intake intake;
+	public static CargoIntake cargoIntake;
 	public static HatchPanelIntake hatchPanelIntake;
 	public static HatchPanelArm hatchPanelArm;
 
+	public static TalonSRX cargoIntakeTalon;
+	public static TalonSRXWrapper cargoIntakeTalonWrapper; 
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -196,5 +199,10 @@ public class RobotMap {
 		hatchPanelArmEncoderWrapperDistance = new TalonSRXEncoderWrapper(hatchPanelArmTalon, PIDSourceType.kDisplacement);
 		hatchPanelArmEncoderWrapperRate = new TalonSRXEncoderWrapper(hatchPanelArmTalon, PIDSourceType.kRate);
 		hatchPanelArmSC = new SpeedControllerWrapper(hatchPanelArmWrapper);
+
+		cargoIntakeTalon = new TalonSRX(15);
+		cargoIntakeTalonWrapper = new TalonSRXWrapper(ControlMode.PercentOutput, cargoIntakeTalon);
+
+		cargoIntake = new CargoIntake();
 	}
 }
