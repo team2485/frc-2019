@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  * Add your docs here.
  */
-public class subsystem extends Subsystem {
+public class CargoIntake extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -23,11 +23,11 @@ public class subsystem extends Subsystem {
   }
 
   public void setIntakeManual(double pwm) {
-    RobotMap.cargoIntakeTalon.set(pwm);
+    RobotMap.cargoIntakeTalonWrapper.set(pwm);
   }
 
   public double current() {
-    return RobotMap.cargoIntakeTalon.getCurrent();
+    return RobotMap.cargoIntakeTalon.getOutputCurrent();
   }
 
 }

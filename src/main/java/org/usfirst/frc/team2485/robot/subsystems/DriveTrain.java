@@ -32,24 +32,24 @@ public class DriveTrain extends Subsystem {
 	private static final double MAX_VEL = 10; //change
 	private static final double MAX_ANGVEL = 10; //change
 	private static final double MAX_ANG = Math.PI; 
-	private static final double MAX_CURR = 10; 
+	private static final double MAX_CURR = 30; 
 
-	private WarlordsPIDController distancePID;
-	private WarlordsPIDController velocityPID;
-	private WarlordsPIDController anglePID;
-	private WarlordsPIDController angVelPID;
+	public WarlordsPIDController distancePID;
+	public WarlordsPIDController velocityPID;
+	public WarlordsPIDController anglePID;
+	public WarlordsPIDController angVelPID;
 
 	private RampRate velocityRampRate;
 
-	private TransferNode distanceTN;
-	private TransferNode velocitySetpointTN;
-	private TransferNode velocityTN;
-	private TransferNode angVelTN;
-	private TransferNode angleTN;
+	public TransferNode distanceTN;
+	public TransferNode velocitySetpointTN;
+	public TransferNode velocityTN;
+	public TransferNode angVelTN;
+	public TransferNode angleTN;
 
 	//public PIDSourceWrapper kp_distancePIDSource;
 	private PIDSourceWrapper distancePIDSource;
-	private PIDSourceWrapper velocityPIDSource;
+	public PIDSourceWrapper velocityPIDSource;
 	private PIDSourceWrapper anglePIDSource;
 	private PIDSourceWrapper angVelPIDSource;
 	private PIDSourceWrapper minVelocityORSource;
@@ -57,11 +57,11 @@ public class DriveTrain extends Subsystem {
 	private PIDSourceWrapper minAngleORSource;
 	private PIDSourceWrapper maxAngleORSource;
 
-	private PIDSourceWrapper leftCurrentPIDSource;
-	private PIDSourceWrapper rightCurrentPIDSource;
+	public PIDSourceWrapper leftCurrentPIDSource;
+	public PIDSourceWrapper rightCurrentPIDSource;
 
-	private MotorSetter leftMotorSetter;
-	private MotorSetter rightMotorSetter;
+	public MotorSetter leftMotorSetter;
+	public MotorSetter rightMotorSetter;
 
 
 
@@ -100,10 +100,9 @@ public class DriveTrain extends Subsystem {
 
 		updateConstants();
 
-		//distancePID.setSetpointSource()
 		distancePIDSource.setPidSource(() -> {
-			return (RobotMap.driveLeftEncoderWrapperDistance.pidGet()
-					+ RobotMap.driveRightEncoderWrapperDistance.pidGet()) / 2;
+			return ((RobotMap.driveLeftEncoderWrapperDistance.pidGet()
+					+ RobotMap.driveRightEncoderWrapperDistance.pidGet()) / 2);
 		});
 
 		distancePID.setSources(distancePIDSource);
@@ -114,7 +113,7 @@ public class DriveTrain extends Subsystem {
 		velocityRampRate.setOutputs(velocitySetpointTN);
 
 		velocityPIDSource.setPidSource(() -> {
-			return (RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet()) / 2;
+			return ((((RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet()) / 2)));
 		});
 
 		velocityPID.setSources(velocityPIDSource);
@@ -144,26 +143,27 @@ public class DriveTrain extends Subsystem {
 		angVelPID.setOutputs(angVelTN);
 
 		leftCurrentPIDSource.setPidSource(() ->{
-			return velocityTN.pidGet() + angVelTN.pidGet();
-		});
-
-		rightCurrentPIDSource.setPidSource(() ->{
 			return velocityTN.pidGet() - angVelTN.pidGet();
 		});
 
-		leftMotorSetter.setSources(leftCurrentPIDSource);
-		rightMotorSetter.setSources(rightCurrentPIDSource);
-		leftMotorSetter.setOutputs(RobotMap.driveLeft);
-		rightMotorSetter.setOutputs(RobotMap.driveRight);
+		rightCurrentPIDSource.setPidSource(() ->{
+			return velocityTN.pidGet() + angVelTN.pidGet();
+		});
 
+		leftMotorSetter.setSetpointSource(leftCurrentPIDSource);
+		rightMotorSetter.setSetpointSource(rightCurrentPIDSource);
+		leftMotorSetter.setOutputs(RobotMap.driveLeftPWM);
+		rightMotorSetter.setOutputs(RobotMap.driveRightPWM);
+
+		
 	}
 
 	public void updateConstants() {
 		
 		distancePID.setPID(ConstantsIO.kPMax_Distance, 0, 0);
-		velocityPID.setPID(ConstantsIO.kP_DriveVelocity, ConstantsIO.kI_DriveVelocity, 0);
+		velocityPID.setPID(ConstantsIO.kP_DriveVelocity, ConstantsIO.kI_DriveVelocity, 0, ConstantsIO.kF_DriveVelocity);
 		velocityRampRate.setRampRates(ConstantsIO.kUpRamp_Velocity, ConstantsIO.kDownRamp_Velocity);
-		anglePID.setPID(ConstantsIO.kP_DriveAngle, 0, 0);
+		anglePID.setPID(ConstantsIO.kP_DriveAngle, ConstantsIO.kI_DriveAngle, ConstantsIO.kD_DriveAngle);
 		angVelPID.setPID(ConstantsIO.kP_AngVelTeleop, ConstantsIO.kI_AngVelTeleop, 0, ConstantsIO.kF_AngVelTeleop);
 		
 	}
@@ -174,31 +174,38 @@ public class DriveTrain extends Subsystem {
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
-    	setDefaultCommand(new DriveWithControllers());
+		// setDefaultCommand(new DriveWithControllers());
 	}
 	
 	
     public void enablePID(boolean PID){
 		if(PID){
-		velocityPID.enable();
-		anglePID.enable();
-		distancePID.enable();
-		velocityRampRate.enable();
-		angVelPID.enable();
+			velocityPID.enable();
+			anglePID.enable();
+			distancePID.enable();
+			velocityRampRate.enable();
+			angVelPID.enable();
+			leftMotorSetter.enable();
+			rightMotorSetter.enable();
 		} else {
 			velocityPID.disable();
-		anglePID.disable();
-		distancePID.disable();
-		velocityRampRate.disable();
-		angVelPID.disable();
+			anglePID.disable();
+			distancePID.disable();
+			velocityRampRate.disable();
+			angVelPID.disable();
+			leftMotorSetter.disable();
+			rightMotorSetter.disable();
 		}
 	}
-    public void simpleDrive(double x, double y, boolean quickTurn) {
+    public void simpleDrive(double y, double x, boolean quickTurn) {
 		enablePID(false);
     	
     	double steering = ThresholdHandler.deadbandAndScale(x, 0.2, 0, 1);
 		
 		double throttle = ThresholdHandler.deadbandAndScale(y, 0.2, 0, 1);
+
+		// System.out.println("Steering: " + steering);
+		// System.out.println("Throttle: " + throttle);
 		
 		double left;
 		
@@ -222,22 +229,17 @@ public class DriveTrain extends Subsystem {
 			}
 		}
 		
-		
-		RobotMap.driveLeft.set(left);
-		
-		RobotMap.driveRight.set(right);
+		// System.out.println("Left: " + left);
+		// System.out.println("Right: " + right);
+
+		RobotMap.driveLeftPWM.set(left);
+		RobotMap.driveRightPWM.set(right);
+
+
 		
 	}
     
-    public void driveAtSpeed(double speed) {
-    	RobotMap.driveLeft.set(speed);
-    	RobotMap.driveRight.set(speed);
-    }
-    
-    public void stop() {
-    	RobotMap.driveLeft.set(0);
-    	RobotMap.driveRight.set(0);
-	}
+   
 	
 	public static double getThetaSurface() {
 		double phi = RobotMap.gyroAngleWrapper.pidGet(); //gyro angle
@@ -288,6 +290,71 @@ public class DriveTrain extends Subsystem {
  
 	}
 
+	public boolean driveTo(double distance, double maxSpeed, double angle, double curvature, double toleranceDist, double toleranceAngle) {
+		anglePID.enable();
+		distancePID.enable();
+		velocityPID.enable();
+		angVelPID.enable();
+		velocityRampRate.enable();
+		leftMotorSetter.enable();
+		rightMotorSetter.enable();
+		angleTN.setOutput(angle);
+		distancePID.setSetpoint(distance);
+		distancePID.setAbsoluteTolerance(toleranceDist);
+		anglePID.setAbsoluteTolerance(toleranceAngle);
+		
+		distancePID.setOutputRange(-maxSpeed, maxSpeed);
+
+		return distancePID.isOnTarget() && anglePID.isOnTarget();
+	}
+
+	public static void setHighLowCurrent(double highCurrentLeft, double lowCurrentLeft, double highCurrentRight, double lowCurrentRight, int period){
+		RobotMap.driveLeftCurrent.set(highCurrentLeft);
+		RobotMap.driveRightCurrent.set(highCurrentRight);
+		try {
+			Thread.sleep(period);
+		} catch (Exception e) {
+			//TODO: handle exception
+		}
+		RobotMap.driveLeftCurrent.set(lowCurrentLeft);
+		RobotMap.driveRightCurrent.set(lowCurrentRight);
+		try {
+			Thread.sleep(period);
+		} catch (Exception e) {
+			//TODO: handle exception
+		}
+	}
+
+	public void setVelocities(double linearVelocity, double angularVelocity) {
+		distancePID.disable();
+		anglePID.disable();
+		leftMotorSetter.enable();
+		rightMotorSetter.enable();
+		velocityPID.enable();
+		angVelPID.enable();
+		velocityRampRate.enable();
+		
+
+
+		velocityPID.setSetpointSource(null);
+		velocityPID.setSetpoint(linearVelocity);
+		angVelPID.setSetpointSource(null);
+		angVelPID.setSetpoint(angularVelocity);
+
+	}
+
+	public void setAngle(double angle) {
+		velocityPID.disable();
+		anglePID.enable();
+		distancePID.disable();
+		velocityRampRate.disable();
+		angVelPID.enable();
+		leftMotorSetter.enable();
+		rightMotorSetter.enable();
+		anglePID.setSetpointSource(null);
+		anglePID.setSetpoint(angle);
+
+	}
 
 	public static Pair[] generateControlPoints() {
 		Pair endpoint = getAutoAlignEndpoint();
@@ -323,6 +390,17 @@ public class DriveTrain extends Subsystem {
 
 		}
 		return controlPoints;
+	}
+
+	public static Pair[] meterRule(){
+		if(RobotMap.lidar.getDistance() < 40.7){
+			//back up till lidar.getDistance >= 1 meter
+			double dist = 40.7 - RobotMap.lidar.getDistance();
+			return (new Pair[]{new Pair(0, 0), new Pair(0, -dist)});
+		}
+
+		return null;
+
 	}
 }
 

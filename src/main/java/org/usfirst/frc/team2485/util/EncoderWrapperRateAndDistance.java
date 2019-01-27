@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class EncoderWrapperRateAndDistance implements PIDSource {
 	private Encoder encoder;
 	private PIDSourceType pidSource;
+	private double gearRatio = 16.0/62;
 	public EncoderWrapperRateAndDistance(Encoder encoder, PIDSourceType pidSource) {
 		this.encoder = encoder;
 		this.pidSource = pidSource;
@@ -29,9 +30,13 @@ public class EncoderWrapperRateAndDistance implements PIDSource {
 	@Override
 	public double pidGet() {
 		if (pidSource == PIDSourceType.kDisplacement) {
-			return encoder.getDistance();
+			return (encoder.getDistance() * gearRatio);
 		} else {
-			return encoder.getRate();
+			return (encoder.getRate() * gearRatio);
 		}
+	}
+
+	public void setGearRatio(double gearRatio) {
+		this.gearRatio = gearRatio;
 	}
 }

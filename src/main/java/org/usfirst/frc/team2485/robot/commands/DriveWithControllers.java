@@ -36,9 +36,10 @@ public class DriveWithControllers extends Command {
        
         double forwardThrottleUA=OI.xbox.getRawAxis(3);
         double backThrottleUA=OI.xbox.getRawAxis(2);
-    	double steeringUA=OI.xbox.getRawAxis(1);
-    	boolean quickTurn=OI.xbox.getRawButton(3);
-    	
+    	double steeringUA=OI.xbox.getRawAxis(0);
+        boolean quickTurn=OI.xbox.getRawButton(3);
+        // System.out.println("Forward - Backward: " + (forwardThrottleUA - backThrottleUA));
+        // System.out.println("SteeringUA: " + steeringUA);
     	RobotMap.driveTrain.simpleDrive(forwardThrottleUA-backThrottleUA,steeringUA,quickTurn);
     }
 
