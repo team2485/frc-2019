@@ -29,8 +29,9 @@ public class SetIntake extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
+    //TODO: Fix
     double a = 9;//I dont know how to connect this to the keyboard
-    Intake.setIntake(a);
+    RobotMap.intake.setIntake(a);
   }
 
 }

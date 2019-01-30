@@ -13,10 +13,10 @@ public class HatchLoadingStationIntake extends InstantCommand {
     }
 
     public static void init(){
-        HatchIntake.suctionOff();
-        HatchIntake.sideOff();
+        RobotMap.hatchIntake.suctionOff();
+        RobotMap.hatchIntake.sideOff();
         
-        HatchIntake.centerOn();
+        RobotMap.hatchIntake.centerOn();
 
         try {
             Thread.sleep(250);
@@ -25,7 +25,7 @@ public class HatchLoadingStationIntake extends InstantCommand {
             System.out.println("Failed");
         }
 
-        HatchIntake.centerOff();
+        RobotMap.hatchIntake.centerOff();
 
         
 

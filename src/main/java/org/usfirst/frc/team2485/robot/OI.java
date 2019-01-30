@@ -52,8 +52,8 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 
-	public void init(){
-		xbox = new Joystick(1);
+	public static void init(){
+		xbox = new Joystick(0);
 		buttonX = new JoystickButton(xbox,3);
 		//These button choices are random, I don't know where to assign them-Adam T-W
 		intakeButton = new JoystickButton(xbox, 1);

@@ -5,37 +5,18 @@ import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class HatchRelease extends InstantCommand {
+public class HatchVaccuumIntake extends InstantCommand {
 
-    public HatchRelease() {
+    public HatchVaccuumIntake() {
         //setInterruptible(true);
         requires(RobotMap.hatchIntake);
     }
 
     public static void init(){
         //button stuff 
-
-        RobotMap.hatchIntake.suctionOff();
+        RobotMap.hatchIntake.suctionOn();
         RobotMap.hatchIntake.centerOff();
-
-        try {
-            Thread.sleep(250);
-        }
-        catch (Exception e) {
-            System.out.println("Failed");
-        }
-
-        RobotMap.hatchIntake.sideOn();
-
-        try {
-            Thread.sleep(250);
-        }
-        catch (Exception e) {
-            System.out.println("Failed");
-        }
-
         RobotMap.hatchIntake.sideOff();
- 
     }
 
 }
