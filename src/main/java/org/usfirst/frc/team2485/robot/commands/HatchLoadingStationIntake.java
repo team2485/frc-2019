@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2485.robot.commands;
 
 import org.usfirst.frc.team2485.robot.RobotMap;
-import org.usfirst.frc.team2485.robot.subsystems.HatchPanelIntake;
+import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
@@ -9,23 +9,23 @@ public class HatchLoadingStationIntake extends InstantCommand {
 
     public HatchLoadingStationIntake() {
         //setInterruptible(true);
-        requires(RobotMap.hatchPanelIntake);
+        requires(RobotMap.hatchIntake);
     }
 
     public static void init(){
-        RobotMap.hatchPanelIntake.suctionOff();
-        RobotMap.hatchPanelIntake.sideOff();
+        RobotMap.hatchIntake.suctionOff();
+        RobotMap.hatchIntake.sideOff();
         
-        RobotMap.hatchPanelIntake.centerOn();
+        RobotMap.hatchIntake.centerOn();
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         }
         catch (Exception e) {
             System.out.println("Failed");
         }
 
-        RobotMap.hatchPanelIntake.centerOff();
+        RobotMap.hatchIntake.centerOff();
 
         
 

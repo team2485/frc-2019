@@ -30,7 +30,7 @@ import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
 import  org.usfirst.frc.team2485.robot.subsystems.HatchPanelArm;
-import org.usfirst.frc.team2485.robot.subsystems.HatchPanelIntake;
+import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -142,7 +142,7 @@ public class RobotMap {
 	public static DriveTrain driveTrain;
 	public static Intake intake;
 	public static CargoIntake cargoIntake;
-	public static HatchPanelIntake hatchPanelIntake;
+	public static HatchIntake hatchIntake;
 	public static HatchPanelArm hatchPanelArm;
 
 	public static TalonSRX cargoIntakeTalon;
@@ -312,7 +312,7 @@ public class RobotMap {
 		sideSolenoidOut = new Solenoid(4);
 		suctionSolenoid = new Solenoid(5);
 
-		hatchPanelIntake = new HatchPanelIntake(); 
+		hatchIntake = new HatchIntake(); 
 		hatchPanelArm = new HatchPanelArm();
 
 		hatchPanelArmTalon = new TalonSRX(9);
