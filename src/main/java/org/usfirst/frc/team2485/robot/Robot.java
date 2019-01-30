@@ -56,14 +56,13 @@ public class Robot extends TimedRobot {
 	public static double centerX = 0.0;
 
 
-	// private static final AutoPath path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0),
-		// new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
+	private static final AutoPath path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0),
+		new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
 
 
-	
+	UsbCamera camera;
 	private final Object imgLock = new Object();
 	
-	UsbCamera camera;
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -134,10 +133,10 @@ public class Robot extends TimedRobot {
 		m_autonomousCommand = m_chooser.getSelected();
 		ConstantsIO.init();
 		RobotMap.driveTrain.enablePID(true);
-		Pair[] controlPoints = { new Pair( 35.6, -255.0), new Pair(0, -110.0), new Pair(0.0, 0.0) };
+		// Pair[] controlPoints = { new Pair( 35.6, -255.0), new Pair(0, -110.0), new Pair(0.0, 0.0) };
 		
-		double[] dists = { 90.0, };
-	   	AutoPath path = AutoPath.getAutoPathForClothoidSpline(controlPoints, dists);
+		// double[] dists = { 90.0, };
+	   	// AutoPath path = AutoPath.getAutoPathForClothoidSpline(controlPoints, dists);
 		Scheduler.getInstance().add(new DriveTo(path, 50, false, 20000, false, false));
 		
 		/*
@@ -153,7 +152,7 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.start();
 		}
 		
-		RobotMap.driveTrain.distancePID.setSetpoint(RobotMap.lidar.getDistance() - 20);
+		// RobotMap.driveTrain.distancePID.setSetpoint(RobotMap.lidar.getDistance() - 20);
 
 	}
 
@@ -231,6 +230,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Ang Vel TN", RobotMap.driveTrain.angVelTN.pidGet());
 		SmartDashboard.putNumber("Velocity PID Source", RobotMap.driveTrain.velocityPIDSource.pidGet());
 
+		SmartDashboard.putNumber("Angle Output", RobotMap.driveTrain.angleTN.pidGet());
+
+		SmartDashboard.putNumber("Angle Setpoint: ", RobotMap.driveTrain.anglePIDSource.pidGet());
+
 		SmartDashboard.putNumber("Distance Error: ", RobotMap.driveTrain.distancePID.getAvgError());
 		SmartDashboard.putNumber("Ang Vel avg error: ", RobotMap.driveTrain.angVelPID.getAvgError());
 		SmartDashboard.putNumber("Ang Vel get error", RobotMap.driveTrain.angVelPID.getError());
@@ -246,6 +249,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Velocity Left Enc", RobotMap.driveLeftEncoderWrapperRate.pidGet());
 		SmartDashboard.putNumber("Velocity Right Enc", RobotMap.driveRightEncoderWrapperRate.pidGet());
 		SmartDashboard.putNumber("Velocity setpoint TN", RobotMap.driveTrain.velocitySetpointTN.pidGet());
+
+		SmartDashboard.putNumber("Ang Vel Setpoint", RobotMap.angVelPID.pidGet());
 	
 		SmartDashboard.putNumber("Lidar Value", RobotMap.lidar.getDistance());
 	}

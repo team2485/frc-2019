@@ -50,8 +50,8 @@ public class DriveTrain extends Subsystem {
 	//public PIDSourceWrapper kp_distancePIDSource;
 	private PIDSourceWrapper distancePIDSource;
 	public PIDSourceWrapper velocityPIDSource;
-	private PIDSourceWrapper anglePIDSource;
-	private PIDSourceWrapper angVelPIDSource;
+	public PIDSourceWrapper anglePIDSource;
+	public PIDSourceWrapper angVelPIDSource;
 	private PIDSourceWrapper minVelocityORSource;
 	private PIDSourceWrapper maxVelocityORSource;
 	private PIDSourceWrapper minAngleORSource;

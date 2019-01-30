@@ -36,6 +36,16 @@ import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 
+
+import edu.wpi.first.wpilibj.CameraServer;
+
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -46,6 +56,10 @@ import edu.wpi.first.wpilibj.I2C;
 
 public class RobotMap {
 	public static final int WHEEL_RADIUS = 3;
+
+	
+	private static final int IMG_WIDTH = 128;
+	private static final int IMG_HEIGHT = 96;
 
 	public static TalonSRX driveLeftTalon1; 
 	public static TalonSRX driveLeftTalon2; 
@@ -148,6 +162,9 @@ public class RobotMap {
 	public static TalonSRX cargoIntakeTalon;
 	public static TalonSRXWrapper cargoIntakeTalonWrapper; 
 
+	
+	public static UsbCamera camera;
+
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
@@ -242,10 +259,13 @@ public class RobotMap {
 		leftIntakeTalon = new TalonSRX(1);
 		rightIntakeTalon = new TalonSRX(2);
 
-
+		camera = CameraServer.getInstance().startAutomaticCapture();
+		
+		camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		
 
-		gyro = new PigeonIMU(0); //port known because Ian did something
+		gyro = new PigeonIMU(leftIntakeTalon); //port known because Ian did something
 
 		gyroRateWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
 		gyroAngleWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kDisplacement, Units.RADS);
