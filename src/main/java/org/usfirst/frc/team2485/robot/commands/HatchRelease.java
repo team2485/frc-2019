@@ -15,7 +15,7 @@ public class HatchRelease extends InstantCommand {
     public static void init(){
         //button stuff 
         HatchIntake.suctionOff();
-        HatchIntake.centerOff();
+        HatchIntake.centerOn();
 
         try {
             Thread.sleep(250);

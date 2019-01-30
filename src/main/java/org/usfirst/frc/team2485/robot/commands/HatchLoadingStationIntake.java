@@ -19,7 +19,7 @@ public class HatchLoadingStationIntake extends InstantCommand {
         HatchIntake.centerOn();
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(250);
         }
         catch (Exception e) {
             System.out.println("Failed");
