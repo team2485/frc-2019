@@ -28,7 +28,7 @@ public class StopIntake extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Intake.stopIntake();
+    RobotMap.intake.stopIntake();
   }
 
 }

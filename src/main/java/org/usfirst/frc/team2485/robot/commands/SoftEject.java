@@ -28,7 +28,7 @@ public class SoftEject extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Intake.softEject();
+    RobotMap.intake.softEject();
   }
 
 }

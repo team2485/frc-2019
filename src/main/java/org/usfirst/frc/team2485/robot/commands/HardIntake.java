@@ -28,7 +28,7 @@ public class HardIntake extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Intake.hardIntake();
+    RobotMap.intake.hardIntake();
   }
 
 }

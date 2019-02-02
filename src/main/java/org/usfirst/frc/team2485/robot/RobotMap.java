@@ -30,7 +30,7 @@ import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
 import  org.usfirst.frc.team2485.robot.subsystems.HatchPanelArm;
-import org.usfirst.frc.team2485.robot.subsystems.HatchPanelIntake;
+import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -156,7 +156,7 @@ public class RobotMap {
 	public static DriveTrain driveTrain;
 	public static Intake intake;
 	public static CargoIntake cargoIntake;
-	public static HatchPanelIntake hatchPanelIntake;
+	public static HatchIntake hatchIntake;
 	public static HatchPanelArm hatchPanelArm;
 
 	public static TalonSRX cargoIntakeTalon;
@@ -164,6 +164,18 @@ public class RobotMap {
 
 	
 	public static UsbCamera camera;
+	public static TalonSRX elevatorTalon1;
+	public static TalonSRXWrapper elevatorTalonWrapperPWM1;
+	public static TalonSRXWrapper elevatorTalonWrapperCurrent1;
+
+	public static TalonSRX elevatorTalon2;
+	public static TalonSRXWrapper elevatorTalonWrapperPWM2;
+	public static TalonSRXWrapper elevatorTalonWrapperCurrent2;
+
+	public static Encoder elevatorEncoder;
+	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperRate;
+	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperDistance;
+
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -319,7 +331,7 @@ public class RobotMap {
 		sideSolenoidOut = new Solenoid(4);
 		suctionSolenoid = new Solenoid(5);
 
-		hatchPanelIntake = new HatchPanelIntake(); 
+		hatchIntake = new HatchIntake(); 
 		hatchPanelArm = new HatchPanelArm();
 
 		hatchPanelArmTalon = new TalonSRX(9);
@@ -333,6 +345,18 @@ public class RobotMap {
 
 		cargoIntake = new CargoIntake();
 		intake = new Intake();
+
+		elevatorTalon1 = new TalonSRX(10);
+		elevatorTalonWrapperPWM1 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon1);						
+		elevatorTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon1);
+
+		elevatorTalon2 = new TalonSRX(11);
+		elevatorTalonWrapperPWM2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);	
+		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);
+
+		elevatorEncoder = new Encoder(314, 159);
+		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
+		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
 	}
 
 	// public static void updateConstants(){
