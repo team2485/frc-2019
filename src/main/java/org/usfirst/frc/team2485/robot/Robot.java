@@ -25,10 +25,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
+import org.usfirst.frc.team2485.robot.commandGroups.Docking;
 import org.usfirst.frc.team2485.robot.commands.DriveTo;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import  org.usfirst.frc.team2485.util.ConstantsIO;
+import org.usfirst.frc.team2485.util.FastMath;
 import  org.usfirst.frc.team2485.util.Pipeline;
 import  org.usfirst.frc.team2485.util.AutoPath;
 
@@ -55,9 +57,11 @@ public class Robot extends TimedRobot {
 	private VisionThread visionThread;
 	public static double centerX = 0.0;
 
+	public Pair[] controlPoints;
+	public Pair endpoint;
 
-	private static final AutoPath path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0),
-		new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
+
+	private static AutoPath path;
 
 
 	UsbCamera camera;
@@ -77,8 +81,15 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Auto mode", m_chooser);
 		RobotMap.init();
 		OI.init();
-		// ConstantsIO.init();
+		FastMath.init();
+		ConstantsIO.init();
 		RobotMap.driveTrain.updateConstants();
+
+		controlPoints = RobotMap.driveTrain.generateControlPoints(100, 100, 120);
+		endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 100, 120);
+
+		path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0), new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
+
 
 		// camera = CameraServer.getInstance().startAutomaticCapture();
 		// camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
@@ -137,7 +148,8 @@ public class Robot extends TimedRobot {
 		
 		// double[] dists = { 90.0, };
 	   	// AutoPath path = AutoPath.getAutoPathForClothoidSpline(controlPoints, dists);
-		Scheduler.getInstance().add(new DriveTo(path, 50, false, 20000, false, false));
+		// Scheduler.getInstance().add(new DriveTo(path, 50, false, 20000, false, false));
+		Scheduler.getInstance().add(new Docking());
 		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -165,6 +177,7 @@ public class Robot extends TimedRobot {
 		updateSmartDashboard();
 		RobotMap.driveTrain.updateConstants();
 		//RobotMap.driveTrain.setAngle(Math.PI/2);
+		//RobotMap.driveTrain.setVelocities(30, 0.2);
 		
 
 		
@@ -230,7 +243,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Ang Vel TN", RobotMap.driveTrain.angVelTN.pidGet());
 		SmartDashboard.putNumber("Velocity PID Source", RobotMap.driveTrain.velocityPIDSource.pidGet());
 
-		SmartDashboard.putNumber("Angle Output", RobotMap.driveTrain.angleTN.pidGet());
+		SmartDashboard.putNumber("Angle Output", RobotMap.driveTrain.angVelSetpointTN.pidGet());
 
 		SmartDashboard.putNumber("Angle Setpoint: ", RobotMap.driveTrain.anglePIDSource.pidGet());
 
@@ -250,9 +263,32 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Velocity Right Enc", RobotMap.driveRightEncoderWrapperRate.pidGet());
 		SmartDashboard.putNumber("Velocity setpoint TN", RobotMap.driveTrain.velocitySetpointTN.pidGet());
 
-		SmartDashboard.putNumber("Ang Vel Setpoint", RobotMap.angVelPID.pidGet());
+		SmartDashboard.putNumber("Ang Vel Setpoint", RobotMap.driveTrain.angVelTN.pidGet());
 	
 		SmartDashboard.putNumber("Lidar Value", RobotMap.lidar.getDistance());
+
+		SmartDashboard.putNumber("Control Point X 1", controlPoints[0].getX());
+		SmartDashboard.putNumber("Control Point Y 1", controlPoints[0].getY());
+		SmartDashboard.putNumber("Control Point X 2", controlPoints[1].getX());
+		SmartDashboard.putNumber("Control Point Y 2", controlPoints[1].getY());
+		SmartDashboard.putNumber("Control Points Length: ", controlPoints.length);
+
+		SmartDashboard.putNumber("Endpoint X", endpoint.getX());
+		SmartDashboard.putNumber("Endpoint Y", endpoint.getY());
+
+		SmartDashboard.putNumber("Left Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
+		SmartDashboard.putNumber("Right Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
+
+		SmartDashboard.putBoolean("Distance PID Enabled", RobotMap.driveTrain.distancePID.isEnabled());
+
+		SmartDashboard.putNumber("Distance PID Source: ", RobotMap.driveTrain.distancePIDSource.pidGet());
+		SmartDashboard.putNumber("kPath", ConstantsIO.kPath);
+
+
+		SmartDashboard.putNumber("Angle cos", FastMath.cos(RobotMap.gyroAngleWrapper.pidGet()));
+
+		SmartDashboard.putNumber("Surface angle", RobotMap.driveTrain.getThetaAlignmentLine());
+
 	}
 
 	

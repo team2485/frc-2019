@@ -145,30 +145,11 @@ public class ConstantsIO {
 
 		kRamp_DriveVelocity = Double.parseDouble(data.get("kRamp_DriveVelocity"));
 
-		kThrottleLimit_DeceleratingForward = Double.parseDouble(data.get("kThrottleLimit_DeceleratingForward"));
-		kThrottleLimit_DeceleratingBackward = Double.parseDouble(data.get("kThrottleLimit_DeceleratingBackward"));
 
-		kRamp_AcceleratingForwardArmDown = Double.parseDouble(data.get("kRamp_AcceleratingForwardArmDown"));
-
-		kRamp_AcceleratingBackwardArmDown = Double.parseDouble(data.get("kRamp_AcceleratingBackwardArmDown"));
-
-		kRamp_DeceleratingForwardArmDown = Double.parseDouble(data.get("kRamp_DeceleratingForwardArmDown"));
-
-		kThrottleLimit_DeceleratingForwardArmDown = Double
-				.parseDouble(data.get("kThrottleLimit_DeceleratingForwardArmDown"));
-
-		kRamp_DeceleratingBackwardArmDown = Double.parseDouble(data.get("kRamp_DeceleratingBackwardArmDown"));
-
-		kThrottleLimit_DeceleratingBackwardArmDown = Double
-				.parseDouble(data.get("kThrottleLimit_DeceleratingBackwardArmDown"));
 
 		accelerationMax = Double.parseDouble(data.get("accelerationMax"));
 		kPMax_Distance = Double.parseDouble(data.get("kPMax_Distance"));
-		IMax = Integer.parseInt(data.get("IMax"));
-		voltageMax = Double.parseDouble(data.get("voltageMax"));
 
-		intakeIMax = Integer.parseInt(data.get("intakeIMax"));
-		accelerationMaxElbow = Double.parseDouble(data.get("accelerationMaxElbow"));
 
 		kP_DriveVelocity = Double.parseDouble(data.get("kP_DriveVelocity"));
 		kI_DriveVelocity = Double.parseDouble(data.get("kI_DriveVelocity"));
@@ -186,41 +167,14 @@ public class ConstantsIO {
 		kD_AngVelTeleop = Double.parseDouble(data.get("kD_AngVelTeleop"));
 		kF_AngVelTeleop = Double.parseDouble(data.get("kF_AngVelTeleop"));
 
-		filterCoefficient = Double.parseDouble(data.get("filterCoefficient"));
 
 		kUpRamp_Velocity = Double.parseDouble(data.get("kUpRamp_Velocity"));
 		kDownRamp_Velocity = Double.parseDouble(data.get("kDownRamp_Velocity"));
-		kUpRamp_AngVelocity = Double.parseDouble(data.get("kUpRamp_AngVelocity"));
-		kDownRamp_AngVelocity = Double.parseDouble(data.get("kDownRamp_AngVelocity"));
 
 		System.out.println(kUpRamp_Velocity);
 		System.out.println(kDownRamp_Velocity);
 
-		kP_ElbowAng = Double.parseDouble(data.get("kP_ElbowAng"));
-		kI_ElbowAng = Double.parseDouble(data.get("kI_ElbowAng"));
-		kD_ElbowAng = Double.parseDouble(data.get("kD_ElbowAng"));
 
-		kP_ElbowAngVel = Double.parseDouble(data.get("kP_ElbowAngVel"));
-		kI_ElbowAngVel = Double.parseDouble(data.get("kI_ElbowAngVel"));
-		kF_ElbowAngVel = Double.parseDouble(data.get("kF_ElbowAngVel"));
-
-		kP_WristAng = Double.parseDouble(data.get("kP_WristAng"));
-		kI_WristAng = Double.parseDouble(data.get("kI_WristAng"));
-		kD_WristAng = Double.parseDouble(data.get("kD_WristAng"));
-
-		kP_WristAngVel = Double.parseDouble(data.get("kP_WristAngVel"));
-		kI_WristAngVel = Double.parseDouble(data.get("kI_WristAngVel"));
-		kF_WristAngVel = Double.parseDouble(data.get("kF_WristAngVel"));
-
-		kUpRamp_AngCurrent = Double.parseDouble(data.get("kUpRamp_AngCurrent"));
-
-		kUpRamp_TeleopDown = Double.parseDouble(data.get("kUpRamp_TeleopDown"));
-		kDownRamp_TeleopDown = Double.parseDouble(data.get("kDownRamp_TeleopDown"));
-
-		kUpRamp_TeleopUp = Double.parseDouble(data.get("kUpRamp_TeleopUp"));
-		kDownRamp_TeleopUp = Double.parseDouble(data.get("kDownRamp_TeleopUp"));
-
-		kP_Drift = Double.parseDouble(data.get("kP_Drift"));
 		kPath = Double.parseDouble(data.get("kPath"));
 
 		// kUpSpeed_WristAngVel = Double.parseDouble(data.get("kUpSpeed_WristAngVel"));
@@ -229,25 +183,6 @@ public class ConstantsIO {
 		// kUpSpeed_ElbowAngVel = Double.parseDouble(data.get("kUpSpeed_ElbowAngVel"));
 		// kDownSpeed_ElbowAngVel =
 		// Double.parseDouble(data.get("kDownSpeed_ElbowAngVel"));
-		//Kira
-
-		IMax = Integer.parseInt(data.get("IMax"));
-
-		voltageMax = Double.parseDouble(data.get("voltageMax"));
-
-		kSoftLimitForward_Wrist = Integer.parseInt(data.get("kSoftLimitForward_Wrist"));
-		kSoftLimitReverse_Wrist = Integer.parseInt(data.get("kSoftLimitReverse_Wrist"));
-		kSoftLimitForward_Elbow = Integer.parseInt(data.get("kSoftLimitForward_Elbow"));
-		kSoftLimitReverse_Elbow = Integer.parseInt(data.get("kSoftLimitReverse_Elbow"));
-
-		currentStallWrist = Integer.parseInt(data.get("currentStallWrist"));
-		currentStallElbow = Integer.parseInt(data.get("currentStallElbow"));
-
-		levitateWristCurrent = Double.parseDouble(data.get("levitateWristCurrent"));
-		levitateElbowCurrent = Double.parseDouble(data.get("levitateElbowCurrent"));
-
-		kP_DriveStraight = Double.parseDouble(data.get("kP_DriveStraight"));
-		kI_DriveStraight = Double.parseDouble(data.get("kI_DriveStraight"));
 
 	}
 

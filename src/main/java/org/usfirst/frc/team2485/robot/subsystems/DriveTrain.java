@@ -26,7 +26,7 @@ import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
 
 public class DriveTrain extends Subsystem {
-	private static final double THETA_CAMERA = 60;
+	private static final double THETA_CAMERA = Math.PI/3;
 	private static final double CAMERA_PIXEL_WIDTH = 320;
 
 	private static final double MAX_VEL = 10; //change
@@ -42,13 +42,16 @@ public class DriveTrain extends Subsystem {
 	private RampRate velocityRampRate;
 
 	public TransferNode distanceTN;
+	public TransferNode angleSetpointTN;
+	public TransferNode angVelSetpointTN;
 	public TransferNode velocitySetpointTN;
 	public TransferNode velocityTN;
 	public TransferNode angVelTN;
-	public TransferNode angleTN;
+	public TransferNode distanceSetpointTN;
+
 
 	//public PIDSourceWrapper kp_distancePIDSource;
-	private PIDSourceWrapper distancePIDSource;
+	public PIDSourceWrapper distancePIDSource;
 	public PIDSourceWrapper velocityPIDSource;
 	public PIDSourceWrapper anglePIDSource;
 	public PIDSourceWrapper angVelPIDSource;
@@ -78,7 +81,9 @@ public class DriveTrain extends Subsystem {
 		velocitySetpointTN = new TransferNode(0);
 		velocityTN = new TransferNode(0);
 		angVelTN = new TransferNode(0);
-		angleTN = new TransferNode(0);
+		angVelSetpointTN = new TransferNode(0);
+		angleSetpointTN = new TransferNode(0);
+		distanceSetpointTN = new TransferNode(0);
 
 		//kp_distancePIDSource = new PIDSourceWrapper();
 		distancePIDSource = new PIDSourceWrapper();
@@ -108,6 +113,7 @@ public class DriveTrain extends Subsystem {
 		distancePID.setSources(distancePIDSource);
 		distancePID.setOutputRange(-MAX_VEL, MAX_VEL);
 		distancePID.setOutputs(distanceTN);
+		distancePID.setSetpointSource(distanceSetpointTN);
 
 		velocityRampRate.setSetpointSource(distanceTN);
 		velocityRampRate.setOutputs(velocitySetpointTN);
@@ -128,26 +134,27 @@ public class DriveTrain extends Subsystem {
 		});
 
 		anglePID.setSources(anglePIDSource);
+		anglePID.setSetpointSource(angleSetpointTN);
 		anglePID.setContinuous(true);
 		anglePID.setInputRange(-MAX_ANG, MAX_ANG);
 		anglePID.setOutputRange(-MAX_ANGVEL, MAX_ANGVEL);
-		anglePID.setOutputs(angleTN);
+		anglePID.setOutputs(angVelSetpointTN);
 
 		angVelPIDSource.setPidSource(()-> {
 			return RobotMap.gyroRateWrapper.pidGet();
 		});
 
 		angVelPID.setSources(angVelPIDSource);
-		angVelPID.setSetpointSource(angleTN);
+		angVelPID.setSetpointSource(angVelSetpointTN);
 		angVelPID.setOutputRange(-MAX_CURR, MAX_CURR);
 		angVelPID.setOutputs(angVelTN);
 
-		leftCurrentPIDSource.setPidSource(() ->{
-			return velocityTN.pidGet() - angVelTN.pidGet();
+		leftCurrentPIDSource.setPidSource(() -> {
+			return velocityTN.pidGet() + angVelTN.pidGet(); 
 		});
 
-		rightCurrentPIDSource.setPidSource(() ->{
-			return velocityTN.pidGet() + angVelTN.pidGet();
+		rightCurrentPIDSource.setPidSource(() -> {
+			return velocityTN.pidGet() - angVelTN.pidGet();
 		});
 
 		leftMotorSetter.setSetpointSource(leftCurrentPIDSource);
@@ -241,7 +248,7 @@ public class DriveTrain extends Subsystem {
     
    
 	
-	public static double getThetaSurface() {
+	public static double getThetaAlignmentLine() {
 		double phi = RobotMap.gyroAngleWrapper.pidGet(); //gyro angle
 		double theta = 0; //the surface angle 
 
@@ -265,28 +272,35 @@ public class DriveTrain extends Subsystem {
 			theta = Math.toRadians(241.25);
 		} 
 
-		return theta;
+		return theta + Math.PI/2;
 	}
 
-	public static Pair getAutoAlignEndpoint() {
-		double lidarDist = RobotMap.lidar.getDistance();
-		double thetaSurface = getThetaSurface();
+	public static Pair getAutoAlignEndpoint(double lidar, double target1, double target2) {
+		double lidarDist = lidar;
+		double thetaSurface = getThetaAlignmentLine(); //this is fine just leave it alone -S
 		double phi = RobotMap.gyroAngleWrapper.pidGet();
-		double cx1 = 0; //change
-		double cx2 = 0; //change
+		double cx1 = target1; 
+		double cx2 = target2; 
 		double thetaCamera = THETA_CAMERA; //angle of end of field of view to plane parallel to robot
 		double thetaFieldOfView = Math.PI - thetaCamera*2; //total field of view angle
-		double fovWidth = FastMath.sin(thetaFieldOfView/2)*lidarDist*2; //width in inches of total field of view (assuming lidar dist as height)
+		double fovWidth = FastMath.tan(thetaFieldOfView/2)*lidarDist*2; //width in inches of total field of view (assuming lidar dist as height)
 		double thetaRobotToSurface = thetaSurface - phi; //angle between plane of surface and plane parallel to front of robot
+		System.out.println("Theta R2S: " + thetaRobotToSurface);
 		double cx = (cx1+cx2)/2; //distance to alignment line in pixels (x-axis)
-		double Px = cx*fovWidth/CAMERA_PIXEL_WIDTH; //distance to alignment line in inches (x-axis)
-		double cy = FastMath.tan(thetaRobotToSurface)*Px; 
-		double Py = cy + lidarDist;
-		
+		double dx = cx*fovWidth/CAMERA_PIXEL_WIDTH; //distance to alignment line in inches 
+		System.out.println("fovWidth/CAMERA_PIXEL_WIDTH: " + fovWidth/CAMERA_PIXEL_WIDTH);
+		double phiInDegrees = Math.toDegrees(phi) % 360;
+		dx -= fovWidth/2;
+		System.out.println("dx: " + dx);
+		System.out.println("Sin phi + 90: " + FastMath.sin(phi+Math.PI/2));
+		double Px = ((phiInDegrees + 90 > 2 || phiInDegrees + 90 < -2) ? dx/FastMath.sin(phi + Math.PI/2) : 0) + ((phiInDegrees > 2 || phiInDegrees < -2) ? (lidarDist/FastMath.sin(phi)) : 0);
+		System.out.println("Sin phi + Math.PI/2: " + FastMath.sin(phi+Math.PI/2));
+		System.out.println("Sin phi: " + FastMath.sin(phi));
+		double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
+		double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
 
 
-
-		return new Pair(Px, Py);
+		return new Pair(Px, Math.abs(Py));
  
 	}
 
@@ -298,8 +312,8 @@ public class DriveTrain extends Subsystem {
 		velocityRampRate.enable();
 		leftMotorSetter.enable();
 		rightMotorSetter.enable();
-		angleTN.setOutput(angle);
-		distancePID.setSetpoint(distance);
+		angleSetpointTN.setOutput(angle);
+		distanceSetpointTN.setOutput(distance);
 		distancePID.setAbsoluteTolerance(toleranceDist);
 		anglePID.setAbsoluteTolerance(toleranceAngle);
 		
@@ -356,46 +370,86 @@ public class DriveTrain extends Subsystem {
 
 	}
 
-	public static Pair[] generateControlPoints() {
-		Pair endpoint = getAutoAlignEndpoint();
+	public static Pair[] generateControlPoints(double lidar, double target1, double target2) {
+		Pair endpoint = getAutoAlignEndpoint(lidar, target1, target2);
 		Pair startpoint = new Pair(0,0);
-		double thetaAlignmentLine = (Math.PI/2) - getThetaSurface();
-		double Pc1y = (endpoint.getY() - startpoint.getY())*ConstantsIO.kPath;
-		double Pc1x = startpoint.getX();
-		double hEndpointControl1 = Math.sqrt(Math.pow((endpoint.getY()-Pc1y), 2)+(Math.pow(endpoint.getX()-Pc1x, 2)));
-		double thetaEndpointControl1 = FastMath.asin((endpoint.getY()-Pc1y)/hEndpointControl1);
-		double Pc2x = hEndpointControl1 * FastMath.cos(thetaEndpointControl1);
 		double phi = RobotMap.gyroAngleWrapper.pidGet();
-		double thetaRobotToSurface = getThetaSurface() - phi;
+		double phiInDegrees = Math.toDegrees(phi) % 360;
+		double thetaAlignmentLine = (Math.PI/2) - getThetaAlignmentLine();
+		double Pc1y = (((endpoint.getY() - startpoint.getY())*ConstantsIO.kPath) + startpoint.getY());
+		System.out.println("Startpoint Y: " + startpoint.getY());
+		System.out.println("End Y - Start Y: " + (endpoint.getY() - startpoint.getY()));
+		System.out.println("kPath * End-Start: " + (endpoint.getY() - startpoint.getY()) * ConstantsIO.kPath);
+		double Pc1x = startpoint.getX() + (((phiInDegrees > 2 || phiInDegrees < -2) && (phiInDegrees > 182 || phiInDegrees < 178)) ? (Pc1y * FastMath.sin(phi))/FastMath.cos(phi) : 0);
+
+
+		double hypot = Math.sqrt(Pc1y * Pc1y + Pc1x * Pc1x);
+		double c2Hypot = lidar - hypot;
+
+		System.out.println("phi in degrees: " + phiInDegrees);
+	
+		double Pc2x = ((phiInDegrees > 2 || phiInDegrees < -2) && (phiInDegrees > 182 || phiInDegrees < 178)) ? c2Hypot/FastMath.sin(phi) : 0;
+		double Pc2y = ((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? c2Hypot/FastMath.cos(phi) : 0;
+		System.out.println("Pc2x: " + Pc2x);
+		System.out.println("Pc2y: " + Pc2y);
+
+		double thetaRobotToSurface = getThetaAlignmentLine() - phi;
+
+
+		double Pc2r2sx = Pc2x*FastMath.cos(thetaRobotToSurface);
+		double Pc2r2sy = Pc2y*FastMath.sin(thetaRobotToSurface);
+		System.out.println("Pc2r2sx: " + Pc2r2sx);
+		System.out.println("Pc2r2sy: " + Pc2r2sy);
+
+
+		double thetaSurfaceDegrees = Math.toDegrees(getThetaAlignmentLine()) % 360;
+
+		Pc2r2sx = ((thetaSurfaceDegrees > 2 || thetaSurfaceDegrees<0) && (thetaSurfaceDegrees > 182 || thetaSurfaceDegrees < 178)) ? Pc2r2sx / FastMath.sin(getThetaAlignmentLine()) : 0;
+		Pc2r2sy = ((thetaSurfaceDegrees < 88 || thetaSurfaceDegrees > 92) && (thetaSurfaceDegrees > 272 || thetaSurfaceDegrees < 268)) ? Pc2r2sy / FastMath.cos(getThetaAlignmentLine()) : 0;
+
+		Pc2x += Pc2r2sx;
+		Pc2y += Pc2r2sy;
+
+		Pc2y = endpoint.getY() - Pc2y;
+
+		Pc2x = endpoint.getX() - Pc2x;
+
+		// double hEndpointControl1 = Math.sqrt(Math.pow((endpoint.getY()-Pc1y), 2)+(Math.pow(endpoint.getX()-Pc1x, 2)));
+		// double thetaEndpointControl1 = FastMath.asin((endpoint.getY()-Pc1y)/hEndpointControl1);
+		// double Pc2x = hEndpointControl1 * FastMath.cos(thetaEndpointControl1);
 
 		Pair[] controlPoints;
-		double Pc2y = Pc1y + FastMath.tan(thetaRobotToSurface)*(Pc2x-Pc1x);
+		// double Pc2y = Pc1y + FastMath.tan(thetaRobotToSurface)*(Pc2x-Pc1x);
 		if ((phi > thetaAlignmentLine && Pc1x < Pc2x) || (phi < thetaAlignmentLine && Pc2x < Pc1x)) {
 			controlPoints = new Pair[2];
 			controlPoints[0] = new Pair(Pc1x, Pc1y);
 			controlPoints[1] = new Pair(Pc2x, Pc2y);
-		} else {
-			double thetaAcrossHypotenuse = Math.PI - thetaRobotToSurface;
-			double hypot = Math.sqrt(Math.pow((endpoint.getY()-startpoint.getY()), 2) + Math.pow((endpoint.getX()-startpoint.getX()), 2));
-			double thetaInvented = FastMath.acos(endpoint.getY()/hypot);
-			double thetaComplement = Math.PI/2 - thetaInvented;
-			double endpointConnectedSide =  FastMath.sin(thetaComplement)*hypot/FastMath.sin(thetaAcrossHypotenuse);
-			double thetaEndpoint = Math.PI - thetaComplement - thetaAcrossHypotenuse;
-			double thetaRobotToSurfaceComplement = Math.PI/2 - thetaRobotToSurface;
-			double cx = endpoint.getX() - (FastMath.cos(thetaRobotToSurfaceComplement) * endpointConnectedSide);
-			double yEndpointTriangle = FastMath.sin(thetaRobotToSurfaceComplement) * endpointConnectedSide;
-			double cy = endpoint.getY() - yEndpointTriangle;
-			controlPoints = new Pair[1];
-			controlPoints[0] = new Pair(cx, cy);
-
 		}
+		// } else {
+		// 	double thetaAcrossHypotenuse = Math.PI - thetaRobotToSurface;
+		// 	double hypot = Math.sqrt(Math.pow((endpoint.getY()-startpoint.getY()), 2) + Math.pow((endpoint.getX()-startpoint.getX()), 2));
+		// 	double thetaInvented = FastMath.acos(endpoint.getY()/hypot);
+		// 	double thetaComplement = Math.PI/2 - thetaInvented;
+		// 	double endpointConnectedSide =  FastMath.sin(thetaComplement)*hypot/FastMath.sin(thetaAcrossHypotenuse);
+		// 	double thetaEndpoint = Math.PI - thetaComplement - thetaAcrossHypotenuse;
+		// 	double thetaRobotToSurfaceComplement = Math.PI/2 - thetaRobotToSurface;
+		// 	double cx = endpoint.getX() - (FastMath.cos(thetaRobotToSurfaceComplement) * endpointConnectedSide);
+		// 	double yEndpointTriangle = FastMath.sin(thetaRobotToSurfaceComplement) * endpointConnectedSide;
+		// 	double cy = endpoint.getY() - yEndpointTriangle;
+		// 	// controlPoints = new Pair[1];
+		// 	// controlPoints[0] = new Pair(cx, cy);
+
+		// }
+		controlPoints = new Pair[2];
+		controlPoints[0] = new Pair(Pc1x, Math.abs(Pc1y));
+		controlPoints[1] = new Pair(Pc2x, Math.abs(Pc2y));
 		return controlPoints;
 	}
 
-	public static Pair[] meterRule(){
+	public static Pair[] meterRule(double lidar){
 		if(RobotMap.lidar.getDistance() < 40.7){
 			//back up till lidar.getDistance >= 1 meter
-			double dist = 40.7 - RobotMap.lidar.getDistance();
+			double dist = 40.7 - lidar;
 			return (new Pair[]{new Pair(0, 0), new Pair(0, -dist)});
 		}
 
