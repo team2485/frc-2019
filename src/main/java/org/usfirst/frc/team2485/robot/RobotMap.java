@@ -37,6 +37,16 @@ import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 
+
+import edu.wpi.first.wpilibj.CameraServer;
+
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -47,6 +57,10 @@ import edu.wpi.first.wpilibj.I2C;
 
 public class RobotMap {
 	public static final int WHEEL_RADIUS = 3;
+
+	
+	private static final int IMG_WIDTH = 128;
+	private static final int IMG_HEIGHT = 96;
 
 	public static TalonSRX driveLeftTalon1; 
 	public static TalonSRX driveLeftTalon2; 
@@ -150,8 +164,9 @@ public class RobotMap {
 	public static TalonSRXWrapper cargoIntakeTalonWrapper; 
 
 	//Elevator
-	public static Elevator elevator;
 
+	
+	public static UsbCamera camera;
 	public static TalonSRX elevatorTalon1;
 	public static TalonSRXWrapper elevatorTalonWrapperPWM1;
 	public static TalonSRXWrapper elevatorTalonWrapperCurrent1;
@@ -163,6 +178,9 @@ public class RobotMap {
 	public static Encoder elevatorEncoder;
 	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperRate;
 	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperDistance;
+
+	public static Elevator elevator;
+
 
 
 	// For example to map the left and right motors, you could define the
@@ -259,10 +277,13 @@ public class RobotMap {
 		leftIntakeTalon = new TalonSRX(1);
 		rightIntakeTalon = new TalonSRX(2);
 
-
+		camera = CameraServer.getInstance().startAutomaticCapture();
+		
+		camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		
 
-		gyro = new PigeonIMU(0); //port known because Ian did something
+		gyro = new PigeonIMU(leftIntakeTalon); //port known because Ian did something
 
 		gyroRateWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
 		gyroAngleWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kDisplacement, Units.RADS);
@@ -331,7 +352,6 @@ public class RobotMap {
 		cargoIntake = new CargoIntake();
 		intake = new Intake();
 
-		elevator = new Elevator();
 		
 		elevatorTalon1 = new TalonSRX(10);
 		elevatorTalonWrapperPWM1 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon1);						
@@ -344,6 +364,8 @@ public class RobotMap {
 		elevatorEncoder = new Encoder(314, 159);
 		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
 		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
+		elevator = new Elevator();
+
 	}
 
 	// public static void updateConstants(){

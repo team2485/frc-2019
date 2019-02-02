@@ -15,6 +15,7 @@ import org.usfirst.frc.team2485.util.WarlordsPIDController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 
+
 /**
  * Add your docs here.
  */
@@ -33,6 +34,12 @@ public class Elevator extends Subsystem {
 
   
    
+  double elevatorPos1; //lower hatch
+  double elevatorPos2; //middle hatch
+  double elevatorPos3; //upper hatch
+  double elevatorPos4; //lower cargo
+  double elevatorPos5; //middle cargo
+  double elevatorPos6; //upper cargo
 
   @Override
   public void initDefaultCommand() {
@@ -43,5 +50,6 @@ public class Elevator extends Subsystem {
         RobotMap.elevatorTalonWrapperPWM1.set(0.5);
         RobotMap.elevatorTalonWrapperPWM2.set(0.5);
     }
+
 
 }
