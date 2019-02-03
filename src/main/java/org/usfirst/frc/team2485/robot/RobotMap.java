@@ -175,6 +175,9 @@ public class RobotMap {
 	public static TalonSRXWrapper elevatorTalonWrapperPWM2;
 	public static TalonSRXWrapper elevatorTalonWrapperCurrent2;
 
+	public static SpeedControllerWrapper elevatorWrapperCurrent;
+	public static SpeedControllerWrapper elevatorWrapperPercentOutput;
+
 	public static Encoder elevatorEncoder;
 	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperRate;
 	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperDistance;
@@ -360,6 +363,14 @@ public class RobotMap {
 		elevatorTalon2 = new TalonSRX(11);
 		elevatorTalonWrapperPWM2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);	
 		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);
+
+		TalonSRXWrapper[] elevatorCurrent = {elevatorTalonWrapperCurrent1, elevatorTalonWrapperCurrent2};
+		TalonSRXWrapper[] elevatorPWM = {elevatorTalonWrapperPWM1, elevatorTalonWrapperPWM2};
+
+
+		elevatorWrapperCurrent = new SpeedControllerWrapper(elevatorCurrent);
+		elevatorWrapperPercentOutput = new SpeedControllerWrapper(elevatorPWM);
+
 
 		elevatorEncoder = new Encoder(314, 159);
 		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
