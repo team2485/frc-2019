@@ -85,8 +85,13 @@ public class Robot extends TimedRobot {
 		ConstantsIO.init();
 		RobotMap.driveTrain.updateConstants();
 
-		controlPoints = RobotMap.driveTrain.generateControlPoints(100, 100, 120);
-		endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 100, 120);
+		RobotMap.driveLeftEncoder.reset();
+		RobotMap.driveRightEncoder.reset();
+		RobotMap.gyroRateWrapper.reset();
+		RobotMap.gyroAngleWrapper.reset();
+
+		controlPoints = RobotMap.driveTrain.generateControlPoints(100, 90, 110);
+		endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 90, 110);
 
 		path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0), new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
 
@@ -149,6 +154,9 @@ public class Robot extends TimedRobot {
 		// double[] dists = { 90.0, };
 	   	// AutoPath path = AutoPath.getAutoPathForClothoidSpline(controlPoints, dists);
 		// Scheduler.getInstance().add(new DriveTo(path, 50, false, 20000, false, false));
+		controlPoints = RobotMap.driveTrain.generateControlPoints(100, 70, 90);
+		endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 70, 90);
+
 		Scheduler.getInstance().add(new Docking());
 		
 		/*
@@ -164,7 +172,7 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.start();
 		}
 		
-		// RobotMap.driveTrain.distancePID.setSetpoint(RobotMap.lidar.getDistance() - 20);
+		//RobotMap.driveTrain.distancePID.setSetpoint(RobotMap.lidar.getDistance() - 20);
 
 	}
 
@@ -266,6 +274,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Ang Vel Setpoint", RobotMap.driveTrain.angVelTN.pidGet());
 	
 		SmartDashboard.putNumber("Lidar Value", RobotMap.lidar.getDistance());
+		SmartDashboard.putNumber("Lidar Value 2", RobotMap.lidar.getDistance());
 
 		SmartDashboard.putNumber("Control Point X 1", controlPoints[0].getX());
 		SmartDashboard.putNumber("Control Point Y 1", controlPoints[0].getY());

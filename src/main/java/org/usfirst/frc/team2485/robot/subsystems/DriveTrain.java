@@ -245,7 +245,9 @@ public class DriveTrain extends Subsystem {
 
 		
 	}
-    
+
+	
+
    
 	
 	public static double getThetaAlignmentLine() {
@@ -273,6 +275,7 @@ public class DriveTrain extends Subsystem {
 		} 
 
 		return theta + Math.PI/2;
+		// return Math.PI/2;
 	}
 
 	public static Pair getAutoAlignEndpoint(double lidar, double target1, double target2) {
@@ -285,19 +288,43 @@ public class DriveTrain extends Subsystem {
 		double thetaFieldOfView = Math.PI - thetaCamera*2; //total field of view angle
 		double fovWidth = FastMath.tan(thetaFieldOfView/2)*lidarDist*2; //width in inches of total field of view (assuming lidar dist as height)
 		double thetaRobotToSurface = thetaSurface - phi; //angle between plane of surface and plane parallel to front of robot
-		System.out.println("Theta R2S: " + thetaRobotToSurface);
+		// System.out.println("Theta R2S: " + thetaRobotToSurface);
 		double cx = (cx1+cx2)/2; //distance to alignment line in pixels (x-axis)
 		double dx = cx*fovWidth/CAMERA_PIXEL_WIDTH; //distance to alignment line in inches 
-		System.out.println("fovWidth/CAMERA_PIXEL_WIDTH: " + fovWidth/CAMERA_PIXEL_WIDTH);
+		// System.out.println("fovWidth/CAMERA_PIXEL_WIDTH: " + fovWidth/CAMERA_PIXEL_WIDTH);
 		double phiInDegrees = Math.toDegrees(phi) % 360;
 		dx -= fovWidth/2;
-		System.out.println("dx: " + dx);
-		System.out.println("Sin phi + 90: " + FastMath.sin(phi+Math.PI/2));
-		double Px = ((phiInDegrees + 90 > 2 || phiInDegrees + 90 < -2) ? dx/FastMath.sin(phi + Math.PI/2) : 0) + ((phiInDegrees > 2 || phiInDegrees < -2) ? (lidarDist/FastMath.sin(phi)) : 0);
-		System.out.println("Sin phi + Math.PI/2: " + FastMath.sin(phi+Math.PI/2));
-		System.out.println("Sin phi: " + FastMath.sin(phi));
-		double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
-		double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
+
+		//METHOD 1: 
+		// // System.out.println("dx: " + dx);
+		// // System.out.println("Sin phi + 90: " + FastMath.sin(phi+Math.PI/2));
+		// double Px = ((phiInDegrees + 90 > 2 || phiInDegrees + 90 < -2) ? dx/FastMath.sin(phi + Math.PI/2) : 0) + ((phiInDegrees > 2 || phiInDegrees < -2) ? (lidarDist/FastMath.sin(phi)) : 0);
+		// // System.out.println("Sin phi + Math.PI/2: " + FastMath.sin(phi+Math.PI/2));
+		// // System.out.println("Sin phi: " + FastMath.sin(phi));
+		// System.out.println("FastMath.cos(phi): " + FastMath.cos(phi));
+		// System.out.println("FastMath.tan(thetaR2S): " + FastMath.tan(thetaRobotToSurface));
+		// double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
+		// double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
+
+		// System.out.println("cy: " + cy);
+		// System.out.println("Py: " + Py);
+
+
+		//METHOD 2: 2/3/19
+		double piMinusPhiDegrees = Math.toDegrees(Math.PI-phi) % 360;
+		double weirdSurfaceThingDegrees = Math.toDegrees((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) % 360;
+
+		double d = dx * FastMath.cos(thetaRobotToSurface);
+		double Ly = lidar * ((piMinusPhiDegrees > 92 || piMinusPhiDegrees < 88) ? FastMath.cos(Math.PI - phi) : 0);
+		double Sy = d * ((weirdSurfaceThingDegrees > 92 || weirdSurfaceThingDegrees < 88) ? FastMath.cos((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) : 0);
+		double Py = Ly + Sy;
+
+		System.out.println("Boolean 1: " + (piMinusPhiDegrees > 2 || piMinusPhiDegrees < -2));
+		System.out.println("Boolean 2: " + (weirdSurfaceThingDegrees > 2 || weirdSurfaceThingDegrees < -2));
+
+		double Lx = lidar * ((piMinusPhiDegrees > 2 || piMinusPhiDegrees < -2) ? FastMath.sin(Math.PI - phi) : 0);
+		double Sx = d * ((weirdSurfaceThingDegrees > 2 || weirdSurfaceThingDegrees < -2) ? FastMath.sin((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) : 0);
+		double Px = Lx + Sx;
 
 
 		return new Pair(Px, Math.abs(Py));
@@ -357,7 +384,7 @@ public class DriveTrain extends Subsystem {
 
 	}
 
-	public void setAngle(double angle) {
+	public boolean setAngle(double angle, double tolerance) {
 		velocityPID.disable();
 		anglePID.enable();
 		distancePID.disable();
@@ -365,41 +392,44 @@ public class DriveTrain extends Subsystem {
 		angVelPID.enable();
 		leftMotorSetter.enable();
 		rightMotorSetter.enable();
-		anglePID.setSetpointSource(null);
-		anglePID.setSetpoint(angle);
+		anglePID.setAbsoluteTolerance(tolerance);
+		angleSetpointTN.setOutput(angle);
+		return anglePID.isOnTarget();
 
 	}
 
 	public static Pair[] generateControlPoints(double lidar, double target1, double target2) {
 		Pair endpoint = getAutoAlignEndpoint(lidar, target1, target2);
+		// System.out.println("Lidar: " + lidar);
+		// System.out.println("Endpoint: " + endpoint.getX() + ", " + endpoint.getY());
 		Pair startpoint = new Pair(0,0);
 		double phi = RobotMap.gyroAngleWrapper.pidGet();
 		double phiInDegrees = Math.toDegrees(phi) % 360;
 		double thetaAlignmentLine = (Math.PI/2) - getThetaAlignmentLine();
 		double Pc1y = (((endpoint.getY() - startpoint.getY())*ConstantsIO.kPath) + startpoint.getY());
-		System.out.println("Startpoint Y: " + startpoint.getY());
-		System.out.println("End Y - Start Y: " + (endpoint.getY() - startpoint.getY()));
-		System.out.println("kPath * End-Start: " + (endpoint.getY() - startpoint.getY()) * ConstantsIO.kPath);
+		// System.out.println("Startpoint Y: " + startpoint.getY());
+		// System.out.println("End Y - Start Y: " + (endpoint.getY() - startpoint.getY()));
+		// System.out.println("kPath * End-Start: " + (endpoint.getY() - startpoint.getY()) * ConstantsIO.kPath);
 		double Pc1x = startpoint.getX() + (((phiInDegrees > 2 || phiInDegrees < -2) && (phiInDegrees > 182 || phiInDegrees < 178)) ? (Pc1y * FastMath.sin(phi))/FastMath.cos(phi) : 0);
 
 
 		double hypot = Math.sqrt(Pc1y * Pc1y + Pc1x * Pc1x);
 		double c2Hypot = lidar - hypot;
 
-		System.out.println("phi in degrees: " + phiInDegrees);
+		// System.out.println("phi in degrees: " + phiInDegrees);
 	
 		double Pc2x = ((phiInDegrees > 2 || phiInDegrees < -2) && (phiInDegrees > 182 || phiInDegrees < 178)) ? c2Hypot/FastMath.sin(phi) : 0;
 		double Pc2y = ((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? c2Hypot/FastMath.cos(phi) : 0;
-		System.out.println("Pc2x: " + Pc2x);
-		System.out.println("Pc2y: " + Pc2y);
+		// System.out.println("Pc2x: " + Pc2x);
+		// System.out.println("Pc2y: " + Pc2y);
 
 		double thetaRobotToSurface = getThetaAlignmentLine() - phi;
 
 
 		double Pc2r2sx = Pc2x*FastMath.cos(thetaRobotToSurface);
 		double Pc2r2sy = Pc2y*FastMath.sin(thetaRobotToSurface);
-		System.out.println("Pc2r2sx: " + Pc2r2sx);
-		System.out.println("Pc2r2sy: " + Pc2r2sy);
+		// System.out.println("Pc2r2sx: " + Pc2r2sx);
+		// System.out.println("Pc2r2sy: " + Pc2r2sy);
 
 
 		double thetaSurfaceDegrees = Math.toDegrees(getThetaAlignmentLine()) % 360;
@@ -443,7 +473,16 @@ public class DriveTrain extends Subsystem {
 		controlPoints = new Pair[2];
 		controlPoints[0] = new Pair(Pc1x, Math.abs(Pc1y));
 		controlPoints[1] = new Pair(Pc2x, Math.abs(Pc2y));
+		
+
+
+
+		//  System.out.println("CP 1: " + controlPoints[0].getX() + ", " + controlPoints[0].getY());
+		//  System.out.println("CP 2: " + controlPoints[1].getX() + ", " + controlPoints[1].getY());
+
 		return controlPoints;
+
+		
 	}
 
 	public static Pair[] meterRule(double lidar){

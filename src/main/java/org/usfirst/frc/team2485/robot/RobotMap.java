@@ -323,7 +323,7 @@ public class RobotMap {
 		intakeLeft = new SpeedControllerWrapper(leftIntakeTalonWrappers);
 		
 
-		lidar = new LidarWrapper(I2C.Port.kOnboard); //port unknown
+		lidar = new LidarWrapper(I2C.Port.kOnboard); 
 
 		centerSolenoidIn = new Solenoid(1);
 		centerSolenoidOut = new Solenoid(2);
@@ -350,11 +350,11 @@ public class RobotMap {
 		elevatorTalonWrapperPWM1 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon1);						
 		elevatorTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon1);
 
-		elevatorTalon2 = new TalonSRX(11);
+		elevatorTalon2 = new TalonSRX(9);
 		elevatorTalonWrapperPWM2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);	
 		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);
 
-		elevatorEncoder = new Encoder(314, 159);
+		elevatorEncoder = new Encoder(5, 6);
 		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
 		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
 	}
