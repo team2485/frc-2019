@@ -13,6 +13,7 @@ import org.usfirst.frc.team2485.util.TalonSRXWrapper;
 import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
 import org.usfirst.frc.team2485.robot.subsystems.CargoIntake;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team2485.robot.subsystems.Elevator;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
@@ -145,13 +146,13 @@ public class RobotMap {
 
 	public static I2C colorSensor; 
 
-
+	
 	public static Solenoid centerSolenoidIn; 
 	public static Solenoid centerSolenoidOut; 
 	public static Solenoid sideSolenoidIn;
 	public static Solenoid sideSolenoidOut;
 	public static Solenoid suctionSolenoid;
-
+	
 	//Subsystems
 	public static DriveTrain driveTrain;
 	public static Intake intake;
@@ -161,6 +162,8 @@ public class RobotMap {
 
 	public static TalonSRX cargoIntakeTalon;
 	public static TalonSRXWrapper cargoIntakeTalonWrapper; 
+
+	//Elevator
 
 	
 	public static UsbCamera camera;
@@ -172,9 +175,15 @@ public class RobotMap {
 	public static TalonSRXWrapper elevatorTalonWrapperPWM2;
 	public static TalonSRXWrapper elevatorTalonWrapperCurrent2;
 
+	public static SpeedControllerWrapper elevatorWrapperCurrent;
+	public static SpeedControllerWrapper elevatorWrapperPercentOutput;
+
 	public static Encoder elevatorEncoder;
 	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperRate;
 	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperDistance;
+
+	public static Elevator elevator;
+
 
 
 	// For example to map the left and right motors, you could define the
@@ -346,6 +355,7 @@ public class RobotMap {
 		cargoIntake = new CargoIntake();
 		intake = new Intake();
 
+		
 		elevatorTalon1 = new TalonSRX(10);
 		elevatorTalonWrapperPWM1 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon1);						
 		elevatorTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon1);
@@ -354,9 +364,20 @@ public class RobotMap {
 		elevatorTalonWrapperPWM2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);	
 		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);
 
-		elevatorEncoder = new Encoder(5, 6);
+
+		TalonSRXWrapper[] elevatorCurrent = {elevatorTalonWrapperCurrent1, elevatorTalonWrapperCurrent2};
+		TalonSRXWrapper[] elevatorPWM = {elevatorTalonWrapperPWM1, elevatorTalonWrapperPWM2};
+
+
+		elevatorWrapperCurrent = new SpeedControllerWrapper(elevatorCurrent);
+		elevatorWrapperPercentOutput = new SpeedControllerWrapper(elevatorPWM);
+
+
+		elevatorEncoder = new Encoder(314, 159);
 		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
 		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
+		elevator = new Elevator();
+
 	}
 
 	// public static void updateConstants(){
