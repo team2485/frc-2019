@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
+import  org.usfirst.frc.team2485.robot.subsystems.CargoIntake;
 import  org.usfirst.frc.team2485.robot.subsystems.HatchPanelArm;
 import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
@@ -156,17 +157,16 @@ public class RobotMap {
 	//Subsystems
 	public static DriveTrain driveTrain;
 	public static Intake intake;
-	public static CargoIntake cargoIntake;
+	
 	public static HatchIntake hatchIntake;
 	public static HatchPanelArm hatchPanelArm;
 
-	public static TalonSRX cargoIntakeTalon;
-	public static TalonSRXWrapper cargoIntakeTalonWrapper; 
+
+
+	public static UsbCamera camera;
 
 	//Elevator
-
 	
-	public static UsbCamera camera;
 	public static TalonSRX elevatorTalon1;
 	public static TalonSRXWrapper elevatorTalonWrapperPWM1;
 	public static TalonSRXWrapper elevatorTalonWrapperCurrent1;
@@ -184,6 +184,17 @@ public class RobotMap {
 
 	public static Elevator elevator;
 
+	//CargoIntake
+
+	public static TalonSRX cargoIntakeTalon;
+	public static TalonSRXWrapper cargoIntakeTalonWrapperPWM;
+	public static TalonSRXWrapper cargoIntakeTalonWrapperCurrent;
+
+	public static Encoder armEncoder;
+	public static EncoderWrapperRateAndDistance armEncoderWrapperRate;
+	public static EncoderWrapperRateAndDistance armEncoderWrapperDistance;
+	
+	public static CargoIntake cargoIntake;
 
 
 	// For example to map the left and right motors, you could define the
@@ -232,13 +243,6 @@ public class RobotMap {
 		driveRightTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.Current,driveRightTalon4);
 
 		
-
-
-
-
-
-
-		
 		driveLeftTalonWrappersCurrent[0]= driveLeftTalonWrapperCurrent1;
 		driveLeftTalonWrappersCurrent[1]= driveLeftTalonWrapperCurrent2;
 		driveLeftTalonWrappersCurrent[2]= driveLeftTalonWrapperCurrent3;
@@ -261,10 +265,6 @@ public class RobotMap {
 		driveRightTalonWrappersPWM[3] = driveRightTalonWrapperPWM4;
 
 
-
-	
-
-		
 		driveLeftCurrent = new SpeedControllerWrapper(driveLeftTalonWrappersCurrent);
 		driveRightCurrent = new SpeedControllerWrapper(driveRightTalonWrappersCurrent);	
 		driveLeftPWM = new SpeedControllerWrapper(driveLeftTalonWrappersPWM);
@@ -373,14 +373,26 @@ public class RobotMap {
 		elevatorWrapperPercentOutput = new SpeedControllerWrapper(elevatorPWM);
 
 
-		elevatorEncoder = new Encoder(314, 159);
+		elevatorEncoder = new Encoder(314, 159); //change this
 		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
 		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
 		elevator = new Elevator();
 
+
+		//cargo intake
+		
+		cargoIntakeTalon = new TalonSRX(11);//change this
+		cargoIntakeTalonWrapperPWM = new TalonSRXWrapper(cargoIntakeTalon, ControlMode.PercentOutput);
+		cargoIntakeTalonWrapperCurrent = new TalonSRXWrapper(cargoIntakeTalon, ControlMode.Current);
+
+		armEncoder = new Encoder(271, 812); //CHANGE THIS
+		armEncoderWrapperRate = new EncoderWrapperRateAndDistance(armEncoder, PIDSourceType.kRate);
+		armEncoderWrapperDistance = new EncoderWrapperRateAndDistance(armEncoder, PIDSourceType.kDisplacement);
+	
+		cargoIntake = new CargoIntake(); // VS Code Sucks - Mark :) (:
 	}
 
-	// public static void updateConstants(){
+	// public static void updateConstants(){s
 	// 	RobotMap.driveTrain.updateConstants();
 	// }
 }

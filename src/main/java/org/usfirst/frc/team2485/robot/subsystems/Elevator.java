@@ -22,8 +22,8 @@ public class Elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private static final double MAX_VEL = 10;
-  private static final double MAX_CURR = 30;
+  private static final double MAX_VEL = 1000;
+  private static final double MAX_CURR = 1000;
 
   public TransferNode distanceSetpointTN; // what do we name this?
   public TransferNode distanceOutputTN;
@@ -46,8 +46,8 @@ public class Elevator extends Subsystem {
 
   public Elevator() {
 
-    distanceSetpointTN = new TransferNode(0);
-    distanceOutputTN = new TransferNode(0);
+    distanceSetpointTN = new TransferNode(0); //change?
+    distanceOutputTN = new TransferNode(0); //change?
 
     elevatorDistPID = new WarlordsPIDController();
     elevatorVelocityPID = new WarlordsPIDController();   
