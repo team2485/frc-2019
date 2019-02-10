@@ -162,6 +162,40 @@ public class DriveTrain extends Subsystem {
 		leftMotorSetter.setOutputs(RobotMap.driveLeftPWM);
 		rightMotorSetter.setOutputs(RobotMap.driveRightPWM);
 
+		// RobotMap.driveLeftTalon1.enableCurrentLimit(true);
+		// RobotMap.driveLeftTalon2.enableCurrentLimit(true);
+		// RobotMap.driveLeftTalon3.enableCurrentLimit(true);
+		// RobotMap.driveLeftTalon4.enableCurrentLimit(true);
+
+		// RobotMap.driveRightTalon1.enableCurrentLimit(true);
+		// RobotMap.driveRightTalon2.enableCurrentLimit(true);
+		// RobotMap.driveRightTalon3.enableCurrentLimit(true);
+		// RobotMap.driveRightTalon4.enableCurrentLimit(true);
+
+
+		// RobotMap.driveLeftTalon1.configContinuousCurrentLimit(10);
+		// RobotMap.driveLeftTalon2.configContinuousCurrentLimit(10);		
+		// RobotMap.driveLeftTalon3.configContinuousCurrentLimit(10);
+		// RobotMap.driveLeftTalon4.configContinuousCurrentLimit(10);
+
+		// RobotMap.driveRightTalon1.configContinuousCurrentLimit(10);
+		// RobotMap.driveRightTalon2.configContinuousCurrentLimit(10);		
+		// RobotMap.driveRightTalon3.configContinuousCurrentLimit(10);
+		// RobotMap.driveRightTalon4.configContinuousCurrentLimit(10);
+
+
+		// RobotMap.driveLeftTalon1.configPeakCurrentLimit(10);
+		// RobotMap.driveLeftTalon2.configPeakCurrentLimit(10);
+		// RobotMap.driveLeftTalon3.configPeakCurrentLimit(10);
+		// RobotMap.driveLeftTalon4.configPeakCurrentLimit(10);
+
+		// RobotMap.driveRightTalon1.configPeakCurrentLimit(10);
+		// RobotMap.driveRightTalon2.configPeakCurrentLimit(10);
+		// RobotMap.driveRightTalon3.configPeakCurrentLimit(10);
+		// RobotMap.driveRightTalon4.configPeakCurrentLimit(10);
+
+
+
 		
 	}
 
@@ -296,35 +330,37 @@ public class DriveTrain extends Subsystem {
 		dx -= fovWidth/2;
 
 		//METHOD 1: 
-		// // System.out.println("dx: " + dx);
-		// // System.out.println("Sin phi + 90: " + FastMath.sin(phi+Math.PI/2));
-		// double Px = ((phiInDegrees + 90 > 2 || phiInDegrees + 90 < -2) ? dx/FastMath.sin(phi + Math.PI/2) : 0) + ((phiInDegrees > 2 || phiInDegrees < -2) ? (lidarDist/FastMath.sin(phi)) : 0);
-		// // System.out.println("Sin phi + Math.PI/2: " + FastMath.sin(phi+Math.PI/2));
-		// // System.out.println("Sin phi: " + FastMath.sin(phi));
-		// System.out.println("FastMath.cos(phi): " + FastMath.cos(phi));
-		// System.out.println("FastMath.tan(thetaR2S): " + FastMath.tan(thetaRobotToSurface));
-		// double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
-		// double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
+		// System.out.println("dx: " + dx);
+		// System.out.println("Sin phi + 90: " + FastMath.sin(phi+Math.PI/2));
+		double Px = ((phiInDegrees + 90 > 2 || phiInDegrees + 90 < -2) ? dx/FastMath.sin(phi + Math.PI/2) : 0) + ((phiInDegrees > 2 || phiInDegrees < -2) ? (lidarDist/FastMath.sin(phi)) : 0);
+		// System.out.println("Sin phi + Math.PI/2: " + FastMath.sin(phi+Math.PI/2));
+		// System.out.println("Sin phi: " + FastMath.sin(phi));
+		System.out.println("FastMath.cos(phi): " + FastMath.cos(phi));
+		System.out.println("FastMath.tan(thetaR2S): " + FastMath.tan(thetaRobotToSurface));
+		double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
+		double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
 
-		// System.out.println("cy: " + cy);
-		// System.out.println("Py: " + Py);
+		System.out.println("cy: " + cy);
+		System.out.println("Py: " + Py);
 
 
-		//METHOD 2: 2/3/19
-		double piMinusPhiDegrees = Math.toDegrees(Math.PI-phi) % 360;
-		double weirdSurfaceThingDegrees = Math.toDegrees((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) % 360;
+		// //METHOD 2: 2/3/19 -il, sk
+		// double piMinusPhiDegrees = Math.toDegrees(Math.PI-phi) % 360;
+		// double weirdSurfaceThingDegrees = Math.toDegrees((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) % 360;
 
-		double d = dx * FastMath.cos(thetaRobotToSurface);
-		double Ly = lidar * ((piMinusPhiDegrees > 92 || piMinusPhiDegrees < 88) ? FastMath.cos(Math.PI - phi) : 0);
-		double Sy = d * ((weirdSurfaceThingDegrees > 92 || weirdSurfaceThingDegrees < 88) ? FastMath.cos((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) : 0);
-		double Py = Ly + Sy;
+		// double d = dx / FastMath.cos(thetaRobotToSurface);
+		// System.out.println(d);
+		// double Ly = lidar * ((piMinusPhiDegrees > 92 || piMinusPhiDegrees < 88) ? FastMath.cos(Math.PI - phi) : 0);
+		// double Sy = d * ((weirdSurfaceThingDegrees > 92 || weirdSurfaceThingDegrees < 88) ? FastMath.cos((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) : 0);
+		// double Py = Ly + Sy;
 
-		System.out.println("Boolean 1: " + (piMinusPhiDegrees > 2 || piMinusPhiDegrees < -2));
-		System.out.println("Boolean 2: " + (weirdSurfaceThingDegrees > 2 || weirdSurfaceThingDegrees < -2));
+		// System.out.println("Weird Surface Thing Degrees: " + weirdSurfaceThingDegrees);
+		// System.out.println("Boolean 1: " + (piMinusPhiDegrees > 2 || piMinusPhiDegrees < -2));
+		// System.out.println("Boolean 2: " + (weirdSurfaceThingDegrees > 2 || weirdSurfaceThingDegrees < -2));
 
-		double Lx = lidar * ((piMinusPhiDegrees > 2 || piMinusPhiDegrees < -2) ? FastMath.sin(Math.PI - phi) : 0);
-		double Sx = d * ((weirdSurfaceThingDegrees > 2 || weirdSurfaceThingDegrees < -2) ? FastMath.sin((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) : 0);
-		double Px = Lx + Sx;
+		// double Lx = lidar * ((piMinusPhiDegrees > 2 || piMinusPhiDegrees < -2) ? FastMath.sin(Math.PI - phi) : 0);
+		// double Sx = d * ((weirdSurfaceThingDegrees > 2 || weirdSurfaceThingDegrees < -2) ? FastMath.sin((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) : 0);
+		// double Px = Lx + Sx;
 
 
 		return new Pair(Px, Math.abs(Py));

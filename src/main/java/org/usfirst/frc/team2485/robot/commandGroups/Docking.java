@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class Docking extends CommandGroup {
     public Docking () {
-        // addSequential(new SetAngle(Math.PI/4, Math.toRadians(3)));
+        // addSequential(new SetAngle(Math.PI/3, Math.toRadians(3)));
 
         // if(RobotMap.driveTrain.meterRule(100) != null) {
         //     AutoPath.Pair[] meterRuleControlPoints = RobotMap.driveTrain.meterRule(100);
@@ -21,8 +21,8 @@ public class Docking extends CommandGroup {
         AutoPath.Pair endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 90, 110);
         AutoPath.Pair[] controlPoints = RobotMap.driveTrain.generateControlPoints(100, 90, 110);
         System.out.println("Docking");
-        //System.out.println("CP 1: " + controlPoints[0].getX() + ", " + controlPoints[0].getY());
-		//System.out.println("CP 2: " + controlPoints[1].getX() + ", " + controlPoints[1].getY());
+        System.out.println("CP 1: " + controlPoints[0].getX() + ", " + controlPoints[0].getY());
+		System.out.println("CP 2: " + controlPoints[1].getX() + ", " + controlPoints[1].getY());
         AutoPath path;
         if (controlPoints.length == 2) {
             path = new AutoPath(AutoPath.getPointsForBezier(1000, new AutoPath.Pair(0, 0), controlPoints[0], controlPoints[1], endpoint));
@@ -30,6 +30,7 @@ public class Docking extends CommandGroup {
             path = new AutoPath(AutoPath.getPointsForBezier(1000, new AutoPath.Pair(0, 0), controlPoints[0], endpoint));
 
         }
+        System.out.println("Len CP: " + controlPoints.length);
         addSequential(new DriveTo(path, 50, false, 30000, false, false));
     }
 }

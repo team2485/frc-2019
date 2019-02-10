@@ -57,6 +57,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class RobotMap {
 	public static final int WHEEL_RADIUS = 3;
+	public static final int DRUM_RADIUS = 1;
 
 	
 	private static final int IMG_WIDTH = 128;
@@ -356,26 +357,30 @@ public class RobotMap {
 		intake = new Intake();
 
 		
-		elevatorTalon1 = new TalonSRX(10);
+		elevatorTalon1 = new TalonSRX(3);
 		elevatorTalonWrapperPWM1 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon1);						
 		elevatorTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon1);
 
-		elevatorTalon2 = new TalonSRX(9);
+		elevatorTalon2 = new TalonSRX(2);
 		elevatorTalonWrapperPWM2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);	
-		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);
+		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon2);
 
 
 		TalonSRXWrapper[] elevatorCurrent = {elevatorTalonWrapperCurrent1, elevatorTalonWrapperCurrent2};
 		TalonSRXWrapper[] elevatorPWM = {elevatorTalonWrapperPWM1, elevatorTalonWrapperPWM2};
-
+ 
 
 		elevatorWrapperCurrent = new SpeedControllerWrapper(elevatorCurrent);
 		elevatorWrapperPercentOutput = new SpeedControllerWrapper(elevatorPWM);
 
 
-		elevatorEncoder = new Encoder(314, 159);
+		elevatorEncoder = new Encoder(4, 5);
 		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
 		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
+		elevatorEncoder.setDistancePerPulse(DRUM_RADIUS*2*Math.PI/250);
+		elevatorEncoderWrapperRate.setGearRatio(2);
+		elevatorEncoderWrapperDistance.setGearRatio(2);
+		elevatorEncoder.setSamplesToAverage(10);
 		elevator = new Elevator();
 
 	}

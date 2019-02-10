@@ -23,6 +23,7 @@ public class OI {
 	public static JoystickButton intakeButton;
 	public static JoystickButton ejectButton;
 	public static JoystickButton stopIntakeButton;
+	public static Joystick suraj;
 
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
@@ -54,6 +55,7 @@ public class OI {
 
 	public static void init(){
 		xbox = new Joystick(0);
+		suraj = new Joystick(1);
 		buttonX = new JoystickButton(xbox,3);
 		//These button choices are random, I don't know where to assign them-Adam T-W
 		intakeButton = new JoystickButton(xbox, 1);
@@ -63,5 +65,7 @@ public class OI {
 		intakeButton.whenPressed(new HardIntake());
 		ejectButton.whenPressed(new HardEject());
 		stopIntakeButton.whenPressed(new StopIntake());
+
+
 	}
 }

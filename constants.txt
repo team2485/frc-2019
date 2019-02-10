@@ -1,0 +1,80 @@
+accelerationMax = 0
+accelerationMaxElbow = 0
+
+kRamp_DriveVelocity = 0
+
+kP_DriveVelocity = 0.03
+kI_DriveVelocity = 0.001
+kD_DriveVelocity = 0
+kF_DriveVelocity = 0.016
+
+kPMax_Distance = 2
+
+kP_DriveAngle = 0.5
+kI_DriveAngle = 0.001
+kD_DriveAngle = 5
+kF_DriveAngle = 0
+kDrift = 0
+
+kP_AngVelTeleop = 0.05
+kI_AngVelTeleop = 0.01
+kD_AngVelTeleop = 0
+kF_AngVelTeleop = 0.227
+
+filterCoefficient = 0
+
+
+kUpRamp_Velocity = .2
+kDownRamp_Velocity = .2
+kUpRamp_AngVelocity = 10000
+kDownRamp_AngVelocity = 10000
+
+
+
+kP_elevatorDistance = 0.5
+kI_elevatorDistance = 0
+kD_elevatorDistance = 0
+
+
+kP_elevatorVelocity = 0.04
+kI_elevatorVelocity = 0.001
+kD_elevatorVelocity = 0
+kF_elevatorVelocity = 0
+kV_elevatorVelocity = 0.9
+
+
+
+
+
+
+kP_Drift = 0
+kPath = 0
+
+IMax = 0
+
+voltageMax = 0
+
+currentStallWrist = 0
+currentStallElbow = 0
+
+intakeIMax = 0
+kP_DriveStraight = 0
+kI_DriveStraight = 0
+
+kUpRamp_AngCurrent = 0
+
+kThrottleLimit_DeceleratingForward = 0
+kThrottleLimit_DeceleratingBackward = 0
+
+kRamp_AcceleratingForwardArmDown = 0
+
+kRamp_AcceleratingBackwardArmDown = 0
+
+kRamp_DeceleratingForwardArmDown = 0
+
+kThrottleLimit_DeceleratingForwardArmDown = 0
+
+kRamp_DeceleratingBackwardArmDown = 0
+
+kThrottleLimit_DeceleratingBackwardArmDown = 0
+

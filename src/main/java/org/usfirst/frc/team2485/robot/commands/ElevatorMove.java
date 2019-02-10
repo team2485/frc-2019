@@ -7,14 +7,17 @@
 
 package org.usfirst.frc.team2485.robot.commands;
 
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import  org.usfirst.frc.team2485.robot.subsystems.Intake;
+import org.usfirst.frc.team2485.util.ThresholdHandler;
+import org.usfirst.frc.team2485.robot.OI;
 import  org.usfirst.frc.team2485.robot.RobotMap;
 
 /**
  * Add your docs here.
  */
-public class ElevatorMove extends InstantCommand {
+public class ElevatorMove extends Command {
   /**
    * Add your docs here.
    */
@@ -23,12 +26,24 @@ public class ElevatorMove extends InstantCommand {
     requires(RobotMap.elevator);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    setInterruptible(true);
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
-    RobotMap.elevator.movePWM();
+    
+  }
+
+  public void execute() {
+    double power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(2)-OI.suraj.getRawAxis(3), .1, 0, 0.5);
+    System.out.println("Power: " + power);
+    RobotMap.elevator.setPWM(power);
+    
+  }
+
+  public boolean isFinished() {
+    return false;
   }
 
 }

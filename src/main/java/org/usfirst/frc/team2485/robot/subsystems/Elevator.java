@@ -8,6 +8,8 @@
 package org.usfirst.frc.team2485.robot.subsystems;
 
 import org.usfirst.frc.team2485.robot.RobotMap;
+import org.usfirst.frc.team2485.robot.commands.ElevatorMove;
+import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.MotorSetter;
 import org.usfirst.frc.team2485.util.PIDSourceWrapper;
 import org.usfirst.frc.team2485.util.TransferNode;
@@ -22,8 +24,10 @@ public class Elevator extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private static final double MAX_VEL = 10;
+  private static final double MAX_VEL = 40;
   private static final double MAX_CURR = 30;
+
+  public static final double VELOCITY_TOLERANCE = 0.5;
 
   public TransferNode distanceSetpointTN; // what do we name this?
   public TransferNode distanceOutputTN;
@@ -34,8 +38,11 @@ public class Elevator extends Subsystem {
   public PIDSourceWrapper distancePIDSource;
   public PIDSourceWrapper velocityPIDSource;
 
-  public MotorSetter leftMotorSetter;
-  public MotorSetter rightMotorSetter;
+
+
+
+
+
 
   double elevatorLH; // lower hatch
   double elevatorMH; // middle hatch
@@ -53,10 +60,8 @@ public class Elevator extends Subsystem {
     elevatorVelocityPID = new WarlordsPIDController();   
 
     distancePIDSource = new PIDSourceWrapper();
-    velocityPIDSource = new PIDSourceWrapper();        
+    velocityPIDSource = new PIDSourceWrapper();   
 
-    leftMotorSetter = new MotorSetter();
-    rightMotorSetter = new MotorSetter();
 
     updateConstants();
 
@@ -73,6 +78,15 @@ public class Elevator extends Subsystem {
       return (RobotMap.elevatorEncoderWrapperRate.pidGet());
     });
 
+    // kF_elevatorVelocityPIDSource.setPidSource(() -> {
+    //     if(Math.abs(velocityPIDSource.pidGet()) < VELOCITY_TOLERANCE && !elevatorVelocityPID.isOnTarget()) {
+    //         return ConstantsIO.kF_elevatorVelocityStatic;
+    //     } else if(elevatorVelocityPID.getAvgError() <= .5) {
+    //         return 0;
+    //     }
+    //     return ConstantsIO.kF_elevatorVelocityDynamic;
+    // });
+
     elevatorVelocityPID.setSources(velocityPIDSource);
     elevatorVelocityPID.setSetpointSource(distanceOutputTN);
     elevatorVelocityPID.setOutputs(RobotMap.elevatorWrapperCurrent);
@@ -82,21 +96,59 @@ public class Elevator extends Subsystem {
 
   }
 
-  public void updateConstants() {
+  public void enablePID(boolean PID) {
+    if (PID) {
+      elevatorVelocityPID.enable();
+      elevatorDistPID.enable();
+    } else {
+      elevatorVelocityPID.disable();
+      elevatorDistPID.disable();
+ 
+    }
+  }
+
+
+  public void setElevatorVelocity (double speed) {
+    elevatorDistPID.disable();
+    // distanceOutputTN.setOutput(speed);
+    elevatorVelocityPID.enable();
+
+    elevatorVelocityPID.setSetpointSource(null);
+    elevatorVelocityPID.setSetpoint(speed);
+
+    elevatorVelocityPID.setPercentTolerance(0.05);
+
 
 
 
   }
+
+  public void setElevatorPosition(double position) {
+    elevatorDistPID.enable();
+    elevatorVelocityPID.enable();
+    elevatorVelocityPID.setPercentTolerance(0.02);
+    System.out.println("Dist PID enabled: " + elevatorDistPID.isEnabled());
+    distanceSetpointTN.setOutput(position);
+  }
+
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+    // setDefaultCommand(new ElevatorMove());
   }
 
-  public static void movePWM() {
-    RobotMap.elevatorTalonWrapperPWM1.set(0.5);
-    RobotMap.elevatorTalonWrapperPWM2.set(0.5);
+  public void setPWM(double pwm) {
+    enablePID(false);
+    RobotMap.elevatorWrapperPercentOutput.set(pwm);
+  }
+
+  public void updateConstants() {
+    elevatorDistPID.setPID(ConstantsIO.kP_elevatorDistance, ConstantsIO.kI_elevatorDistance, ConstantsIO.kD_elevatorDistance);
+    elevatorVelocityPID.setPID(ConstantsIO.kP_elevatorVelocity, ConstantsIO.kI_elevatorVelocity, ConstantsIO.kD_elevatorVelocity, ConstantsIO.kF_elevatorVelocity);
+    elevatorVelocityPID.setFrictionTerm(ConstantsIO.kV_elevatorVelocity, MAX_VEL);
+
   }
 
 }

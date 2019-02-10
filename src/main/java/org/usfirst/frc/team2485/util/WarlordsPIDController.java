@@ -13,7 +13,13 @@ import edu.wpi.first.wpilibj.PIDSource;
  */
 public class WarlordsPIDController extends WarlordsControlSystem {
 	
-	private double kP, kI, kD, kF, kC;
+	private double kP, kI, kD, kF, kC, kV;
+
+	private static double kVTermGlobal;
+
+	private double vMax;
+
+	private boolean frictionTerm = false;
 	
 	private double integralTerm, lastPropTerm;
 
@@ -46,6 +52,7 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 	 * @param kI integral term, multiplied by the total (sum) error
 	 * @param kD derivative term, multiplied by the change of the error
 	 * @param kF feedforward term, multiplied by the setpoint, (usually) only used in rate control
+	 * @param kV friction term, multiplied by the maximum velocity - current velocity, only used in cases of high static friction and low dynamic
 	 * @param kC coupling constant
 	 * @param source input device / sensor used to monitor progress towards setpoint
 	 * @param outputs output device(s) / motor(s)  used to approach setpoint
@@ -88,6 +95,12 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 		kISource = kI;
 		kDSource = kD;
 		kFSource = kF;
+	}
+
+	public void setFrictionTerm(double kV, double vMax) {
+		this.kV = kV;
+		this.vMax = vMax;
+		frictionTerm = true;
 	}
 	
 	/**
@@ -290,6 +303,7 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 		}
 		double derivativeTerm;
 		double ffTerm;
+		double kVTerm;
 		if (velSource == null) {
 			derivativeTerm = kD * (propTerm - lastPropTerm);
 			ffTerm = kF*setpoint;
@@ -300,9 +314,31 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 			derivativeTerm = kP * kD * (velSetpointSource.pidGet() - velSource.pidGet());
 			ffTerm = kF * velSetpointSource.pidGet();
 		}
+
+
+		if(frictionTerm && setpoint >= 0.25){
+			kVTerm = kV * ((vMax - sensorVal) / vMax);
+			kVTermGlobal = kVTerm;
+			System.out.println("Sensor Value: " + sensorVal);
+			System.out.println("vMax: " + vMax);
+		} else {
+			kVTerm = 0;
+		}
+
 		
-		double outputPreSat = propTerm + integralTerm + derivativeTerm + ffTerm;
-				
+		// if(frictionTerm) {
+		// 	kVTerm = kV * (vMax/Math.abs(sensorVal) - 1);
+		// 	kVTermGlobal = kVTerm;
+		// 	System.out.println("Sensor Value: " + sensorVal);
+		// 	System.out.println("vMax: " + vMax);
+
+
+		// } else {
+		// 	kVTerm = 0;
+		// }
+
+		double outputPreSat = propTerm + integralTerm + derivativeTerm + ffTerm + kVTerm;
+
 		if (outputPreSat < minOutput) {
 			result = minOutput;
 			saturateLowFlag = true;
@@ -331,6 +367,10 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 		for (PIDOutput out : super.outputs) {
 			out.pidWrite(result);
 		}
+	}
+
+	public static double getkVTermGlobal() {
+		return kVTermGlobal;
 	}
 	
 	

@@ -48,14 +48,6 @@ public class ConstantsIO {
 
 	public static double filterCoefficient;
 
-	public static double kP_ElbowAng;
-	public static double kI_ElbowAng;
-	public static double kD_ElbowAng;
-
-	public static double kP_ElbowAngVel;
-	public static double kI_ElbowAngVel;
-	public static double kF_ElbowAngVel;
-
 	public static double kP_WristAng;
 	public static double kI_WristAng;
 	public static double kD_WristAng;
@@ -63,30 +55,6 @@ public class ConstantsIO {
 	public static double kP_WristAngVel;
 	public static double kI_WristAngVel;
 	public static double kF_WristAngVel;
-
-	public static double kUpSpeed_WristAngVel;
-	public static double kDownSpeed_WristAngVel;
-	public static double kUpSpeed_ElbowAngVel;
-	public static double kDownSpeed_ElbowAngVel;
-
-	public static double kUpRamp_Velocity;
-	public static double kDownRamp_Velocity;
-	public static double kUpRamp_AngVelocity;
-	public static double kDownRamp_AngVelocity;
-
-	public static int kSoftLimitReverse_Wrist;
-	public static int kSoftLimitForward_Wrist;
-	public static int kSoftLimitReverse_Elbow;
-	public static int kSoftLimitForward_Elbow;
-
-	public static double levitateWristCurrent;
-	public static double levitateElbowCurrent;
-
-	public static double kUpRamp_TeleopDown;
-	public static double kDownRamp_TeleopDown;
-
-	public static double kUpRamp_TeleopUp;
-	public static double kDownRamp_TeleopUp;
 
 	public static double kP_Drift;
 	public static double kPath;
@@ -104,21 +72,25 @@ public class ConstantsIO {
 	public static double kI_DriveStraight;
 
 	public static double kUpRamp_AngCurrent;
-
-	public static double kThrottleLimit_DeceleratingForward;
-	public static double kThrottleLimit_DeceleratingBackward;
-
-	public static double kRamp_AcceleratingForwardArmDown;
-
-	public static double kRamp_AcceleratingBackwardArmDown;
-
-	public static double kRamp_DeceleratingForwardArmDown;
-
-	public static double kThrottleLimit_DeceleratingForwardArmDown;
+	public static double kUpRamp_Velocity;
+	public static double kDownRamp_Velocity;
 
 	public static double kRamp_DeceleratingBackwardArmDown;
 
 	public static double kThrottleLimit_DeceleratingBackwardArmDown;
+
+	public static double kP_elevatorVelocity;
+	public static double kI_elevatorVelocity;
+	public static double kD_elevatorVelocity;
+	public static double kF_elevatorVelocity;
+	public static double kV_elevatorVelocity;
+
+	public static double kP_elevatorDistance;
+	public static double kI_elevatorDistance;
+	public static double kD_elevatorDistance;
+
+
+
 
 	public static void init() {
 
@@ -176,6 +148,20 @@ public class ConstantsIO {
 
 
 		kPath = Double.parseDouble(data.get("kPath"));
+
+		kP_elevatorDistance = Double.parseDouble(data.get("kP_elevatorDistance"));
+		kI_elevatorDistance = Double.parseDouble(data.get("kI_elevatorDistance"));
+		kD_elevatorDistance = Double.parseDouble(data.get("kD_elevatorDistance"));
+
+		kP_elevatorVelocity = Double.parseDouble(data.get("kP_elevatorVelocity"));
+		kI_elevatorVelocity = Double.parseDouble(data.get("kI_elevatorVelocity"));
+		kD_elevatorVelocity = Double.parseDouble(data.get("kD_elevatorVelocity"));
+		kF_elevatorVelocity = Double.parseDouble(data.get("kF_elevatorVelocity"));
+		kV_elevatorVelocity = Double.parseDouble(data.get("kV_elevatorVelocity"));
+
+
+
+		
 
 		// kUpSpeed_WristAngVel = Double.parseDouble(data.get("kUpSpeed_WristAngVel"));
 		// kDownSpeed_WristAngVel =
