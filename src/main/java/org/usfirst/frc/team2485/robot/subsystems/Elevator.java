@@ -53,8 +53,8 @@ public class Elevator extends Subsystem {
 
   public Elevator() {
 
-    distanceSetpointTN = new TransferNode(0);
-    distanceOutputTN = new TransferNode(0);
+    distanceSetpointTN = new TransferNode(0); //change?
+    distanceOutputTN = new TransferNode(0); //change?
 
     elevatorDistPID = new WarlordsPIDController();
     elevatorVelocityPID = new WarlordsPIDController();   
