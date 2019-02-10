@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team2485.robot.Robot;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
@@ -17,6 +18,8 @@ import org.usfirst.frc.team2485.util.RampRate;
 import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.PIDSourceWrapper;
 import org.usfirst.frc.team2485.util.MotorSetter;
+
+import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -65,6 +68,8 @@ public class DriveTrain extends Subsystem {
 
 	public MotorSetter leftMotorSetter;
 	public MotorSetter rightMotorSetter;
+
+	public double distBetweenCenterTargets;
 
 
 
@@ -195,7 +200,7 @@ public class DriveTrain extends Subsystem {
 		// RobotMap.driveRightTalon4.configPeakCurrentLimit(10);
 
 
-
+		distBetweenCenterTargets = distInchesCenterVisionTarget();
 		
 	}
 
@@ -519,6 +524,38 @@ public class DriveTrain extends Subsystem {
 		return controlPoints;
 
 		
+	}
+
+	public double distInchesCenterVisionTarget() {
+		double theta = 14.5;
+		double height = FastMath.cos(theta) * 5.5;
+		height /= 2;
+		double xh = FastMath.tan(theta) * height;
+		xh += xh + 8;
+		return xh;
+	}
+
+	public double[] collectSamples() {
+		double thetaRobotToSurface = getThetaAlignmentLine() - RobotMap.gyroAngleWrapper.pidGet();
+		double dpx = distBetweenCenterTargets * FastMath.cos(thetaRobotToSurface);
+		dpx += 2;
+		ArrayList<Double> arr = Robot.samples;
+		double val1 = 0, val2 = 0;
+		val1 = arr.get(0);
+		for(int i = 1; i < 10; i++) {
+			double currVal = arr.get(i);
+			if(currVal - dpx > val1 && currVal + dpx < val1) {
+				val1 = (val1 + currVal)/2;
+			} else if (val2 == 0) {
+				val2 = currVal;
+			} else {
+				val2 = (val2 + currVal) / 2;
+			}
+		}
+
+		double[] samples = {val1, val2};
+
+
 	}
 
 	public static Pair[] meterRule(double lidar){

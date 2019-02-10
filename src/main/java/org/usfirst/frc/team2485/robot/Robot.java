@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team2485.robot;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.usfirst.frc.team2485.util.AutoPath.Pair;
 
@@ -30,12 +32,28 @@ import org.usfirst.frc.team2485.robot.commands.DriveTo;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
 import org.usfirst.frc.team2485.robot.commands.ElevatorMove;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
-import  org.usfirst.frc.team2485.util.ConstantsIO;
+import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
-import  org.usfirst.frc.team2485.util.Pipeline;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
-import  org.usfirst.frc.team2485.util.AutoPath;
+import org.usfirst.frc.team2485.util.AutoPath;
+import org.usfirst.frc.team2485.util.GripPipeline;
 
+
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
 
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -58,6 +76,8 @@ public class Robot extends TimedRobot {
 	
 	private VisionThread visionThread;
 	public static double centerX = 0.0;
+	public static ArrayList<Double> samples;
+	public static boolean doneCollecting = false;
 
 	public Pair[] controlPoints;
 	public Pair endpoint;
@@ -72,6 +92,8 @@ public class Robot extends TimedRobot {
 	
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+	public static boolean collectingSamples;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -99,20 +121,23 @@ public class Robot extends TimedRobot {
 		path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0), new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
 
 
-		// camera = CameraServer.getInstance().startAutomaticCapture();
-		// camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
-	    // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-	    		
-		//  visionThread = new VisionThread(camera, new Pipeline(), pipeline -> {
-		//         if (!pipeline.filterContoursOutput().isEmpty()) {
-		//             Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-		//             synchronized (imgLock) {
-		//                 centerX = r.x + (r.width / 2);
-		//                 System.out.println("Center X: " + centerX);
-		//             }
-		//         }
-		//     });
-		//     visionThread.start();
+		camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setVideoMode(PixelFormat.kYUYV, 320, 240, 30);
+	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+		
+		visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
+			if (!pipeline.filterContoursOutput().isEmpty()) {
+				Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+				synchronized (imgLock) {
+					centerX = r.x;
+					samples.add(centerX);
+					if (samples.size() > 10) {
+						samples.remove(0);
+					}
+				}
+			}
+		});
+		visionThread.start();
 	}
 
 	/**
@@ -204,7 +229,7 @@ public class Robot extends TimedRobot {
 		updateSmartDashboard();
 
 		// RobotMap.elevatorWrapperCurrent.set(1);
-
+		
 
 
 
@@ -250,7 +275,6 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		updateSmartDashboard();
-		
 		
 
 	}
@@ -357,7 +381,6 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Elevator Dist Enabled: ", RobotMap.elevator.elevatorDistPID.isEnabled());
 		SmartDashboard.putNumber("kV: ", ConstantsIO.kV_elevatorVelocity);
 
-		SmartDashboard.putNumber("kV Term: ", WarlordsPIDController.getkVTermGlobal());
 	}
 
 	

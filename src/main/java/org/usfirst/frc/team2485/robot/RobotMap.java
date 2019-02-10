@@ -350,9 +350,7 @@ public class RobotMap {
 		hatchPanelArmEncoderWrapperRate = new TalonSRXEncoderWrapper(hatchPanelArmTalon, PIDSourceType.kRate);
 		hatchPanelArmSC = new SpeedControllerWrapper(hatchPanelArmWrapper);
 
-		cargoIntakeTalon = new TalonSRX(8);
 
-		cargoIntake = new CargoIntake();
 		intake = new Intake();
 
 		
@@ -386,15 +384,15 @@ public class RobotMap {
 
 		//cargo intake
 		
-		cargoIntakeTalon = new TalonSRX(11);//change this
-		cargoIntakeTalonWrapperPWM = new TalonSRXWrapper(ControlMode.PercentOutput, cargoIntakeTalon);
-		cargoIntakeTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoIntakeTalon);
+		// cargoIntakeTalon = new TalonSRX(11);//change this
+		// cargoIntakeTalonWrapperPWM = new TalonSRXWrapper(ControlMode.PercentOutput, cargoIntakeTalon);
+		// cargoIntakeTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoIntakeTalon);
 
-		armEncoder = new Encoder(271, 812); //CHANGE THIS
-		armEncoderWrapperRate = new EncoderWrapperRateAndDistance(armEncoder, PIDSourceType.kRate);
-		armEncoderWrapperDistance = new EncoderWrapperRateAndDistance(armEncoder, PIDSourceType.kDisplacement);
+		// armEncoder = new Encoder(271, 812); //CHANGE THIS
+		// armEncoderWrapperRate = new EncoderWrapperRateAndDistance(armEncoder, PIDSourceType.kRate);
+		// armEncoderWrapperDistance = new EncoderWrapperRateAndDistance(armEncoder, PIDSourceType.kDisplacement);
 	
-		cargoIntake = new CargoIntake(); // VS Code Sucks - Mark :) (:
+		// cargoIntake = new CargoIntake(); 
 	}
 
 	// public static void updateConstants(){s

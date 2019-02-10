@@ -15,8 +15,6 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 	
 	private double kP, kI, kD, kF, kC, kV;
 
-	private static double kVTermGlobal;
-
 	private double vMax;
 
 	private boolean frictionTerm = false;
@@ -318,24 +316,9 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 
 		if(frictionTerm && setpoint >= 0.25){
 			kVTerm = kV * ((vMax - sensorVal) / vMax);
-			kVTermGlobal = kVTerm;
-			System.out.println("Sensor Value: " + sensorVal);
-			System.out.println("vMax: " + vMax);
 		} else {
 			kVTerm = 0;
 		}
-
-		
-		// if(frictionTerm) {
-		// 	kVTerm = kV * (vMax/Math.abs(sensorVal) - 1);
-		// 	kVTermGlobal = kVTerm;
-		// 	System.out.println("Sensor Value: " + sensorVal);
-		// 	System.out.println("vMax: " + vMax);
-
-
-		// } else {
-		// 	kVTerm = 0;
-		// }
 
 		double outputPreSat = propTerm + integralTerm + derivativeTerm + ffTerm + kVTerm;
 
@@ -368,12 +351,6 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 			out.pidWrite(result);
 		}
 	}
-
-	public static double getkVTermGlobal() {
-		return kVTermGlobal;
-	}
-	
-	
 	
 	@Override
 	public void pidWrite(double output) {

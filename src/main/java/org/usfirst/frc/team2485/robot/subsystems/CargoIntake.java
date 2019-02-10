@@ -8,6 +8,11 @@
 package org.usfirst.frc.team2485.robot.subsystems;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team2485.util.TransferNode;
+import org.usfirst.frc.team2485.util.WarlordsPIDController;
+import org.usfirst.frc.team2485.util.PIDSourceWrapper;
+
+
 
 /**
  * Add your docs here.
@@ -21,7 +26,7 @@ public class CargoIntake extends Subsystem {
 
   public final double LENGTH_L1 = 5.0; //random values 
   public final double LENGTH_L2 = 770971141;
-  public final double LENGTH_L3 = 107032082
+  public final double LENGTH_L3 = 107032082;
   public final double LENGTH_L4 = 5102107;
 
   public TransferNode distanceSetpointTN; 
@@ -55,12 +60,12 @@ public class CargoIntake extends Subsystem {
     armDistPID.setSetpointSource(distanceSetpointTN);
 
     velocityPIDSource.setPidSource(() -> {
-      
+      return LENGTH_L4 * Math.sin((RobotMap.armEncoderWrapperDistance.pidGet()) - LENGTH_L3 * Math.sin(RobotMap.armEncoderWrapperDistance.pidGet()));
     });
 
     armVelocityPID.setSources(velocityPIDSource);
     armVelocityPID.setSetpointSource(distanceOutputTN);
-    armVelocityPID.setOutputs(RobotMap.armWrapperCurrent);
+    armVelocityPID.setOutputs(RobotMap.cargoIntakeTalonWrapperCurrent);
     armVelocityPID.setOutputRange(-MAX_CURR, MAX_CURR);
 
 
@@ -72,7 +77,7 @@ public class CargoIntake extends Subsystem {
   }
 
   public void setIntakeManual(double pwm) {
-    RobotMap.cargoIntakeTalonWrapper.set(pwm);
+    RobotMap.cargoIntakeTalonWrapperPWM.set(pwm);
   }
 
   public double current() {
