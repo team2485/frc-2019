@@ -149,10 +149,15 @@ public class RobotMap {
 	public static I2C colorSensor; 
 
 	
-	public static Solenoid centerSolenoidIn; 
-	public static Solenoid centerSolenoidOut; 
-	public static Solenoid sideSolenoidIn;
-	public static Solenoid sideSolenoidOut;
+	public static Solenoid intakeCenterSolenoidIn; 
+	public static Solenoid intakeCenterSolenoidOut; 
+	public static Solenoid intakeSideSolenoidIn;
+	public static Solenoid intakeSideSolenoidOut;
+	public static Solenoid intakeSwivelSolenoidIn;
+	public static Solenoid intakeSwivelSolenoidOut;
+	public static Solenoid intakePushSolenoidIn;
+	public static Solenoid intakePushSolenoidOut;
+
 	public static Solenoid suctionSolenoid;
 	
 	//Subsystems

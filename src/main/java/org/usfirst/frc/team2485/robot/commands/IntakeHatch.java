@@ -25,6 +25,22 @@ public class IntakeHatch extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
+    
+    RobotMap.hatchIntake.pushOn();
+    RobotMap.hatchIntake.centerOut();
+
+    try {
+      Thread.sleep(250);
+    }
+    catch (Exception e) {
+      System.out.println("Failed");
+    }
+
+    RobotMap.hatchIntake.centerIn();
+
+
+
+
   }
 
 }
