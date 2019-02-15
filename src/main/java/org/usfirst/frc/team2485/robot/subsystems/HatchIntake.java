@@ -17,33 +17,55 @@ public class HatchIntake extends Subsystem {
     	
     }
 
-    public static void suctionOn() {
-        RobotMap.suctionSolenoid.set(true);
-    }
+    // public static void suctionOn() {
+    //     RobotMap.suctionSolenoid.set(true);
+    // }
 
-    public static void suctionOff() {
-        RobotMap.suctionSolenoid.set(false);
-    }
+    // public static void suctionOff() {
+    //     RobotMap.suctionSolenoid.set(false);
+    // }
 
     public static void centerOn() {
-        RobotMap.centerSolenoidIn.set(false);
-        RobotMap.centerSolenoidOut.set(true);                          
+        RobotMap.intakeCenterSolenoidIn.set(false);
+        RobotMap.intakeCenterSolenoidOut.set(true);                          
     }
 
     public static void centerOff() {
-        RobotMap.centerSolenoidIn.set(true);
-        RobotMap.centerSolenoidOut.set(false);        
+        RobotMap.intakeCenterSolenoidIn.set(true);
+        RobotMap.intakeCenterSolenoidOut.set(false);        
     }
 
     public static void sideOn() {
-        RobotMap.sideSolenoidIn.set(false);
-        RobotMap.sideSolenoidOut.set(true);                
+        RobotMap.intakeSideSolenoidIn.set(false);
+        RobotMap.intakeSideSolenoidOut.set(true);                
     }
 
     public static void sideOff() {
-        RobotMap.sideSolenoidIn.set(true);
-        RobotMap.sideSolenoidOut.set(false);
+        RobotMap.intakeSideSolenoidIn.set(true);
+        RobotMap.intakeSideSolenoidOut.set(false);
     }
+
+    public static void pushOn() {
+        RobotMap.intakePushSolenoidIn.set(true);
+        RobotMap.intakePushSolenoidOut.set(false);
+    }
+
+    public static void pushOff() {
+        RobotMap.intakePushSolenoidIn.set(true);
+        RobotMap.intakePushSolenoidOut.set(false);
+    }
+
+    public static void swivelOn() {
+        RobotMap.intakeSwivelSolenoidIn.set(true);
+        RobotMap.intakeSwivelSolenoidOut.set(false);
+    }
+
+    public static void swivelOff() {
+        RobotMap.intakeSwivelSolenoidIn.set(true);
+        RobotMap.intakeSwivelSolenoidOut.set(false);
+    }
+
+
         
     
 

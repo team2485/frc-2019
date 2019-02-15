@@ -31,6 +31,7 @@ import org.usfirst.frc.team2485.util.FastMath;
 public class DriveTrain extends Subsystem {
 	private static final double THETA_CAMERA = Math.PI/3;
 	private static final double CAMERA_PIXEL_WIDTH = 320;
+	private static final double cameraFieldOfView = Math.toRadians(65);
 
 	private static final double MAX_VEL = 10; //change
 	private static final double MAX_ANGVEL = 10; //change
@@ -323,10 +324,11 @@ public class DriveTrain extends Subsystem {
 		double phi = RobotMap.gyroAngleWrapper.pidGet();
 		double cx1 = target1; 
 		double cx2 = target2; 
-		double thetaCamera = THETA_CAMERA; //angle of end of field of view to plane parallel to robot
-		double thetaFieldOfView = Math.PI - thetaCamera*2; //total field of view angle
-		double fovWidth = FastMath.tan(thetaFieldOfView/2)*lidarDist*2; //width in inches of total field of view (assuming lidar dist as height)
+		// double thetaCamera = THETA_CAMERA; //angle of end of field of view to plane parallel to robot
+		// double thetaFieldOfView = Math.PI - thetaCamera*2; //total field of view angle
+		// double fovWidth = FastMath.tan(thetaFieldOfView/2)*lidarDist*2; //width in inches of total field of view (assuming lidar dist as height)
 		double thetaRobotToSurface = thetaSurface - phi; //angle between plane of surface and plane parallel to front of robot
+<<<<<<< HEAD
 		// System.out.println("Theta R2S: " + thetaRobotToSurface);
 		double cx = (cx1+cx2)/2; //distance to alignment line in pixels (x-axis)
 		double dx = cx*fovWidth/CAMERA_PIXEL_WIDTH; //distance to alignment line in inches 
@@ -345,6 +347,25 @@ public class DriveTrain extends Subsystem {
 		// System.out.println("FastMath.tan(thetaR2S): " + FastMath.tan(thetaRobotToSurface));
 		double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
 		double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
+=======
+		// // System.out.println("Theta R2S: " + thetaRobotToSurface);
+		// double cx = (cx1+cx2)/2; //distance to alignment line in pixels (x-axis)
+		// double dx = cx*fovWidth/CAMERA_PIXEL_WIDTH; //distance to alignment line in inches 
+		// // System.out.println("fovWidth/CAMERA_PIXEL_WIDTH: " + fovWidth/CAMERA_PIXEL_WIDTH);
+		// double phiInDegrees = Math.toDegrees(phi) % 360;
+		// dx -= fovWidth/2;
+
+		// //METHOD 1: 
+		// // System.out.println("dx: " + dx);
+		// // System.out.println("Sin phi + 90: " + FastMath.sin(phi+Math.PI/2));
+		// double Px = ((phiInDegrees + 90 > 2 || phiInDegrees + 90 < -2) ? dx/FastMath.sin(phi + Math.PI/2) : 0) + ((phiInDegrees > 2 || phiInDegrees < -2) ? (lidarDist/FastMath.sin(phi)) : 0);
+		// // System.out.println("Sin phi + Math.PI/2: " + FastMath.sin(phi+Math.PI/2));
+		// // System.out.println("Sin phi: " + FastMath.sin(phi));
+		// System.out.println("FastMath.cos(phi): " + FastMath.cos(phi));
+		// System.out.println("FastMath.tan(thetaR2S): " + FastMath.tan(thetaRobotToSurface));
+		// double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
+		// double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
+>>>>>>> 5a8acb5eac52bd72a312ae1d18ca44aae087670f
 
 		// System.out.println("cy: " + cy);
 		// System.out.println("Py: " + Py);
@@ -367,6 +388,24 @@ public class DriveTrain extends Subsystem {
 		// double Lx = lidar * ((piMinusPhiDegrees > 2 || piMinusPhiDegrees < -2) ? FastMath.sin(Math.PI - phi) : 0);
 		// double Sx = d * ((weirdSurfaceThingDegrees > 2 || weirdSurfaceThingDegrees < -2) ? FastMath.sin((Math.PI/2) - (getThetaAlignmentLine()-Math.PI/2)) : 0);
 		// double Px = Lx + Sx;
+
+
+		//Method 3: 2/12/19 -il, sk, ag
+		double focalLength = Robot.IMG_WIDTH / (2 * FastMath.tan(cameraFieldOfView/2));
+		double centerX = Robot.IMG_WIDTH/2 - 0.5;
+		double thetaCamera1 = FastMath.atan((target1 - centerX)/focalLength);
+		double thetaCamera2 = FastMath.atan((target2-centerX)/focalLength);
+		double thetaCamera = (thetaCamera1 + thetaCamera2) / 2;
+
+		double dxTemp = lidar * FastMath.tan(thetaCamera);
+		double thetaWTF = Math.PI - ((Math.PI/2) - thetaCamera) - thetaRobotToSurface;
+		double dh = dxTemp * FastMath.sin((Math.PI/2) - thetaCamera)/FastMath.sin(thetaWTF);
+		double dx = dh * FastMath.cos(thetaRobotToSurface);
+		double thetaCameraDegrees = Math.toDegrees(thetaCamera) ;
+		double hypot = thetaCameraDegrees > 2 || thetaCameraDegrees < -2 ?  dx / FastMath.sin(thetaCamera) : lidar - dh * FastMath.sin(thetaRobotToSurface);
+
+		double Px = hypot * FastMath.sin(phi - thetaCamera);
+		double Py = hypot * FastMath.cos(phi - thetaCamera);
 
 
 		return new Pair(Px, Math.abs(Py));
@@ -567,10 +606,14 @@ public class DriveTrain extends Subsystem {
 			return false;
 		}
 
+<<<<<<< HEAD
 		double lidarDist = RobotMap.lidar.getDistance();
 		if (lidarDist < 18 || lidarDist > 80) {
 			return false;
 		}
+=======
+		return samples;
+>>>>>>> 5a8acb5eac52bd72a312ae1d18ca44aae087670f
 
 		double[] samples = collectSamples();
 		double thetaRobotToSurface = getThetaAlignmentLine() - RobotMap.gyroAngleWrapper.pidGet();

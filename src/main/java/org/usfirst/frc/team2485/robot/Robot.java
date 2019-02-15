@@ -69,8 +69,8 @@ import org.opencv.imgproc.Imgproc;
 
 public class Robot extends TimedRobot {
 	
-	private static final int IMG_WIDTH = 128;
-	private static final int IMG_HEIGHT = 96;
+	public static final int IMG_WIDTH = 128;
+	public static final int IMG_HEIGHT = 96;
 	
 	private VisionThread visionThread;
 	public static double centerX = 0.0;
