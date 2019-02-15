@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.usfirst.frc.team2485.util.AutoPath.Pair;
 
-import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.cameraserver.CameraServer;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -25,7 +25,7 @@ import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.VisionThread;
+import edu.wpi.first.vision.VisionThread;
 
 import org.usfirst.frc.team2485.robot.commandGroups.Docking;
 import org.usfirst.frc.team2485.robot.commands.DriveTo;
@@ -44,7 +44,6 @@ import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -53,7 +52,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.VisionThread;
 
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -79,7 +77,7 @@ public class Robot extends TimedRobot {
 	public static ArrayList<Double> samples;
 	public static boolean doneCollecting = false;
 
-	public Pair[] controlPoints;
+	public static Pair[] controlPoints;
 	public Pair endpoint;
 
 
@@ -95,18 +93,22 @@ public class Robot extends TimedRobot {
 
 	public static boolean collectingSamples;
 
+	public static boolean contoursVisible;
+
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
+		
+		FastMath.init();
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		ConstantsIO.init();
 		RobotMap.init();
 		OI.init();
-		FastMath.init();
 		RobotMap.driveTrain.updateConstants();
 		RobotMap.elevator.updateConstants();
 
@@ -120,22 +122,26 @@ public class Robot extends TimedRobot {
 
 		path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0), new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
 
+		samples = new ArrayList<Double>();
 
 		camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setVideoMode(PixelFormat.kYUYV, 320, 240, 30);
+		camera.setVideoMode(PixelFormat.kYUYV, IMG_WIDTH, IMG_HEIGHT, 30);
 	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		
 		visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
 			if (!pipeline.filterContoursOutput().isEmpty()) {
+				System.out.println("Contours found: " + pipeline.filterContoursOutput().size());
+			
 				Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
 				synchronized (imgLock) {
+					contoursVisible = true;
 					centerX = r.x;
 					samples.add(centerX);
 					if (samples.size() > 10) {
 						samples.remove(0);
 					}
 				}
-			}
+			} 
 		});
 		visionThread.start();
 	}
@@ -180,6 +186,7 @@ public class Robot extends TimedRobot {
 		RobotMap.elevator.updateConstants();
 		RobotMap.elevatorEncoder.reset();
 		m_autonomousCommand = m_chooser.getSelected();
+
 		//RobotMap.driveTrain.enablePID(true);
 		// Pair[] controlPoints = { new Pair( 35.6, -255.0), new Pair(0, -110.0), new Pair(0.0, 0.0) };
 		
@@ -189,7 +196,7 @@ public class Robot extends TimedRobot {
 		//controlPoints = RobotMap.driveTrain.generateControlPoints(100, 70, 90);
 		//endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 70, 90);
 
-		// Scheduler.getInstance().add(new Docking());
+		Scheduler.getInstance().add(new Docking());
 		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -210,12 +217,12 @@ public class Robot extends TimedRobot {
 
 
 		
-		//RobotMap.driveTrain.distancePID.setSetpoint(RobotMap.lidar.getDistance() - 20);
+		// RobotMap.driveTrain.distancePID.setSetpoint(RobotMap.lidar.getDistance() - 10);
 
 		//RobotMap.elevator.setElevatorVelocity(15);
 
-		RobotMap.elevator.enablePID(true);
-		RobotMap.elevator.setElevatorPosition(30);
+		// RobotMap.elevator.enablePID(true);
+		// RobotMap.elevator.setElevatorPosition(30);
 
 
 	}
@@ -288,6 +295,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void updateSmartDashboard() {
+	
 		// SmartDashboard.putBoolean("Color Sensor", RobotMap.colorSensor.read(0x04,1,RobotMap.colorSensorOutput));
 		SmartDashboard.putNumber("Left Talon 1: ", RobotMap.driveLeftTalon1.getOutputCurrent());
 		SmartDashboard.putNumber("Right Talon 1: ", RobotMap.driveRightTalon1.getOutputCurrent());
@@ -356,11 +364,11 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putNumber("Surface angle", RobotMap.driveTrain.getThetaAlignmentLine());
 
-		SmartDashboard.putNumber("Elevator Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
-		SmartDashboard.putNumber("Elevator Current 2: ", RobotMap.elevatorTalon1.getOutputCurrent());
+		// SmartDashboard.putNumber("Elevator Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
+		// SmartDashboard.putNumber("Elevator Current 2: ", RobotMap.elevatorTalon1.getOutputCurrent());
 
-		SmartDashboard.putNumber("Elevator Current Setpoint: ", RobotMap.elevatorTalon1.getClosedLoopTarget());
-		SmartDashboard.putNumber("Elevator Current Error: ", RobotMap.elevatorTalon1.getClosedLoopError());
+		// SmartDashboard.putNumber("Elevator Current Setpoint: ", RobotMap.elevatorTalon1.getClosedLoopTarget());
+		// SmartDashboard.putNumber("Elevator Current Error: ", RobotMap.elevatorTalon1.getClosedLoopError());
 
 		SmartDashboard.putNumber("Elevator Velocity Setpoint: ", RobotMap.elevator.elevatorVelocityPID.getSetpoint());
 		SmartDashboard.putNumber("Elevator Velocity Error: ", RobotMap.elevator.elevatorVelocityPID.getAvgError());
@@ -381,6 +389,15 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Elevator Dist Enabled: ", RobotMap.elevator.elevatorDistPID.isEnabled());
 		SmartDashboard.putNumber("kV: ", ConstantsIO.kV_elevatorVelocity);
 
+
+		SmartDashboard.putBoolean("Vision Targets Visible", RobotMap.driveTrain.visionTargetsAreVisible());
+
+		SmartDashboard.putNumber("Center X: ", centerX);
+
+		SmartDashboard.putNumber("Right Ultrasonic Sensor Value: ", RobotMap.sonicSensorRight.getRangeInches());
+		SmartDashboard.putNumber("Left Ultrasonic Sensor Value: ", RobotMap.sonicSensorLeft.getRangeInches());
+
+		SmartDashboard.putNumber("Lidar Corrected Value", RobotMap.lidar.getDistanceCorrected());
 	}
 
 	

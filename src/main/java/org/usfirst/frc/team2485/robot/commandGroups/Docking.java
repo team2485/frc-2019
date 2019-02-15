@@ -18,8 +18,8 @@ public class Docking extends CommandGroup {
         //     addSequential(new DriveTo(meterPath, 50, true, 30000, false, false));
         // }
        // AutoPath.Pair endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 70, 100);
-        AutoPath.Pair endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 90, 110);
-        AutoPath.Pair[] controlPoints = RobotMap.driveTrain.generateControlPoints(100, 90, 110);
+        AutoPath.Pair endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(RobotMap.lidar.getDistanceCorrected(), 90, 110);
+        AutoPath.Pair[] controlPoints = RobotMap.driveTrain.generateControlPoints(RobotMap.lidar.getDistanceCorrected(), 90, 110);
         System.out.println("Docking");
         System.out.println("CP 1: " + controlPoints[0].getX() + ", " + controlPoints[0].getY());
 		System.out.println("CP 2: " + controlPoints[1].getX() + ", " + controlPoints[1].getY());

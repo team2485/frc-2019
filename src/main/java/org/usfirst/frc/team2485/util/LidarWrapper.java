@@ -25,6 +25,8 @@ public class LidarWrapper extends SendableBase implements PIDSource {
 	private static final int ROLLING_AVG_SAMPLE_SIZE = 25;
 	private static final int ROLLING_AVG_SAMPLE_RATE = 5;
 
+	private static final double CORRECTING_DIST = 40;
+
 	public LidarWrapper(Port port) {
 		m_i2c = new I2C(port, 0x62);
 		pidSourceType = PIDSourceType.kDisplacement;
@@ -81,6 +83,16 @@ public class LidarWrapper extends SendableBase implements PIDSource {
 				.toUnsignedInt(buffer[1])) / 2.54;
 		
 		return dist;
+	}
+
+	public double getDistanceCorrected() {
+		double dist = this.getDistance();
+		if (dist < 33) {
+			dist = -9.97 + (1.29 * dist) + (-0.000715 * dist * dist) + (-0.00000601* dist *dist *dist); 
+		}
+		return dist;
+		
+	
 	}
 
 	/**

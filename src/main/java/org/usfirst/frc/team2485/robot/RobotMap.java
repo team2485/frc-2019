@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import java.nio.ByteBuffer;
 
 import edu.wpi.first.wpilibj.Solenoid;
-
+import edu.wpi.first.wpilibj.Ultrasonic;
 
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 import  org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
@@ -37,11 +37,9 @@ import org.usfirst.frc.team2485.util.TalonSRXEncoderWrapper;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
-
-
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
-
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import org.opencv.core.Rect;
@@ -197,6 +195,10 @@ public class RobotMap {
 	
 	public static CargoIntake cargoIntake;
 
+	public static AnalogInput irSensor1, irSensor2;
+
+	public static Ultrasonic sonicSensorLeft; 
+	public static Ultrasonic sonicSensorRight; 
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -281,12 +283,6 @@ public class RobotMap {
 		leftIntakeTalon = new TalonSRX(1);
 		rightIntakeTalon = new TalonSRX(2);
 
-		camera = CameraServer.getInstance().startAutomaticCapture();
-		
-		camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
-	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-		
-
 		gyro = new PigeonIMU(leftIntakeTalon); //port known because Ian did something
 
 		gyroRateWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
@@ -300,6 +296,9 @@ public class RobotMap {
 
 		driveLeftEncoder.setReverseDirection(true);
 		driveRightEncoder.setReverseDirection(false);
+
+		// irSensor1 = new AnalogInput(5);
+		// irSensor2 = new AnalogInput(6);
 
 		driveLeftEncoderWrapperDistance = new EncoderWrapperRateAndDistance(driveLeftEncoder, PIDSourceType.kDisplacement);
 		driveLeftEncoderWrapperRate = new EncoderWrapperRateAndDistance(driveLeftEncoder, PIDSourceType.kRate);
@@ -371,7 +370,7 @@ public class RobotMap {
 		elevatorWrapperPercentOutput = new SpeedControllerWrapper(elevatorPWM);
 
 
-		elevatorEncoder = new Encoder(4, 5);
+		elevatorEncoder = new Encoder(15, 16);
 
 		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
 		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
@@ -380,6 +379,12 @@ public class RobotMap {
 		elevatorEncoderWrapperDistance.setGearRatio(2);
 		elevatorEncoder.setSamplesToAverage(10);
 		elevator = new Elevator();
+
+		sonicSensorLeft = new Ultrasonic(5, 6);
+		sonicSensorRight = new Ultrasonic(7, 8);
+
+		// sonicSensorLeft.setAutomaticMode(true);
+		// sonicSensorRight.setAutomaticMode(true);
 
 
 		//cargo intake

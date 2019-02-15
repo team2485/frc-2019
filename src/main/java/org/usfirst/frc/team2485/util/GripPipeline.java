@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
 
-import edu.wpi.first.wpilibj.vision.VisionPipeline;
+import edu.wpi.first.vision.VisionPipeline;
 
 import org.opencv.core.*;
 import org.opencv.core.Core.*;
@@ -39,7 +39,7 @@ public class GripPipeline implements VisionPipeline {
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
-	
+
 	/**
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
 	 */
@@ -53,9 +53,9 @@ public class GripPipeline implements VisionPipeline {
 
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = resizeImageOutput;
-		double[] hsvThresholdHue = {0.0, 1.5151511539112605};
-		double[] hsvThresholdSaturation = {0.0, 0.0};
-		double[] hsvThresholdValue = {255.0, 255.0};
+		double[] hsvThresholdHue = {0.0, 0.0};
+		double[] hsvThresholdSaturation = {0.0, 145.95959800662416};
+		double[] hsvThresholdValue = {225.64748201438852, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_GaussianBlur0:

@@ -220,7 +220,7 @@ public class DriveTrain extends Subsystem {
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
-		// setDefaultCommand(new DriveWithControllers());
+		setDefaultCommand(new DriveWithControllers());
 	}
 	
 	
@@ -340,13 +340,14 @@ public class DriveTrain extends Subsystem {
 		double Px = ((phiInDegrees + 90 > 2 || phiInDegrees + 90 < -2) ? dx/FastMath.sin(phi + Math.PI/2) : 0) + ((phiInDegrees > 2 || phiInDegrees < -2) ? (lidarDist/FastMath.sin(phi)) : 0);
 		// System.out.println("Sin phi + Math.PI/2: " + FastMath.sin(phi+Math.PI/2));
 		// System.out.println("Sin phi: " + FastMath.sin(phi));
-		System.out.println("FastMath.cos(phi): " + FastMath.cos(phi));
-		System.out.println("FastMath.tan(thetaR2S): " + FastMath.tan(thetaRobotToSurface));
+		
+		// System.out.println("FastMath.cos(phi): " + FastMath.cos(phi));
+		// System.out.println("FastMath.tan(thetaR2S): " + FastMath.tan(thetaRobotToSurface));
 		double cy = (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? FastMath.tan(thetaRobotToSurface) : 0) * Px; 
 		double Py = cy + (((phiInDegrees < 88 || phiInDegrees > 92) && (phiInDegrees > 272 || phiInDegrees < 268)) ? lidarDist/FastMath.cos(phi) : 0);
 
-		System.out.println("cy: " + cy);
-		System.out.println("Py: " + Py);
+		// System.out.println("cy: " + cy);
+		// System.out.println("Py: " + Py);
 
 
 		// //METHOD 2: 2/3/19 -il, sk
@@ -527,7 +528,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public double distInchesCenterVisionTarget() {
-		double theta = 14.5;
+		double theta = Math.toRadians(14.5);
 		double height = FastMath.cos(theta) * 5.5;
 		height /= 2;
 		double xh = FastMath.tan(theta) * height;
@@ -542,20 +543,44 @@ public class DriveTrain extends Subsystem {
 		ArrayList<Double> arr = Robot.samples;
 		double val1 = 0, val2 = 0;
 		val1 = arr.get(0);
-		for(int i = 1; i < 10; i++) {
-			double currVal = arr.get(i);
-			if(currVal - dpx > val1 && currVal + dpx < val1) {
-				val1 = (val1 + currVal)/2;
-			} else if (val2 == 0) {
-				val2 = currVal;
-			} else {
-				val2 = (val2 + currVal) / 2;
+		if (Robot.samples.size() >= 10) {
+			for(int i = 1; i < 10; i++) {
+				double currVal = arr.get(i);
+				if(currVal - dpx > val1 && currVal + dpx < val1) {
+					val1 = (val1 + currVal)/2;
+				} else if (val2 == 0) {
+					val2 = currVal;
+				} else {
+					val2 = (val2 + currVal) / 2;
+				}
 			}
 		}
-
 		double[] samples = {val1, val2};
+		return samples;
+
+	}
 
 
+	public boolean visionTargetsAreVisible() {
+
+		if (!Robot.contoursVisible) {
+			return false;
+		}
+
+		double lidarDist = RobotMap.lidar.getDistance();
+		if (lidarDist < 18 || lidarDist > 80) {
+			return false;
+		}
+
+		double[] samples = collectSamples();
+		double thetaRobotToSurface = getThetaAlignmentLine() - RobotMap.gyroAngleWrapper.pidGet();
+		double dpx = distBetweenCenterTargets * FastMath.cos(thetaRobotToSurface);
+
+		if (Math.abs(samples[1] - samples[0]) > dpx + 2 && Math.abs(samples[1] - samples[0]) < dpx - 2) {
+			return false;
+		} 
+		
+		return true;
 	}
 
 	public static Pair[] meterRule(double lidar){
