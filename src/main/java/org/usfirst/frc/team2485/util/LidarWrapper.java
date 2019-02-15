@@ -25,11 +25,21 @@ public class LidarWrapper extends SendableBase implements PIDSource {
 	private static final int ROLLING_AVG_SAMPLE_SIZE = 25;
 	private static final int ROLLING_AVG_SAMPLE_RATE = 5;
 
-	private static final double CORRECTING_DIST = 40;
+	private static final double CORRECTING_DIST = 33;
+
+	public static final int numSamples = 100000;
+	private double[] correctedDistances = new double[numSamples+1];
 
 	public LidarWrapper(Port port) {
 		m_i2c = new I2C(port, 0x62);
 		pidSourceType = PIDSourceType.kDisplacement;
+	}
+
+	public void init() {
+		for(int i = 0; i <= numSamples; i++) {
+			double dist = CORRECTING_DIST * i / numSamples;
+			correctedDistances[i] = -9.97 + (1.29 * dist) + (-0.000715 * dist * dist) + (-0.00000601* dist *dist *dist);
+		}
 	}
 
 	public int prepLidarForRateMesaurement() {
@@ -86,6 +96,12 @@ public class LidarWrapper extends SendableBase implements PIDSource {
 	}
 
 	public double getDistanceCorrected() {
+		int index = (int) (this.getDistance()*numSamples / (CORRECTING_DIST));
+		index %= numSamples;
+		if (index < 0) {
+			index += numSamples;
+		}
+
 		double dist = this.getDistance();
 		if (dist < 33) {
 			dist = -9.97 + (1.29 * dist) + (-0.000715 * dist * dist) + (-0.00000601* dist *dist *dist); 
@@ -167,7 +183,8 @@ public class LidarWrapper extends SendableBase implements PIDSource {
 
 	@Override
 	public double pidGet() {
-		return pidSourceType == PIDSourceType.kDisplacement ? getDistance()
+		boolean isCorrected = getDistance() <= 33;
+		return pidSourceType == PIDSourceType.kDisplacement ? (isCorrected ? getDistanceCorrected() : getDistance())
 				: getRate();
 	}
 
