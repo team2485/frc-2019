@@ -9,8 +9,10 @@ package org.usfirst.frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
+import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
+import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
 
@@ -77,6 +79,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		ConstantsIO.init();
+		RobotMap.updateConstants();
 	
 
 		//RobotMap.driveTrain.enablePID(true);
@@ -144,6 +147,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		ConstantsIO.init();
+		RobotMap.updateConstants();
 		
 
 
@@ -175,7 +180,13 @@ public class Robot extends TimedRobot {
 	}
 
 	public void updateSmartDashboard() {
-	
+		SmartDashboard.putNumber("Elevator Distance PID Setpoint: ", RobotMap.elevator.distancePID.getSetpoint());
+		SmartDashboard.putNumber("Elevator Distance PID Error: ", RobotMap.elevator.distancePID.getError());
+		SmartDashboard.putNumber("Elevator Setpoint TN: ", RobotMap.elevator.distanceSetpointTN.getOutput());
+		SmartDashboard.putNumber("Elevator Setpoint Ramped TN: ", RobotMap.elevator.distanceSetpointRampedTN.getOutput());
+		SmartDashboard.putBoolean("Elevator Setpoint Ramp Rate Enabled: ", RobotMap.elevator.distanceSetpointRampRate.isEnabled());
+		SmartDashboard.putBoolean("Elevator Distance PID Enabled: ", RobotMap.elevator.distancePID.isEnabled());
+		SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
 	}
 
 	

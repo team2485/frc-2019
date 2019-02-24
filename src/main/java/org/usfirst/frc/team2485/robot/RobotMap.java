@@ -16,10 +16,12 @@ import org.usfirst.frc.team2485.robot.subsystems.CargoRollers;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator;
 import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
+import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
 import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
 import org.usfirst.frc.team2485.util.TalonSRXWrapper;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 
@@ -34,6 +36,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 
 public class RobotMap {
+	//ROBOT CONSTANTS
+	public static int DRUM_RADIUS = 1;
 
 	//PORTS
 	//Speed Controllers
@@ -63,9 +67,9 @@ public class RobotMap {
 	public static int driveLeftEncoderPort1 = 0, driveLeftEncoderPort2 = 1;
 	public static int driveRightEncoderPort1 = 2, driveRightEncoderPort2 = 3;
 
-	public static int elevatorEncoderPort1 = 4, elevatorEncoderPort2 = 5;
+	public static int elevatorEncoderPort1 = 6, elevatorEncoderPort2 = 7;
 
-	public static int cargoArmEncoderPort1 = 6, cargoArmEncoderPort2 = 7;
+	public static int cargoArmEncoderPort1 = 8, cargoArmEncoderPort2 = 9;
 
 
 
@@ -124,6 +128,8 @@ public class RobotMap {
 	public static SpeedControllerWrapper elevatorCurrent;
 
 	public static Encoder elevatorEncoder;
+	
+	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperDistance;
 
 
 	//CARGO INTAKE ARM
@@ -249,6 +255,12 @@ public class RobotMap {
 
 	elevatorEncoder = new Encoder(elevatorEncoderPort1, elevatorEncoderPort2);
 
+	elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
+	
+	elevatorEncoder.setDistancePerPulse(DRUM_RADIUS*2*Math.PI*2/250);
+	elevatorEncoderWrapperDistance.setGearRatio(2);
+	elevatorEncoder.setSamplesToAverage(10);
+
 
 
 	//CARGO INTAKE ARM
@@ -299,6 +311,12 @@ public class RobotMap {
 	hatchIntake = new HatchIntake();
 	
 
+	}
+
+	public static void updateConstants() {
+		driveTrain.updateConstants();
+		elevator.updateConstants();
+		cargoArm.updateConstants();
 	}
 
 	

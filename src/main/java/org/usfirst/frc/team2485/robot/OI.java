@@ -10,8 +10,10 @@ import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
 import org.usfirst.frc.team2485.robot.commands.Hook;
 import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.Pushers;
+import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
 import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.commands.Slide;
+import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -153,15 +155,21 @@ public class OI {
 
 
 
-		SURAJ_A.whenPressed(new Lift(false));
-		SURAJ_B.whenPressed(new Hook(true));
-		SURAJ_X.whenPressed(new Pushers(true));
-		SURAJ_Y.whenPressed(new Slide(true));
+		// SURAJ_A.whenPressed(new Lift(false));
+		// SURAJ_B.whenPressed(new Hook(true));
+		// SURAJ_X.whenPressed(new Pushers(true));
+		// SURAJ_Y.whenPressed(new Slide(true));
 
-		SURAJ_LBUMPER.whenPressed(new Lift(true));
-		SURAJ_RBUMPER.whenPressed(new Hook(false));
-		SURAJ_START_BUTTON.whenPressed(new Pushers(false));
-		SURAJ_BACK_BUTTON.whenPressed(new Slide(false));
+		// SURAJ_LBUMPER.whenPressed(new Lift(true));
+		// SURAJ_RBUMPER.whenPressed(new Hook(false));
+		// SURAJ_START_BUTTON.whenPressed(new Pushers(false));
+		// SURAJ_BACK_BUTTON.whenPressed(new Slide(false));
+
+		SURAJ_A.whenPressed(new SetElevatorPosition(ElevatorLevel.FLOOR));
+		SURAJ_X.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));
+		SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
+		SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
+
 
 		JACKET_A.whenPressed(new SetRollers(0.4));
 		JACKET_B.whenPressed(new SetRollers(0));

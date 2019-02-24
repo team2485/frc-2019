@@ -18,4 +18,8 @@ public class CargoArm extends Subsystem {
     public void initDefaultCommand() {
         setDefaultCommand(new CargoArmWithControllers());
     }
+
+    public void updateConstants() {
+        
+    }
 }

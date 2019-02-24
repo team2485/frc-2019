@@ -24,73 +24,51 @@ public class ConstantsIO {
 	public static HashMap<String, String> data;
 
 	public static double accelerationMax;
-	public static double accelerationMaxElbow;
 
-	public static double kRamp_DriveVelocity;
+	public static double kDrift;
+	public static double kPath;
+
+	public static double kPMax_Distance;
 
 	public static double kP_DriveVelocity;
 	public static double kI_DriveVelocity;
 	public static double kD_DriveVelocity;
 	public static double kF_DriveVelocity;
-
-	public static double kPMax_Distance;
-
+	public static double kV_DriveVelocity;
+	
 	public static double kP_DriveAngle;
 	public static double kI_DriveAngle;
 	public static double kD_DriveAngle;
-	public static double kF_DriveAngle;
-	public static double kDrift;
-
-	public static double kP_AngVelTeleop;
-	public static double kI_AngVelTeleop;
-	public static double kD_AngVelTeleop;
-	public static double kF_AngVelTeleop;
-
+	
+	public static double kP_DriveAngVel;
+	public static double kI_DriveAngVel;
+	public static double kD_DriveAngVel;
+	public static double kF_DriveAngVel;
+	
 	public static double filterCoefficient;
-
-	public static double kP_WristAng;
-	public static double kI_WristAng;
-	public static double kD_WristAng;
-
-	public static double kP_WristAngVel;
-	public static double kI_WristAngVel;
-	public static double kF_WristAngVel;
-
-	public static double kP_Drift;
-	public static double kPath;
-
-	public static int IMax;
-
-	public static double voltageMax;
-
-	public static double currentStallWrist;
-	public static double currentStallElbow;
-
-	public static int intakeIMax;
-
-	public static double kP_DriveStraight;
-	public static double kI_DriveStraight;
-
-	public static double kUpRamp_AngCurrent;
+	
 	public static double kUpRamp_Velocity;
 	public static double kDownRamp_Velocity;
-
-	public static double kRamp_DeceleratingBackwardArmDown;
-
-	public static double kThrottleLimit_DeceleratingBackwardArmDown;
-
-	public static double kP_elevatorVelocity;
-	public static double kI_elevatorVelocity;
-	public static double kD_elevatorVelocity;
-	public static double kF_elevatorVelocity;
-	public static double kV_elevatorVelocity;
-
+	public static double kUpRamp_AngVelocity;
+	public static double kDownRamp_AngVelocity;
+	
 	public static double kP_elevatorDistance;
 	public static double kI_elevatorDistance;
 	public static double kD_elevatorDistance;
+	public static double levitateElevatorDistance;
 
-
-
+	public static double elevatorDistanceSetpointDownRamp;
+	public static double elevatorDistanceSetpointUpRamp;
+	
+	public static double kP_cargoArmDistance;
+	public static double kI_cargoArmDistance;
+	public static double kD_cargoArmDistance;
+	public static double levitateCargo;
+	
+	public static double cargoRollersIMax;
+	public static double elevatorIMax;
+	public static double cargoArmIMax;
+	public static double driveTrainIMax;
 
 	public static void init() {
 
@@ -113,61 +91,52 @@ public class ConstantsIO {
 			}
 		}
 
-		// createUnMatchedConstants();
-
-		kRamp_DriveVelocity = Double.parseDouble(data.get("kRamp_DriveVelocity"));
-
-
-
 		accelerationMax = Double.parseDouble(data.get("accelerationMax"));
-		kPMax_Distance = Double.parseDouble(data.get("kPMax_Distance"));
 
+		kPath = Double.parseDouble(data.get("kPath"));
+		kDrift = Double.parseDouble(data.get("kDrift"));
+
+		kPMax_Distance = Double.parseDouble(data.get("kPMax_Distance"));
 
 		kP_DriveVelocity = Double.parseDouble(data.get("kP_DriveVelocity"));
 		kI_DriveVelocity = Double.parseDouble(data.get("kI_DriveVelocity"));
 		kD_DriveVelocity = Double.parseDouble(data.get("kD_DriveVelocity"));
 		kF_DriveVelocity = Double.parseDouble(data.get("kF_DriveVelocity"));
-
+		kV_DriveVelocity = Double.parseDouble(data.get("kV_DriveVelocity"));
+		
 		kP_DriveAngle = Double.parseDouble(data.get("kP_DriveAngle"));
 		kI_DriveAngle = Double.parseDouble(data.get("kI_DriveAngle"));
 		kD_DriveAngle = Double.parseDouble(data.get("kD_DriveAngle"));
-		kDrift = Double.parseDouble(data.get("kDrift"));
-
-		kP_AngVelTeleop = Double.parseDouble(data.get("kP_AngVelTeleop"));
-		kI_AngVelTeleop = Double.parseDouble(data.get("kI_AngVelTeleop"));
-		kD_AngVelTeleop = Double.parseDouble(data.get("kD_AngVelTeleop"));
-		kF_AngVelTeleop = Double.parseDouble(data.get("kF_AngVelTeleop"));
-
-
+		
+		kP_DriveAngVel = Double.parseDouble(data.get("kP_DriveAngVel"));
+		kI_DriveAngVel = Double.parseDouble(data.get("kI_DriveAngVel"));
+		kD_DriveAngVel = Double.parseDouble(data.get("kD_DriveAngVel"));
+		kF_DriveAngVel = Double.parseDouble(data.get("kF_DriveAngVel"));
+		
+		filterCoefficient = Double.parseDouble(data.get("filterCoefficient"));
+		
 		kUpRamp_Velocity = Double.parseDouble(data.get("kUpRamp_Velocity"));
 		kDownRamp_Velocity = Double.parseDouble(data.get("kDownRamp_Velocity"));
-
-		System.out.println(kUpRamp_Velocity);
-		System.out.println(kDownRamp_Velocity);
-
-
-		kPath = Double.parseDouble(data.get("kPath"));
-
+		kUpRamp_AngVelocity = Double.parseDouble(data.get("kUpRamp_AngVelocity"));
+		kDownRamp_AngVelocity = Double.parseDouble(data.get("kDownRamp_AngVelocity"));
+		
 		kP_elevatorDistance = Double.parseDouble(data.get("kP_elevatorDistance"));
 		kI_elevatorDistance = Double.parseDouble(data.get("kI_elevatorDistance"));
 		kD_elevatorDistance = Double.parseDouble(data.get("kD_elevatorDistance"));
-
-		kP_elevatorVelocity = Double.parseDouble(data.get("kP_elevatorVelocity"));
-		kI_elevatorVelocity = Double.parseDouble(data.get("kI_elevatorVelocity"));
-		kD_elevatorVelocity = Double.parseDouble(data.get("kD_elevatorVelocity"));
-		kF_elevatorVelocity = Double.parseDouble(data.get("kF_elevatorVelocity"));
-		kV_elevatorVelocity = Double.parseDouble(data.get("kV_elevatorVelocity"));
-
-
-
+	
+		elevatorDistanceSetpointDownRamp = Double.parseDouble(data.get("elevatorDistanceSetpointDownRamp"));
+		elevatorDistanceSetpointUpRamp = Double.parseDouble(data.get("elevatorDistanceSetpointUpRamp"));
 		
+		kP_cargoArmDistance = Double.parseDouble(data.get("kP_cargoArmDistance"));
+		kI_cargoArmDistance = Double.parseDouble(data.get("kI_cargoArmDistance"));
+		kD_cargoArmDistance = Double.parseDouble(data.get("kD_cargoArmDistance"));
+		levitateCargo = Double.parseDouble(data.get("levitateCargo"));
+		
+		elevatorIMax = Double.parseDouble(data.get("elevatorIMax"));
+		cargoArmIMax = Double.parseDouble(data.get("cargoArmIMax"));
+		driveTrainIMax = Double.parseDouble(data.get("driveTrainIMax"));
+	
 
-		// kUpSpeed_WristAngVel = Double.parseDouble(data.get("kUpSpeed_WristAngVel"));
-		// kDownSpeed_WristAngVel =
-		// Double.parseDouble(data.get("kDownSpeed_WristAngVel"));
-		// kUpSpeed_ElbowAngVel = Double.parseDouble(data.get("kUpSpeed_ElbowAngVel"));
-		// kDownSpeed_ElbowAngVel =
-		// Double.parseDouble(data.get("kDownSpeed_ElbowAngVel"));
 
 	}
 
