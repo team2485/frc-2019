@@ -4,14 +4,14 @@ import org.usfirst.frc.team2485.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class Elevator extends Subsystem {
+public class CargoArm extends Subsystem {
 
-    public Elevator() {
+    public CargoArm() {
 
     }
 
-    public void elevatorManual(double power) {
-       RobotMap.elevatorPercentOutput.set(power);
+    public void cargoArmManual(double power) {
+       RobotMap.cargoArmPercentOutput.set(power);
     }
 
     public void initDefaultCommand() {
