@@ -7,54 +7,13 @@
 
 package org.usfirst.frc.team2485.robot;
 
-import java.util.ArrayList;
-
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import org.usfirst.frc.team2485.util.AutoPath.Pair;
-
-import edu.wpi.first.cameraserver.CameraServer;
-
-
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.vision.VisionThread;
 
-import org.usfirst.frc.team2485.robot.commandGroups.Docking;
-import org.usfirst.frc.team2485.robot.commands.DriveTo;
-import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
-import org.usfirst.frc.team2485.robot.commands.ElevatorMove;
-import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
+
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
-import org.usfirst.frc.team2485.util.WarlordsPIDController;
-import org.usfirst.frc.team2485.util.AutoPath;
-import org.usfirst.frc.team2485.util.GripPipeline;
 
-
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
-
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
 
 
 
@@ -69,32 +28,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class Robot extends TimedRobot {
 	
-	public static final int IMG_WIDTH = 128;
-	public static final int IMG_HEIGHT = 96;
 	
-	private VisionThread visionThread;
-	public static double centerX = 0.0;
-	public static ArrayList<Double> samples;
-	public static boolean doneCollecting = false;
-
-	public static Pair[] controlPoints;
-	public Pair endpoint;
-
-
-	private static AutoPath path;
-
-
-	UsbCamera camera;
-	private final Object imgLock = new Object();
-	
-	
-	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-	public static boolean collectingSamples;
-
-	public static boolean contoursVisible;
-
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -105,45 +39,13 @@ public class Robot extends TimedRobot {
 		
 		FastMath.init();
 		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", m_chooser);
 		ConstantsIO.init();
 		RobotMap.init();
 		OI.init();
-		RobotMap.driveTrain.updateConstants();
-		RobotMap.elevator.updateConstants();
 
-		RobotMap.driveLeftEncoder.reset();
-		RobotMap.driveRightEncoder.reset();
-		RobotMap.gyroRateWrapper.reset();
-		RobotMap.gyroAngleWrapper.reset();
 
-		controlPoints = RobotMap.driveTrain.generateControlPoints(RobotMap.lidar.pidGet(), 90, 110);
-		endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(RobotMap.lidar.pidGet(), 90, 110);
-
-		path = new AutoPath (AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 44.0), new Pair(53.5 - 6, 30.0), new Pair(53.5 - 6, 94)));
-
-		samples = new ArrayList<Double>();
-
-		camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setVideoMode(PixelFormat.kYUYV, IMG_WIDTH, IMG_HEIGHT, 30);
-	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-		
-		visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
-			if (!pipeline.filterContoursOutput().isEmpty()) {
-				System.out.println("Contours found: " + pipeline.filterContoursOutput().size());
-			
-				Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-				synchronized (imgLock) {
-					contoursVisible = true;
-					centerX = r.x;
-					samples.add(centerX);
-					if (samples.size() > 10) {
-						samples.remove(0);
-					}
-				}
-			} 
-		});
-		visionThread.start();
+	
+	
 	}
 
 	/**
@@ -153,10 +55,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-		RobotMap.driveTrain.updateConstants();
-		RobotMap.elevator.updateConstants();
-		RobotMap.driveTrain.enablePID(false);
-		RobotMap.elevator.enablePID(false);
+	
 	}
 
 	@Override
@@ -178,14 +77,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		ConstantsIO.init();
-		RobotMap.driveLeftEncoder.reset();
-		RobotMap.driveRightEncoder.reset();
-		RobotMap.gyroRateWrapper.reset();
-		RobotMap.gyroAngleWrapper.reset();
-		RobotMap.driveTrain.updateConstants();
-		RobotMap.elevator.updateConstants();
-		RobotMap.elevatorEncoder.reset();
-		m_autonomousCommand = m_chooser.getSelected();
+	
 
 		//RobotMap.driveTrain.enablePID(true);
 		// Pair[] controlPoints = { new Pair( 35.6, -255.0), new Pair(0, -110.0), new Pair(0.0, 0.0) };
@@ -196,7 +88,6 @@ public class Robot extends TimedRobot {
 		//controlPoints = RobotMap.driveTrain.generateControlPoints(100, 70, 90);
 		//endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 70, 90);
 
-		Scheduler.getInstance().add(new Docking());
 		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -207,10 +98,7 @@ public class Robot extends TimedRobot {
 
 
 		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
-		}
-
+	
 	
 
 
@@ -256,21 +144,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		RobotMap.driveTrain.updateConstants();
-		RobotMap.driveTrain.enablePID(false);
-		RobotMap.driveTrain.updateConstants();
-		RobotMap.elevator.updateConstants();
-
-		Scheduler.getInstance().add(new ElevatorMove());
+		
 
 
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
-		}
 		//Scheduler.getInstance().add(new DriveWithControllers());
 
 	}
@@ -296,108 +176,6 @@ public class Robot extends TimedRobot {
 
 	public void updateSmartDashboard() {
 	
-		// SmartDashboard.putBoolean("Color Sensor", RobotMap.colorSensor.read(0x04,1,RobotMap.colorSensorOutput));
-		SmartDashboard.putNumber("Left Talon 1: ", RobotMap.driveLeftTalon1.getOutputCurrent());
-		SmartDashboard.putNumber("Right Talon 1: ", RobotMap.driveRightTalon1.getOutputCurrent());
-		SmartDashboard.putNumber("Left Talon 2: ", RobotMap.driveLeftTalon2.getOutputCurrent());
-		SmartDashboard.putNumber("Right Talon 2: ", RobotMap.driveRightTalon2.getOutputCurrent());
-		SmartDashboard.putNumber("Velocity Error: ", RobotMap.driveTrain.velocityPID.getError());
-		SmartDashboard.putNumber("Velocity Avg Error", RobotMap.driveTrain.velocityPID.getAvgError());
-		SmartDashboard.putNumber("Velocity: ", ((RobotMap.driveLeftEncoderWrapperRate.pidGet()+RobotMap.driveRightEncoderWrapperRate.pidGet())/2));
-		SmartDashboard.putNumber("Velocity PID Output: ", RobotMap.driveTrain.velocityTN.getOutput());
-		SmartDashboard.putBoolean("Velocity is Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
-		SmartDashboard.putNumber("Setpoint", RobotMap.driveTrain.velocityPID.getSetpoint());
-		SmartDashboard.putNumber("Velocity Setpoint TN Output", RobotMap.driveTrain.velocitySetpointTN.pidGet());
-		SmartDashboard.putNumber("Left Current Source: ", RobotMap.driveTrain.leftCurrentPIDSource.pidGet());
-		SmartDashboard.putNumber("Right Current Source: ", RobotMap.driveTrain.rightCurrentPIDSource.pidGet());
-		SmartDashboard.putNumber("Left Motor Setter: ", RobotMap.driveTrain.leftMotorSetter.getSetpoint());
-		SmartDashboard.putNumber("Right Motor Setter: ", RobotMap.driveTrain.rightMotorSetter.getSetpoint());
-
-		SmartDashboard.putNumber("Velocity TN: ", RobotMap.driveTrain.velocityTN.pidGet());
-		SmartDashboard.putNumber("Ang Vel TN", RobotMap.driveTrain.angVelTN.pidGet());
-		SmartDashboard.putNumber("Velocity PID Source", RobotMap.driveTrain.velocityPIDSource.pidGet());
-
-		SmartDashboard.putNumber("Angle Output", RobotMap.driveTrain.angVelSetpointTN.pidGet());
-
-		SmartDashboard.putNumber("Angle Setpoint: ", RobotMap.driveTrain.anglePIDSource.pidGet());
-
-		SmartDashboard.putNumber("Distance Error: ", RobotMap.driveTrain.distancePID.getAvgError());
-		SmartDashboard.putNumber("Ang Vel avg error: ", RobotMap.driveTrain.angVelPID.getAvgError());
-		SmartDashboard.putNumber("Ang Vel get error", RobotMap.driveTrain.angVelPID.getError());
-		SmartDashboard.putNumber("gyro rate ", RobotMap.gyroRateWrapper.pidGet());
-
-
-		SmartDashboard.putNumber("gyro angle ", RobotMap.gyroAngleWrapper.pidGet());
-		SmartDashboard.putNumber("gyro angle error", RobotMap.driveTrain.anglePID.getError());
-
-
-		SmartDashboard.putNumber("Distance Setpoint", RobotMap.driveTrain.distancePID.getSetpoint());
-	
-		SmartDashboard.putNumber("Velocity Left Enc", RobotMap.driveLeftEncoderWrapperRate.pidGet());
-		SmartDashboard.putNumber("Velocity Right Enc", RobotMap.driveRightEncoderWrapperRate.pidGet());
-		SmartDashboard.putNumber("Velocity setpoint TN", RobotMap.driveTrain.velocitySetpointTN.pidGet());
-
-		SmartDashboard.putNumber("Ang Vel Setpoint", RobotMap.driveTrain.angVelTN.pidGet());
-	
-		SmartDashboard.putNumber("Lidar Value", RobotMap.lidar.getDistance());
-		SmartDashboard.putNumber("Lidar Value 2", RobotMap.lidar.getDistance());
-
-		SmartDashboard.putNumber("Control Point X 1", controlPoints[0].getX());
-		SmartDashboard.putNumber("Control Point Y 1", controlPoints[0].getY());
-		SmartDashboard.putNumber("Control Point X 2", controlPoints[1].getX());
-		SmartDashboard.putNumber("Control Point Y 2", controlPoints[1].getY());
-		SmartDashboard.putNumber("Control Points Length: ", controlPoints.length);
-
-		SmartDashboard.putNumber("Endpoint X", endpoint.getX());
-		SmartDashboard.putNumber("Endpoint Y", endpoint.getY());
-
-		SmartDashboard.putNumber("Left Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
-		SmartDashboard.putNumber("Right Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
-
-		SmartDashboard.putBoolean("Distance PID Enabled", RobotMap.driveTrain.distancePID.isEnabled());
-
-		SmartDashboard.putNumber("Distance PID Source: ", RobotMap.driveTrain.distancePIDSource.pidGet());
-		SmartDashboard.putNumber("kPath", ConstantsIO.kPath);
-
-
-		SmartDashboard.putNumber("Angle cos", FastMath.cos(RobotMap.gyroAngleWrapper.pidGet()));
-
-		SmartDashboard.putNumber("Surface angle", RobotMap.driveTrain.getThetaAlignmentLine());
-
-		// SmartDashboard.putNumber("Elevator Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
-		// SmartDashboard.putNumber("Elevator Current 2: ", RobotMap.elevatorTalon1.getOutputCurrent());
-
-		// SmartDashboard.putNumber("Elevator Current Setpoint: ", RobotMap.elevatorTalon1.getClosedLoopTarget());
-		// SmartDashboard.putNumber("Elevator Current Error: ", RobotMap.elevatorTalon1.getClosedLoopError());
-
-		SmartDashboard.putNumber("Elevator Velocity Setpoint: ", RobotMap.elevator.elevatorVelocityPID.getSetpoint());
-		SmartDashboard.putNumber("Elevator Velocity Error: ", RobotMap.elevator.elevatorVelocityPID.getAvgError());
-		SmartDashboard.putNumber("Elevator Velocity: ", RobotMap.elevatorEncoderWrapperRate.pidGet());
-		SmartDashboard.putNumber("Elevator Velocity Get Error", RobotMap.elevator.elevatorVelocityPID.getError());
-
-		SmartDashboard.putBoolean("Elevator Velocity Enabled:", RobotMap.elevator.elevatorVelocityPID.isEnabled());
-
-
-		SmartDashboard.putNumber("Elevator Velocity Output: ", RobotMap.elevatorWrapperCurrent.get());
-		SmartDashboard.putNumber("PWM Wrapper Value Elevator", RobotMap.elevatorWrapperPercentOutput.get());
-
-		SmartDashboard.putBoolean("Elevator Vel Enabled: ", RobotMap.elevator.elevatorVelocityPID.isEnabled());
-
-		SmartDashboard.putNumber("Elevator Dist Setpoint: ", RobotMap.elevator.distanceSetpointTN.pidGet());
-		SmartDashboard.putNumber("Elevator Dist Output: ", RobotMap.elevator.distanceOutputTN.pidGet());
-		SmartDashboard.putNumber("Elevator Dist Error: ", RobotMap.elevator.elevatorDistPID.getError());
-		SmartDashboard.putBoolean("Elevator Dist Enabled: ", RobotMap.elevator.elevatorDistPID.isEnabled());
-		SmartDashboard.putNumber("kV: ", ConstantsIO.kV_elevatorVelocity);
-
-
-		SmartDashboard.putBoolean("Vision Targets Visible", RobotMap.driveTrain.visionTargetsAreVisible());
-
-		SmartDashboard.putNumber("Center X: ", centerX);
-
-		SmartDashboard.putNumber("Right Ultrasonic Sensor Value: ", RobotMap.sonicSensorRight.getRangeInches());
-		SmartDashboard.putNumber("Left Ultrasonic Sensor Value: ", RobotMap.sonicSensorLeft.getRangeInches());
-
-		SmartDashboard.putNumber("Lidar Corrected Value", RobotMap.lidar.getDistanceCorrected());
 	}
 
 	

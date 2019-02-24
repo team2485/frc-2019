@@ -17,9 +17,9 @@ public class Slide extends InstantCommand {
     @Override
     protected void initialize() {
         if(slide) {
-            RobotMap.hatchIntake.lift();
+            RobotMap.hatchIntake.slideOut();
         } else {
-            RobotMap.hatchIntake.stow();
+            RobotMap.hatchIntake.slideIn();
         }
     }
 }

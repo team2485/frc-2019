@@ -37,15 +37,15 @@ public class RobotMap {
 
 	//PORTS
 	//Speed Controllers
-	public static int driveLeftTalonPort1 = 4;
-	public static int driveLeftTalonPort2 = 5;
-	public static int driveLeftTalonPort3 = 6;
-	public static int driveLeftTalonPort4 = 7;
+	public static int driveLeftTalonPort1 = 11;
+	public static int driveLeftTalonPort2 = 12;
+	public static int driveLeftTalonPort3 = 13;
+	public static int driveLeftTalonPort4 = 14;
 
-	public static int driveRightTalonPort1 = 11;
-	public static int driveRightTalonPort2 = 12;
-	public static int driveRightTalonPort3 = 13;
-	public static int driveRightTalonPort4 = 14;
+	public static int driveRightTalonPort1 = 4;
+	public static int driveRightTalonPort2 = 5;
+	public static int driveRightTalonPort3 = 6;
+	public static int driveRightTalonPort4 = 7;
 
 	public static int elevatorTalonPort1 = 2;
 	public static int elevatorTalonPort2 = 3;
@@ -55,8 +55,8 @@ public class RobotMap {
 	public static int cargoRollersTalonPort = 8;
 
 	public static int liftSolenoidPortIn = 0, liftSolenoidPortOut = 4;
-	public static int pushersSolenoidPortIn = 1, pushersSolenoidPortOut = 5;
-	public static int slideSolenoidPortIn = 2, slideSolenoidPortOut = 6;
+	public static int slideSolenoidPortIn = 1, slideSolenoidPortOut = 5;
+	public static int pushersSolenoidPortIn = 2, pushersSolenoidPortOut = 6;
 	public static int hookSolenoidPortIn = 3, hookSolenoidPortOut = 7;
 
 	//Sensors
@@ -100,11 +100,11 @@ public class RobotMap {
 	public static TalonSRXWrapper driveRightTalonWrapperPercentOutput3;
 	public static TalonSRXWrapper driveRightTalonWrapperPercentOutput4;
 
-	public static SpeedControllerWrapper driveLeftPercentOutput;
 	public static SpeedControllerWrapper driveLeftCurrent;
+	public static SpeedControllerWrapper driveLeftPercentOutput;
 
-	public static SpeedControllerWrapper driveRightPercentOutput;
 	public static SpeedControllerWrapper driveRightCurrent;
+	public static SpeedControllerWrapper driveRightPercentOutput;
 
 	public static Encoder driveLeftEncoder;
 	public static Encoder driveRightEncoder;
@@ -141,8 +141,10 @@ public class RobotMap {
 	//CARGO INTAKE ROLLERS
 	public static TalonSRX cargoRollersTalon;
 
+	public static TalonSRXWrapper cargoRollersWrapperCurrent;
 	public static TalonSRXWrapper cargoRollersWrapperPercentOutput;
 
+	public static SpeedControllerWrapper cargoRollersCurrent;
 	public static SpeedControllerWrapper cargoRollersPercentOutput;
 
 
@@ -170,8 +172,8 @@ public class RobotMap {
 	// number and the module. For example you with a rangefinder:
 	// public static int rangefinderPort = 1;
 	// public static int rangefinderModule = 1;
-	public static void init(){
-		//DRIVE TRAIN
+	public static void init() {
+	//DRIVE TRAIN
 	driveLeftTalon1 = new TalonSRX(driveLeftTalonPort1);
 	driveLeftTalon2 = new TalonSRX(driveLeftTalonPort2);
 	driveLeftTalon3 = new TalonSRX(driveLeftTalonPort3);
@@ -194,15 +196,15 @@ public class RobotMap {
 	driveRightTalonWrapperCurrent3 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon3);
 	driveRightTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon4);
 
-	driveLeftTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon1);
-	driveLeftTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon2);
-	driveLeftTalonWrapperCurrent3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon3);
-	driveLeftTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon4);
+	driveLeftTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon1);
+	driveLeftTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon2);
+	driveLeftTalonWrapperPercentOutput3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon3);
+	driveLeftTalonWrapperPercentOutput4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon4);
 
-	driveRightTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon1);
-	driveRightTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon2);
-	driveRightTalonWrapperCurrent3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon3);
-	driveRightTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon4);
+	driveRightTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon1);
+	driveRightTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon2);
+	driveRightTalonWrapperPercentOutput3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon3);
+	driveRightTalonWrapperPercentOutput4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon4);
 
 
 	TalonSRXWrapper[] driveLeftTalonsCurrent = {driveLeftTalonWrapperCurrent1, driveLeftTalonWrapperCurrent2, driveLeftTalonWrapperCurrent3, driveLeftTalonWrapperCurrent4};
@@ -220,6 +222,12 @@ public class RobotMap {
 
 	driveLeftEncoder = new Encoder(driveLeftEncoderPort1, driveLeftEncoderPort2);
 	driveRightEncoder = new Encoder(driveRightEncoderPort1, driveRightEncoderPort2);
+
+	driveLeftCurrent.setInverted(true);
+	driveLeftPercentOutput.setInverted(true);
+
+	driveLeftTalonWrapperCurrent3.setInverted(true);
+	driveLeftTalonWrapperPercentOutput3.setInverted(true);
 
 
 
@@ -258,9 +266,14 @@ public class RobotMap {
 	//CARGO INTAKE ROLLERS
 	cargoRollersTalon = new TalonSRX(cargoRollersTalonPort);
 
+	cargoRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoRollersTalon);
 	cargoRollersWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoRollersTalon);
 
+	cargoRollersCurrent = new SpeedControllerWrapper(cargoRollersWrapperCurrent);
 	cargoRollersPercentOutput = new SpeedControllerWrapper(cargoRollersWrapperPercentOutput);
+
+	cargoRollersCurrent.setInverted(true);
+	cargoRollersPercentOutput.setInverted(true);
 
 
 	//HATCH INTAKE

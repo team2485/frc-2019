@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team2485.robot;
+import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
 import org.usfirst.frc.team2485.robot.commands.Hook;
 import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.Pushers;
@@ -165,6 +166,7 @@ public class OI {
 		JACKET_A.whenPressed(new SetRollers(0.4));
 		JACKET_B.whenPressed(new SetRollers(0));
 		JACKET_Y.whenPressed(new SetRollers(-0.4));
+		JACKET_RBUMPER.whenPressed(new CargoRollersIntake(0.4));
 
 	}
 }

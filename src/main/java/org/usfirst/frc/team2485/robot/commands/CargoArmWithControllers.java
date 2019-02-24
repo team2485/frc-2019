@@ -16,7 +16,7 @@ public class CargoArmWithControllers extends Command {
     protected void execute() {
         double power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 0.6);
 
-        RobotMap.cargoArm.cargoArmManual(power);
+        RobotMap.cargoArm.cargoArmManual(-power);
     }
 
     @Override

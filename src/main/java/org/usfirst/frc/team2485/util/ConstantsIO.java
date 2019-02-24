@@ -131,7 +131,6 @@ public class ConstantsIO {
 		kP_DriveAngle = Double.parseDouble(data.get("kP_DriveAngle"));
 		kI_DriveAngle = Double.parseDouble(data.get("kI_DriveAngle"));
 		kD_DriveAngle = Double.parseDouble(data.get("kD_DriveAngle"));
-		kF_DriveAngle = Double.parseDouble(data.get("kF_DriveAngle"));
 		kDrift = Double.parseDouble(data.get("kDrift"));
 
 		kP_AngVelTeleop = Double.parseDouble(data.get("kP_AngVelTeleop"));

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2485.robot.subsystems;
 
 import org.usfirst.frc.team2485.robot.RobotMap;
+import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -15,8 +16,8 @@ public class DriveTrain extends Subsystem {
             RobotMap.driveLeftPercentOutput.set(steering);
             RobotMap.driveRightPercentOutput.set(-steering);
         } else {
-            double left = throttle + throttle*steering;
-            double right = throttle - throttle*steering;
+            double left = throttle + Math.abs(throttle)*steering;
+            double right = throttle - Math.abs(throttle)*steering;
 
             if(Math.abs(left) > 1) {
                 right /= Math.abs(left);
@@ -32,6 +33,6 @@ public class DriveTrain extends Subsystem {
     }
 
     public void initDefaultCommand() {
-
+        setDefaultCommand(new DriveWithControllers());
     }
 }
