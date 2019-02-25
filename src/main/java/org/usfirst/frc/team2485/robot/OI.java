@@ -10,6 +10,7 @@ import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
 import org.usfirst.frc.team2485.robot.commands.Hook;
 import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.Pushers;
+import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
 import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.commands.Slide;
@@ -171,10 +172,11 @@ public class OI {
 		SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
 
 
-		JACKET_A.whenPressed(new SetRollers(0.4));
+		// JACKET_A.whenPressed(new SetRollers(0.4));
 		JACKET_B.whenPressed(new SetRollers(0));
 		JACKET_Y.whenPressed(new SetRollers(-0.4));
 		JACKET_RBUMPER.whenPressed(new CargoRollersIntake(0.4));
+		JACKET_A.whenPressed(new SetArmPosition(1));
 
 	}
 }

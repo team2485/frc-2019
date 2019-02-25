@@ -69,7 +69,7 @@ public class RobotMap {
 
 	public static int elevatorEncoderPort1 = 6, elevatorEncoderPort2 = 7;
 
-	public static int cargoArmEncoderPort1 = 8, cargoArmEncoderPort2 = 9;
+	public static int cargoArmEncoderPort1 = 4, cargoArmEncoderPort2 = 5;
 
 
 
@@ -142,6 +142,8 @@ public class RobotMap {
 	public static SpeedControllerWrapper cargoArmPercentOutput;
 
 	public static Encoder cargoArmEncoder;
+
+	public static EncoderWrapperRateAndDistance cargoArmEncoderWrapperDistance;
 
 	
 	//CARGO INTAKE ROLLERS
@@ -273,6 +275,10 @@ public class RobotMap {
 	cargoArmPercentOutput = new SpeedControllerWrapper(cargoArmTalonWrapperPercentOutput);
 
 	cargoArmEncoder = new Encoder(cargoArmEncoderPort1, cargoArmEncoderPort2);
+
+	cargoArmEncoderWrapperDistance = new EncoderWrapperRateAndDistance(cargoArmEncoder, PIDSourceType.kDisplacement);
+
+	cargoArmEncoder.setDistancePerPulse(2 * Math.PI / 1024);
 
 
 	//CARGO INTAKE ROLLERS
