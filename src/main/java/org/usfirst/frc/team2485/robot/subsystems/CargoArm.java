@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class CargoArm extends Subsystem {
 
+    public static final double HOLD_CURRENT = 0.5;
+    public double holdPosition;
+
     public TransferNode distanceSetpointTN;
     public TransferNode distanceOutputTN;
 
@@ -41,11 +44,13 @@ public class CargoArm extends Subsystem {
         distancePID.setOutputRange(-ConstantsIO.cargoArmIMax, ConstantsIO.cargoArmIMax);
 
         distanceOutputPIDSource.setPidSource(() -> {
-            return distanceOutputTN.getOutput() + ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet());
+            return (distanceOutputTN.getOutput() + ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet()));
         });
 
         motorSetter.setSetpointSource(distanceOutputPIDSource);
         motorSetter.setOutputs(RobotMap.cargoArmCurrent);
+
+        holdPosition = 0; 
        
     }
 

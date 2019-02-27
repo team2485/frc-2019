@@ -7,11 +7,18 @@
 
 package org.usfirst.frc.team2485.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
+import org.usfirst.frc.team2485.robot.commands.EjectCargo;
+import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
+import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
@@ -30,7 +37,7 @@ import org.usfirst.frc.team2485.util.FastMath;
 
 public class Robot extends TimedRobot {
 	
-	
+	boolean ejecting = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -44,7 +51,6 @@ public class Robot extends TimedRobot {
 		ConstantsIO.init();
 		RobotMap.init();
 		OI.init();
-
 
 	
 	
@@ -148,9 +154,19 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		ConstantsIO.init();
+		RobotMap.cargoArmEncoder.reset();
+		RobotMap.elevatorEncoder.reset();
 		RobotMap.updateConstants();
+		RobotMap.hatchIntake.slideIn();
+		RobotMap.hatchIntake.hookIn();
+		RobotMap.hatchIntake.retractPushers();
+		RobotMap.hatchIntake.stow();
+		Scheduler.getInstance().add(new SetArmPosition(1.8));
 		
+		UsbCamera jevoisCam = CameraServer.getInstance().startAutomaticCapture();
+		jevoisCam.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
 
+		//Scheduler.getInstance().add(new SetArmPosition(1.8));
 
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
@@ -168,6 +184,16 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		updateSmartDashboard();
 		
+		if(OI.suraj.getRawAxis(OI.XBOX_LTRIGGER_PORT) > 0.2) {
+			Scheduler.getInstance().add(new SetRollers(-0.4));
+			ejecting = true;
+		} else if (ejecting) {
+			ejecting = false;
+			Scheduler.getInstance().add(new SetRollers(0));
+		}
+
+
+
 
 	}
 
@@ -194,6 +220,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Cargo Arm Distance PID Enabled: ", RobotMap.cargoArm.distancePID.isEnabled());
 		SmartDashboard.putNumber("Cargo Arm Position: ", RobotMap.cargoArmEncoderWrapperDistance.pidGet());	
 		SmartDashboard.putNumber("Cargo Arm PID Source Output: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
+		SmartDashboard.putBoolean("Cargo Arm on position:", RobotMap.cargoArm.distancePID.isOnTarget());
+		SmartDashboard.putBoolean("Cargo Arm Up Limit Switch: ", RobotMap.cargoArmLimitSwitchUp.get());
+		SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
+		SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
 	}
 
 	

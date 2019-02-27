@@ -12,6 +12,9 @@ public class CargoRollersIntake extends Command {
 
     public CargoRollersIntake(double power) {
         requires(RobotMap.cargoRollers);
+        requires(RobotMap.cargoArm);
+        requires(RobotMap.hatchIntake);
+        
         setInterruptible(true);
         this.power = power;
         holdingCurrent = 5;
@@ -23,6 +26,9 @@ public class CargoRollersIntake extends Command {
 
     @Override
     protected void initialize() {
+        RobotMap.hatchIntake.slideIn();
+        RobotMap.hatchIntake.stow();
+        RobotMap.cargoArm.setPosition(0);
         RobotMap.cargoRollersPercentOutput.set(power);
     }
 
@@ -44,6 +50,7 @@ public class CargoRollersIntake extends Command {
             }
         } else {
             RobotMap.cargoRollersCurrent.set(holdingCurrent);
+            RobotMap.cargoArm.setPosition(1.8);
         }
     }
 

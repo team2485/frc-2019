@@ -6,7 +6,10 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team2485.robot;
+import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
+import org.usfirst.frc.team2485.robot.commandGroups.PlaceHatch;
 import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
+import org.usfirst.frc.team2485.robot.commands.EjectCargo;
 import org.usfirst.frc.team2485.robot.commands.Hook;
 import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.Pushers;
@@ -161,22 +164,26 @@ public class OI {
 		// SURAJ_X.whenPressed(new Pushers(true));
 		// SURAJ_Y.whenPressed(new Slide(true));
 
-		// SURAJ_LBUMPER.whenPressed(new Lift(true));
+		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
 		// SURAJ_RBUMPER.whenPressed(new Hook(false));
 		// SURAJ_START_BUTTON.whenPressed(new Pushers(false));
-		// SURAJ_BACK_BUTTON.whenPressed(new Slide(false));
+		SURAJ_RBUMPER.whenPressed(new LoadingStationIntake());
 
 		SURAJ_A.whenPressed(new SetElevatorPosition(ElevatorLevel.FLOOR));
 		SURAJ_X.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));
 		SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
 		SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
+		SURAJ_START_BUTTON.whenPressed(new Lift(true));
+		
 
 
 		// JACKET_A.whenPressed(new SetRollers(0.4));
-		JACKET_B.whenPressed(new SetRollers(0));
-		JACKET_Y.whenPressed(new SetRollers(-0.4));
-		JACKET_RBUMPER.whenPressed(new CargoRollersIntake(0.4));
-		JACKET_A.whenPressed(new SetArmPosition(1));
+		// JACKET_B.whenPressed(new SetRollers(0));
+		// JACKET_Y.whenPressed(new SetRollers(-0.4));
+		// JACKET_RBUMPER.whenPressed(new CargoRollersIntake(0.4));
+	
+		JACKET_A.whenPressed(new CargoRollersIntake(0.4));
+
 
 	}
 }

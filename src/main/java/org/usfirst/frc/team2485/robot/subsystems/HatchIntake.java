@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class HatchIntake extends Subsystem {
 
     public HatchIntake() {
-
     }
 
     public void lift() {

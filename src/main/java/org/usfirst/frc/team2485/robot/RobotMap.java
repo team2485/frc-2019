@@ -10,6 +10,7 @@ package org.usfirst.frc.team2485.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 import org.usfirst.frc.team2485.robot.subsystems.CargoRollers;
@@ -17,9 +18,12 @@ import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator;
 import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
+import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
 import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
 import org.usfirst.frc.team2485.util.TalonSRXWrapper;
+import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -54,6 +58,8 @@ public class RobotMap {
 	public static int elevatorTalonPort1 = 2;
 	public static int elevatorTalonPort2 = 3;
 
+	public static int gyroTalonPort = 1;
+
 	public static int cargoArmTalonPort = 9;
 
 	public static int cargoRollersTalonPort = 8;
@@ -84,6 +90,8 @@ public class RobotMap {
 	public static TalonSRX driveRightTalon3;
 	public static TalonSRX driveRightTalon4;
 
+	public static TalonSRX gyroTalon;
+
 	public static TalonSRXWrapper driveLeftTalonWrapperCurrent1;
 	public static TalonSRXWrapper driveLeftTalonWrapperCurrent2;
 	public static TalonSRXWrapper driveLeftTalonWrapperCurrent3;
@@ -112,6 +120,15 @@ public class RobotMap {
 
 	public static Encoder driveLeftEncoder;
 	public static Encoder driveRightEncoder;
+
+	public static EncoderWrapperRateAndDistance driveLeftEncoderWrapperDistance;
+	public static EncoderWrapperRateAndDistance driveRightEncoderWrapperDistance;
+	public static EncoderWrapperRateAndDistance driveLeftEncoderWrapperRate;
+	public static EncoderWrapperRateAndDistance driveRightEncoderWrapperRate;
+
+	public static PigeonIMU gyro;
+	public static PigeonWrapperRateAndAngle gyroRateWrapper;
+	public static PigeonWrapperRateAndAngle gyroAngleWrapper;
 
 
 	//ELEVATOR
@@ -144,6 +161,9 @@ public class RobotMap {
 	public static Encoder cargoArmEncoder;
 
 	public static EncoderWrapperRateAndDistance cargoArmEncoderWrapperDistance;
+
+	public static DigitalInput cargoArmLimitSwitchDown;
+	public static DigitalInput cargoArmLimitSwitchUp;
 
 	
 	//CARGO INTAKE ROLLERS
@@ -181,141 +201,155 @@ public class RobotMap {
 	// public static int rangefinderPort = 1;
 	// public static int rangefinderModule = 1;
 	public static void init() {
-	//DRIVE TRAIN
-	driveLeftTalon1 = new TalonSRX(driveLeftTalonPort1);
-	driveLeftTalon2 = new TalonSRX(driveLeftTalonPort2);
-	driveLeftTalon3 = new TalonSRX(driveLeftTalonPort3);
-	driveLeftTalon4 = new TalonSRX(driveLeftTalonPort4);
 
-	driveRightTalon1 = new TalonSRX(driveRightTalonPort1);
-	driveRightTalon2 = new TalonSRX(driveRightTalonPort2);
-	driveRightTalon3 = new TalonSRX(driveRightTalonPort3);
-	driveRightTalon4 = new TalonSRX(driveRightTalonPort4);
+		//DRIVE TRAIN
+		driveLeftTalon1 = new TalonSRX(driveLeftTalonPort1);
+		driveLeftTalon2 = new TalonSRX(driveLeftTalonPort2);
+		driveLeftTalon3 = new TalonSRX(driveLeftTalonPort3);
+		driveLeftTalon4 = new TalonSRX(driveLeftTalonPort4);
 
+		driveRightTalon1 = new TalonSRX(driveRightTalonPort1);
+		driveRightTalon2 = new TalonSRX(driveRightTalonPort2);
+		driveRightTalon3 = new TalonSRX(driveRightTalonPort3);
+		driveRightTalon4 = new TalonSRX(driveRightTalonPort4);
 
+		gyroTalon = new TalonSRX(gyroTalonPort);
 
-	driveLeftTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon1);
-	driveLeftTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon2);
-	driveLeftTalonWrapperCurrent3 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon3);
-	driveLeftTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon4);
+		driveLeftTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon1);
+		driveLeftTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon2);
+		driveLeftTalonWrapperCurrent3 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon3);
+		driveLeftTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon4);
 
-	driveRightTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon1);
-	driveRightTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon2);
-	driveRightTalonWrapperCurrent3 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon3);
-	driveRightTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon4);
+		driveRightTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon1);
+		driveRightTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon2);
+		driveRightTalonWrapperCurrent3 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon3);
+		driveRightTalonWrapperCurrent4 = new TalonSRXWrapper(ControlMode.Current, driveRightTalon4);
 
-	driveLeftTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon1);
-	driveLeftTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon2);
-	driveLeftTalonWrapperPercentOutput3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon3);
-	driveLeftTalonWrapperPercentOutput4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon4);
+		driveLeftTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon1);
+		driveLeftTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon2);
+		driveLeftTalonWrapperPercentOutput3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon3);
+		driveLeftTalonWrapperPercentOutput4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveLeftTalon4);
 
-	driveRightTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon1);
-	driveRightTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon2);
-	driveRightTalonWrapperPercentOutput3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon3);
-	driveRightTalonWrapperPercentOutput4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon4);
-
-
-	TalonSRXWrapper[] driveLeftTalonsCurrent = {driveLeftTalonWrapperCurrent1, driveLeftTalonWrapperCurrent2, driveLeftTalonWrapperCurrent3, driveLeftTalonWrapperCurrent4};
-	TalonSRXWrapper[] driveLeftTalonsPercentOutput = {driveLeftTalonWrapperPercentOutput1, driveLeftTalonWrapperPercentOutput2, driveLeftTalonWrapperPercentOutput3, driveLeftTalonWrapperPercentOutput4};
-
-	TalonSRXWrapper[] driveRightTalonsCurrent = {driveRightTalonWrapperCurrent1, driveRightTalonWrapperCurrent2, driveRightTalonWrapperCurrent3, driveRightTalonWrapperCurrent4};
-	TalonSRXWrapper[] driveRightTalonsPercentOutput = {driveRightTalonWrapperPercentOutput1, driveRightTalonWrapperPercentOutput2, driveRightTalonWrapperPercentOutput3, driveRightTalonWrapperPercentOutput4};
-	
-
-	driveLeftCurrent = new SpeedControllerWrapper(driveLeftTalonsCurrent);
-	driveLeftPercentOutput = new SpeedControllerWrapper(driveLeftTalonsPercentOutput);
-
-	driveRightCurrent = new SpeedControllerWrapper(driveRightTalonsCurrent);
-	driveRightPercentOutput = new SpeedControllerWrapper(driveRightTalonsPercentOutput);
-
-	driveLeftEncoder = new Encoder(driveLeftEncoderPort1, driveLeftEncoderPort2);
-	driveRightEncoder = new Encoder(driveRightEncoderPort1, driveRightEncoderPort2);
-
-	driveLeftCurrent.setInverted(true);
-	driveLeftPercentOutput.setInverted(true);
-
-	driveLeftTalonWrapperCurrent3.setInverted(true);
-	driveLeftTalonWrapperPercentOutput3.setInverted(true);
+		driveRightTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon1);
+		driveRightTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon2);
+		driveRightTalonWrapperPercentOutput3 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon3);
+		driveRightTalonWrapperPercentOutput4 = new TalonSRXWrapper(ControlMode.PercentOutput, driveRightTalon4);
 
 
+		TalonSRXWrapper[] driveLeftTalonsCurrent = {driveLeftTalonWrapperCurrent1, driveLeftTalonWrapperCurrent2, driveLeftTalonWrapperCurrent3, driveLeftTalonWrapperCurrent4};
+		TalonSRXWrapper[] driveLeftTalonsPercentOutput = {driveLeftTalonWrapperPercentOutput1, driveLeftTalonWrapperPercentOutput2, driveLeftTalonWrapperPercentOutput3, driveLeftTalonWrapperPercentOutput4};
 
-	//ELEVATOR
-	elevatorTalon1 = new TalonSRX(elevatorTalonPort1);
-	elevatorTalon2 = new TalonSRX(elevatorTalonPort2);
+		TalonSRXWrapper[] driveRightTalonsCurrent = {driveRightTalonWrapperCurrent1, driveRightTalonWrapperCurrent2, driveRightTalonWrapperCurrent3, driveRightTalonWrapperCurrent4};
+		TalonSRXWrapper[] driveRightTalonsPercentOutput = {driveRightTalonWrapperPercentOutput1, driveRightTalonWrapperPercentOutput2, driveRightTalonWrapperPercentOutput3, driveRightTalonWrapperPercentOutput4};
+		
 
-	elevatorTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon1);
-	elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon2);
-	
-	elevatorTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon1);
-	elevatorTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);
+		driveLeftCurrent = new SpeedControllerWrapper(driveLeftTalonsCurrent);
+		driveLeftPercentOutput = new SpeedControllerWrapper(driveLeftTalonsPercentOutput);
 
-	TalonSRXWrapper[] elevatorTalonsCurrent = {elevatorTalonWrapperCurrent1, elevatorTalonWrapperCurrent2};
-	TalonSRXWrapper[] elevatorTalonsPercentOutput = {elevatorTalonWrapperPercentOutput1, elevatorTalonWrapperPercentOutput2};
+		driveRightCurrent = new SpeedControllerWrapper(driveRightTalonsCurrent);
+		driveRightPercentOutput = new SpeedControllerWrapper(driveRightTalonsPercentOutput);
 
-	elevatorCurrent = new SpeedControllerWrapper(elevatorTalonsCurrent);
-	elevatorPercentOutput = new SpeedControllerWrapper(elevatorTalonsPercentOutput);
+		driveLeftCurrent.setInverted(true);
+		driveLeftPercentOutput.setInverted(true);
 
-	elevatorEncoder = new Encoder(elevatorEncoderPort1, elevatorEncoderPort2);
+		driveLeftTalonWrapperCurrent3.setInverted(true);
+		driveLeftTalonWrapperPercentOutput3.setInverted(true);
 
-	elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
-	
-	elevatorEncoder.setDistancePerPulse(DRUM_RADIUS*2*Math.PI*2/250);
-	elevatorEncoderWrapperDistance.setGearRatio(2);
-	elevatorEncoder.setSamplesToAverage(10);
+		driveLeftEncoder = new Encoder(driveLeftEncoderPort1, driveLeftEncoderPort2);
+		driveRightEncoder = new Encoder(driveRightEncoderPort1, driveRightEncoderPort2);
+		
+		driveLeftEncoderWrapperDistance = new EncoderWrapperRateAndDistance(driveLeftEncoder, PIDSourceType.kDisplacement);
+		driveRightEncoderWrapperDistance = new EncoderWrapperRateAndDistance(driveRightEncoder, PIDSourceType.kDisplacement);
+		driveLeftEncoderWrapperRate = new EncoderWrapperRateAndDistance(driveLeftEncoder, PIDSourceType.kRate);
+		driveRightEncoderWrapperRate = new EncoderWrapperRateAndDistance(driveRightEncoder, PIDSourceType.kRate);
 
-
-
-	//CARGO INTAKE ARM
-	cargoArmTalon = new TalonSRX(cargoArmTalonPort);
-
-	cargoArmTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoArmTalon);
-	cargoArmTalonWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoArmTalon);
-
-	cargoArmCurrent = new SpeedControllerWrapper(cargoArmTalonWrapperCurrent);
-	cargoArmPercentOutput = new SpeedControllerWrapper(cargoArmTalonWrapperPercentOutput);
-
-	cargoArmEncoder = new Encoder(cargoArmEncoderPort1, cargoArmEncoderPort2);
-
-	cargoArmEncoderWrapperDistance = new EncoderWrapperRateAndDistance(cargoArmEncoder, PIDSourceType.kDisplacement);
-
-	cargoArmEncoder.setDistancePerPulse(2 * Math.PI / 1024);
+		gyro = new PigeonIMU(gyroTalon);
+		gyroAngleWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kDisplacement, Units.RADS);
+		gyroRateWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
 
 
-	//CARGO INTAKE ROLLERS
-	cargoRollersTalon = new TalonSRX(cargoRollersTalonPort);
+		//ELEVATOR
+		elevatorTalon1 = new TalonSRX(elevatorTalonPort1);
+		elevatorTalon2 = new TalonSRX(elevatorTalonPort2);
 
-	cargoRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoRollersTalon);
-	cargoRollersWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoRollersTalon);
+		elevatorTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon1);
+		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon2);
+		
+		elevatorTalonWrapperPercentOutput1 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon1);
+		elevatorTalonWrapperPercentOutput2 = new TalonSRXWrapper(ControlMode.PercentOutput, elevatorTalon2);
 
-	cargoRollersCurrent = new SpeedControllerWrapper(cargoRollersWrapperCurrent);
-	cargoRollersPercentOutput = new SpeedControllerWrapper(cargoRollersWrapperPercentOutput);
+		TalonSRXWrapper[] elevatorTalonsCurrent = {elevatorTalonWrapperCurrent1, elevatorTalonWrapperCurrent2};
+		TalonSRXWrapper[] elevatorTalonsPercentOutput = {elevatorTalonWrapperPercentOutput1, elevatorTalonWrapperPercentOutput2};
 
-	cargoRollersCurrent.setInverted(true);
-	cargoRollersPercentOutput.setInverted(true);
+		elevatorCurrent = new SpeedControllerWrapper(elevatorTalonsCurrent);
+		elevatorPercentOutput = new SpeedControllerWrapper(elevatorTalonsPercentOutput);
 
+		elevatorEncoder = new Encoder(elevatorEncoderPort1, elevatorEncoderPort2);
 
-	//HATCH INTAKE
-	liftSolenoidIn = new Solenoid(liftSolenoidPortIn);
-	liftSolenoidOut = new Solenoid(liftSolenoidPortOut);
-	
-	pushersSolenoidIn = new Solenoid(pushersSolenoidPortIn);
-	pushersSolenoidOut = new Solenoid(pushersSolenoidPortOut);
-	
-	slideSolenoidIn = new Solenoid(slideSolenoidPortIn);
-	slideSolenoidOut = new Solenoid(slideSolenoidPortOut);
-	
-	hookSolenoidIn = new Solenoid(hookSolenoidPortIn);
-	hookSolenoidOut = new Solenoid(hookSolenoidPortOut);
+		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
+		
+		elevatorEncoder.setDistancePerPulse((DRUM_RADIUS*Math.PI*2/250));
+		elevatorEncoderWrapperDistance.setGearRatio(2);
+		elevatorEncoder.setSamplesToAverage(10);
 
 
 
-	//SUBSYSTEMS
-	driveTrain = new DriveTrain();
-	elevator = new Elevator();
-	cargoArm = new CargoArm();
-	cargoRollers = new CargoRollers();
-	hatchIntake = new HatchIntake();
-	
+		//CARGO INTAKE ARM
+		cargoArmTalon = new TalonSRX(cargoArmTalonPort);
+
+		cargoArmTalon.setInverted(true);
+
+		cargoArmTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoArmTalon);
+		cargoArmTalonWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoArmTalon);
+
+		cargoArmCurrent = new SpeedControllerWrapper(cargoArmTalonWrapperCurrent);
+		cargoArmPercentOutput = new SpeedControllerWrapper(cargoArmTalonWrapperPercentOutput);
+
+		cargoArmEncoder = new Encoder(cargoArmEncoderPort1, cargoArmEncoderPort2);
+
+		cargoArmEncoderWrapperDistance = new EncoderWrapperRateAndDistance(cargoArmEncoder, PIDSourceType.kDisplacement);
+
+		cargoArmEncoder.setDistancePerPulse(2 * Math.PI / 1024);
+
+		cargoArmLimitSwitchUp = new DigitalInput(8);
+		cargoArmLimitSwitchDown = new DigitalInput(9);
+
+
+		//CARGO INTAKE ROLLERS
+		cargoRollersTalon = new TalonSRX(cargoRollersTalonPort);
+
+		cargoRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoRollersTalon);
+		cargoRollersWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoRollersTalon);
+
+		cargoRollersCurrent = new SpeedControllerWrapper(cargoRollersWrapperCurrent);
+		cargoRollersPercentOutput = new SpeedControllerWrapper(cargoRollersWrapperPercentOutput);
+
+		cargoRollersCurrent.setInverted(true);
+		cargoRollersPercentOutput.setInverted(true);
+
+
+		//HATCH INTAKE
+		liftSolenoidIn = new Solenoid(liftSolenoidPortIn);
+		liftSolenoidOut = new Solenoid(liftSolenoidPortOut);
+		
+		pushersSolenoidIn = new Solenoid(pushersSolenoidPortIn);
+		pushersSolenoidOut = new Solenoid(pushersSolenoidPortOut);
+		
+		slideSolenoidIn = new Solenoid(slideSolenoidPortIn);
+		slideSolenoidOut = new Solenoid(slideSolenoidPortOut);
+		
+		hookSolenoidIn = new Solenoid(hookSolenoidPortIn);
+		hookSolenoidOut = new Solenoid(hookSolenoidPortOut);
+
+
+
+		//SUBSYSTEMS
+		driveTrain = new DriveTrain();
+		elevator = new Elevator();
+		cargoArm = new CargoArm();
+		cargoRollers = new CargoRollers();
+		hatchIntake = new HatchIntake();
+		
 
 	}
 

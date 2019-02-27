@@ -12,6 +12,7 @@ public class Slide extends InstantCommand {
     public Slide(boolean slide) {
         requires(RobotMap.hatchIntake);
         this.slide = slide;
+        setInterruptible(true);
     }
 
     @Override

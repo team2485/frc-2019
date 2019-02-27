@@ -15,19 +15,21 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Elevator extends Subsystem {
 
     public enum ElevatorLevel {
-        FLOOR, ROCKET_LEVEL_ONE, ROCKET_LEVEL_TWO, ROCKET_LEVEL_THREE, HATCH_LIFTING;
+        FLOOR, ROCKET_LEVEL_ONE, ROCKET_LEVEL_TWO, ROCKET_LEVEL_THREE, HATCH_LIFTING, HATCH_INTAKE_FLOOR;
         public double getPosition() {
             switch(this) {
                 case FLOOR:
-                    return 5;
+                    return 4.5;
                 case ROCKET_LEVEL_ONE:
-                    return 20;
+                    return 4;
                 case ROCKET_LEVEL_TWO:
-                    return 40;
+                    return 47-15;
                 case ROCKET_LEVEL_THREE:
-                    return 60;
+                    return 53;
                 case HATCH_LIFTING:
                     return 7;
+                case HATCH_INTAKE_FLOOR:
+                    return 0;
                 default:
                     return 0;
             }

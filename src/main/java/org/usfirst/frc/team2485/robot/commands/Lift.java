@@ -12,6 +12,7 @@ public class Lift extends InstantCommand {
     public Lift(boolean lift) {
         requires(RobotMap.hatchIntake);
         this.lift = lift;
+        setInterruptible(true);
     }
 
     @Override

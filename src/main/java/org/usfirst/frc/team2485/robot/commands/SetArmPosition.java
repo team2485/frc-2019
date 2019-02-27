@@ -11,15 +11,20 @@ public class SetArmPosition extends Command {
     public SetArmPosition(double position) {
         this.position = position;
         requires(RobotMap.cargoArm);
-        setInterruptible(false);
+        setInterruptible(true);
     }
 
     @Override
     protected void initialize() {
         super.initialize();
+        RobotMap.cargoArm.holdPosition = position;
         RobotMap.cargoArm.setPosition(position);
-        RobotMap.cargoArm.distancePID.setAbsoluteTolerance(0.02);
-        RobotMap.cargoArm.enablePID(true);
+        RobotMap.cargoArm.distancePID.setAbsoluteTolerance(0.05);
+        if(RobotMap.liftSolenoidOut.get() == false) {
+            RobotMap.cargoArm.enablePID(true);
+        } else {
+            System.out.println("Cannot lower cargo arm, hatch lifted");
+        }
     }
 
     @Override
