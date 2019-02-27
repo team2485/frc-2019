@@ -20,6 +20,7 @@ public class LoadingStationIntake extends CommandGroup {
         addSequential(new Lift(true));
         addSequential(new Slide(false));
         addSequential(new Hook(true));
+        addSequential(new WaitCommand(.5));
         addSequential(new SetElevatorPosition(ElevatorLevel.HATCH_LIFTING));
         addSequential(new WaitCommand(1));
         addSequential(new Hook(false));

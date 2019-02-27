@@ -69,6 +69,11 @@ public class Elevator extends Subsystem {
        RobotMap.elevatorPercentOutput.set(power);
     }
 
+    //TEMP; CHAAAAANGE LAAATER
+    public void setElevatorPosition(ElevatorLevel level) {
+        this.lastLevel = level;
+    }
+
     public void initDefaultCommand() {
         setDefaultCommand(new ElevatorWithControllers());
     }

@@ -213,6 +213,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Elevator Setpoint Ramp Rate Enabled: ", RobotMap.elevator.distanceSetpointRampRate.isEnabled());
 		SmartDashboard.putBoolean("Elevator Distance PID Enabled: ", RobotMap.elevator.distancePID.isEnabled());
 		SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
+		SmartDashboard.putNumber("Elevator Hatch Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3);
 
 		SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint: ", RobotMap.cargoArm.distancePID.getSetpoint());
 		SmartDashboard.putNumber("Cargo Arm Distance PID Error: ", RobotMap.cargoArm.distancePID.getError());
@@ -224,6 +225,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Cargo Arm Up Limit Switch: ", RobotMap.cargoArmLimitSwitchUp.get());
 		SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
 		SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
+		
 	}
 
 	
