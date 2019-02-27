@@ -6,6 +6,7 @@ import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class SetElevatorPosition extends Command {
+
     private double elevatorPosition;
     private ElevatorLevel elevatorLevel;
 
@@ -20,17 +21,15 @@ public class SetElevatorPosition extends Command {
         requires(RobotMap.elevator);
         setInterruptible(true);
         this.elevatorPosition = elevatorPosition;
+        this.elevatorLevel = null;
     }
 
     @Override
     protected void initialize() {
-        System.out.println("Elevator Output");
-        RobotMap.elevator.distanceSetpointTN.setOutput(elevatorPosition);
-        RobotMap.elevator.distancePID.setAbsoluteTolerance(1);
-        RobotMap.elevator.enablePID(true);
         if(elevatorLevel != null) {
-            RobotMap.elevator.lastLevel = elevatorLevel;
-            RobotMap.elevator.setElevatorPosition(elevatorLevel);
+            RobotMap.elevator.setLevel(elevatorLevel);
+        } else {
+            RobotMap.elevator.setPosition(elevatorPosition);;
         }
     }
 

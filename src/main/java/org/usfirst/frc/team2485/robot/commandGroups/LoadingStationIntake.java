@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2485.robot.commandGroups;
 
 import org.usfirst.frc.team2485.robot.RobotMap;
+import org.usfirst.frc.team2485.robot.commands.AdjustElevatorPosition;
 import org.usfirst.frc.team2485.robot.commands.Hook;
 import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
@@ -21,7 +22,7 @@ public class LoadingStationIntake extends CommandGroup {
         addSequential(new Slide(false));
         addSequential(new Hook(true));
         addSequential(new WaitCommand(.5));
-        addSequential(new SetElevatorPosition(ElevatorLevel.HATCH_LIFTING));
+        addSequential(new AdjustElevatorPosition(-3));
         addSequential(new WaitCommand(1));
         addSequential(new Hook(false));
         addSequential(new WaitCommand(1));
