@@ -6,8 +6,10 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team2485.robot;
+import org.usfirst.frc.team2485.robot.commandGroups.CargoIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.PlaceHatch;
+import org.usfirst.frc.team2485.robot.commands.CancelCommand;
 import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
 import org.usfirst.frc.team2485.robot.commands.EjectCargo;
 import org.usfirst.frc.team2485.robot.commands.Hook;
@@ -18,10 +20,13 @@ import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
 import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.commands.Slide;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
+import org.usfirst.frc.team2485.util.ThresholdHandler;
+import org.usfirst.frc.team2485.util.TriggerButton;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -92,33 +97,7 @@ public class OI {
 	public static JoystickButton SURAJ_START_BUTTON;
 	public static JoystickButton SURAJ_BACK_BUTTON;
 
-	//// CREATING BUTTONS
-	// One type of button is a joystick button which is any button on a
-	//// joystick.
-	// You create one by telling it which joystick it's on and which button
-	// number it is.
-	// Joystick stick = new Joystick(port);
-	// Button button = new JoystickButton(stick, buttonNumber);
-
-	// There are a few additional built in buttons you can use. Additionally,
-	// by subclassing Button you can create custom triggers and bind those to
-	// commands the same as any other Button.
-
-	//// TRIGGERING COMMANDS WITH BUTTONS
-	// Once you have a button, it's trivial to bind it to a button in one of
-	// three ways:
-
-	// Start the command when the button is pressed and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenPressed(new ExampleCommand());
-
-	// Run the command while the button is being held down and interrupt it once
-	// the button is released.
-	// button.whileHeld(new ExampleCommand());
-
-	// Start the command when the button is released and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenReleased(new ExampleCommand());
+	public static TriggerButton SURAJ_RTRIGGER_BUTTON;
 
 	public static void init(){
 		
@@ -157,6 +136,7 @@ public class OI {
 		SURAJ_LSTICK_BUTTON = new JoystickButton(suraj, XBOX_LSTICK_BUTTON_PORT);
 		SURAJ_RSTICK_BUTTON = new JoystickButton(suraj, XBOX_RSTICK_BUTTON_PORT);
 
+		SURAJ_RTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_RTRIGGER_PORT, 0.2);
 
 
 		// SURAJ_A.whenPressed(new Lift(false));
@@ -168,22 +148,51 @@ public class OI {
 		// SURAJ_RBUMPER.whenPressed(new Hook(false));
 		// SURAJ_START_BUTTON.whenPressed(new Pushers(false));
 		SURAJ_RBUMPER.whenPressed(new LoadingStationIntake());
+		// SURAJ_RBUMPER.whenPressed(new CancelCommand()
 
-		SURAJ_A.whenPressed(new SetElevatorPosition(ElevatorLevel.FLOOR));
+		JACKET_RBUMPER.whenPressed(new Hook(false));
+
+		Command floor = new SetElevatorPosition(ElevatorLevel.FLOOR);
+		SURAJ_A.whenPressed(floor);
+		// SURAJ_A.whenReleased(new CancelCommand(floor));
+		
 		SURAJ_X.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));
 		SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
 		SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
 		
-
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
+		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetRollers(0));
 
 		// JACKET_A.whenPressed(new SetRollers(0.4));
 		// JACKET_B.whenPressed(new SetRollers(0));
 		// JACKET_Y.whenPressed(new SetRollers(-0.4));
 		// JACKET_RBUMPER.whenPressed(new CargoRollersIntake(0.4));
 	
-		JACKET_A.whenPressed(new CargoRollersIntake(0.4));
-
+		JACKET_A.whenPressed(new CargoIntake(0.4));
 
 	}
+
+	public static boolean getQuickTurn() {
+		return OI.jacket.getRawButton(OI.XBOX_X_PORT);
+	}
+
+	public static double getDriveThrottle() {
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_RTRIGGER_PORT), 0.2, 0, 1) 
+		- ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LTRIGGER_PORT), 0.2, 0, 1);
+	}
+
+	public static double getDriveSteering() {
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1);
+	}
+
+	public static double getArmManual() {
+		return ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 0.6);
+	}
+
+	public static double getElevatorManual() {
+		return ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 0.6);
+	}
+
+
 }

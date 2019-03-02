@@ -2,6 +2,8 @@ package org.usfirst.frc.team2485.robot.commands;
 
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
+import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
+import org.usfirst.frc.team2485.util.FastMath;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -15,28 +17,28 @@ public class CargoArmWithControllers extends Command {
     @Override
     protected void execute() {
 
-        double power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 0.6);
+        double power = OI.getArmManual();
 
-        if(power != 0 && !RobotMap.liftSolenoidOut.get()) {
+        if(power != 0) {
+        // if(power != 0 && !RobotMap.liftSolenoidOut.get()) {
             RobotMap.cargoArm.enablePID(false);
             RobotMap.cargoArm.cargoArmManual(-power);
             RobotMap.cargoArm.holdPosition = RobotMap.cargoArmEncoderWrapperDistance.pidGet();
-        } else {
+            RobotMap.hatchIntake.hookIn();
+            RobotMap.hatchIntake.retractPushers();
+            RobotMap.hatchIntake.slideIn();
+            RobotMap.hatchIntake.stow();
+        } else if(RobotMap.cargoArm.distancePID.isOnTarget() || RobotMap.cargoArmLimitSwitchUp.get()) {
+            RobotMap.cargoArm.enablePID(false);
+            RobotMap.cargoArmTalonWrapperCurrent.set(CargoArm.HOLDING_CURRENT * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet()));
+        } else if(RobotMap.cargoArmLimitSwitchDown.get()) {
+            RobotMap.cargoArm.enablePID(false);
+            RobotMap.cargoArmTalonWrapperCurrent.set(0);
+        } 
+        else {
             RobotMap.cargoArm.enablePID(true);
             RobotMap.cargoArm.setPosition(RobotMap.cargoArm.holdPosition);
-       }
-
-       if(RobotMap.cargoArm.distancePID.isOnTarget() || RobotMap.cargoArmLimitSwitchUp.get()){
-            RobotMap.cargoArm.enablePID(false);
-            RobotMap.cargoArmTalonWrapperCurrent.set(RobotMap.cargoArm.HOLD_CURRENT);
-       } 
-
-       if(RobotMap.cargoArmLimitSwitchDown.get()){
-           RobotMap.cargoArm.enablePID(false);
-           RobotMap.cargoArmTalonWrapperCurrent.set(0);
-       }
-
-
+        }
 
     }
 

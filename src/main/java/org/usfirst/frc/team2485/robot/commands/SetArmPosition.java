@@ -17,11 +17,11 @@ public class SetArmPosition extends Command {
     @Override
     protected void initialize() {
         super.initialize();
-        RobotMap.cargoArm.holdPosition = position;
         RobotMap.cargoArm.setPosition(position);
         RobotMap.cargoArm.distancePID.setAbsoluteTolerance(0.05);
         if(RobotMap.liftSolenoidOut.get() == false) {
             RobotMap.cargoArm.enablePID(true);
+            
         } else {
             System.out.println("Cannot lower cargo arm, hatch lifted");
         }
@@ -39,6 +39,13 @@ public class SetArmPosition extends Command {
 
     @Override
     protected void end() {
+
+        if (RobotMap.cargoArmLimitSwitchDown.get()) {
+			RobotMap.cargoArmEncoder.reset();            
+        } else if (RobotMap.cargoArmLimitSwitchUp.get()) {
+
+        }
+        RobotMap.cargoArm.enablePID(false);
         super.end();
     }
 }

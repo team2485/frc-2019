@@ -14,10 +14,9 @@ public class DriveWithControllers extends Command {
 
     @Override
     protected void execute() {
-        double throttle = ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_RTRIGGER_PORT), 0.2, 0, 1) 
-                        - ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LTRIGGER_PORT), 0.2, 0, 1);
-        double steering = ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1);
-        boolean quickTurn = OI.jacket.getRawButton(OI.XBOX_X_PORT);
+        double throttle = OI.getDriveThrottle();
+        double steering = OI.getDriveSteering();
+        boolean quickTurn = OI.getQuickTurn();
 
         RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn);
     }

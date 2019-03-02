@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class CargoRollers extends Subsystem {
 
+    public static final double HOLDING_CURRENT = 1;
+
     public CargoRollers() {
 
     }

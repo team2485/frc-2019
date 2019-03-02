@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 
 public class Elevator extends Subsystem {
+    public final double HOLDING_CURRENT = 5;
 
     public enum ElevatorLevel {
         FLOOR, ROCKET_LEVEL_ONE, ROCKET_LEVEL_TWO, ROCKET_LEVEL_THREE, HATCH_LIFTING, HATCH_INTAKE_FLOOR;
@@ -76,6 +77,7 @@ public class Elevator extends Subsystem {
 
     public void setPosition(double position) {
         this.distanceSetpointTN.setOutput(position);
+        this.distancePID.enable();
         this.distancePID.setAbsoluteTolerance(1);
         this.enablePID(true);
     }

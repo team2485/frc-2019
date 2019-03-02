@@ -29,7 +29,7 @@ public class SetElevatorPosition extends Command {
         if(elevatorLevel != null) {
             RobotMap.elevator.setLevel(elevatorLevel);
         } else {
-            RobotMap.elevator.setPosition(elevatorPosition);;
+            RobotMap.elevator.setPosition(elevatorPosition);
         }
     }
 

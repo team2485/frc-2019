@@ -9,7 +9,7 @@ import org.usfirst.frc.team2485.util.ThresholdHandler;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ElevatorWithControllers extends Command {
-    double holdPosition;
+    public double holdPosition; 
 
     public ElevatorWithControllers() {
         setInterruptible(true);
@@ -23,7 +23,7 @@ public class ElevatorWithControllers extends Command {
 
     @Override
     protected void execute() {
-        double power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 0.6);
+        double power = OI.getElevatorManual();
 
         if(power != 0) {
             RobotMap.elevator.enablePID(false);
@@ -37,6 +37,9 @@ public class ElevatorWithControllers extends Command {
                 RobotMap.elevator.distanceSetpointTN.setOutput(holdPosition);
             }
        }
+
+       System.out.println(holdPosition);
+
     }
 
     @Override
