@@ -12,35 +12,27 @@ public class SetElevatorPosition extends Command {
 
     public SetElevatorPosition(ElevatorLevel elevatorLevel) {
         requires(RobotMap.elevator);
-        setInterruptible(true);
+        setInterruptible(false);
         this.elevatorPosition = elevatorLevel.getPosition();
         this.elevatorLevel = elevatorLevel;
     }
 
-    public SetElevatorPosition(double elevatorPosition) {
-        requires(RobotMap.elevator);
-        setInterruptible(true);
-        this.elevatorPosition = elevatorPosition;
-        this.elevatorLevel = null;
-    }
-
     @Override
     protected void initialize() {
-        if(elevatorLevel != null) {
-            RobotMap.elevator.setLevel(elevatorLevel);
-        } else {
-            RobotMap.elevator.setPosition(elevatorPosition);
-        }
+        RobotMap.elevator.setPosition(elevatorLevel.getPosition());
     }
 
     @Override
     protected void execute() {
-        
+        RobotMap.elevator.setPosition(elevatorLevel.getPosition());
+        System.out.println("Elevator Pos: " + elevatorLevel.getPosition());
+        ElevatorWithControllers.holdPosition = RobotMap.elevatorEncoderWrapperDistance.pidGet();
+        System.out.println("Hold Position: " + ElevatorWithControllers.holdPosition);
     }
 
     @Override
     protected boolean isFinished() {
-        return RobotMap.elevator.distancePID.isOnTarget();
+        return Math.abs(elevatorLevel.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet()) < 1;
     }
 
     @Override

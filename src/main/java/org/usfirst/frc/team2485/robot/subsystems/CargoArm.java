@@ -77,7 +77,6 @@ public class CargoArm extends Subsystem {
             distancePID.enable();
             motorSetter.enable();
         } else {
-            distanceSetpointTN.setOutput(0);
             distanceOutputTN.setOutput(0);
             distancePID.disable();
             motorSetter.disable();

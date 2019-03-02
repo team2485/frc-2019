@@ -154,13 +154,30 @@ public class OI {
 
 		Command floor = new SetElevatorPosition(ElevatorLevel.FLOOR);
 		SURAJ_A.whenPressed(floor);
-		// SURAJ_A.whenReleased(new CancelCommand(floor));
+		SURAJ_A.whenReleased(new CancelCommand(floor));
 		
-		SURAJ_X.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));
-		SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
-		SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
+		Command rocketLevelOne = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE); 
+		SURAJ_X.whenPressed(rocketLevelOne);
+		SURAJ_X.whenReleased(new CancelCommand(rocketLevelOne));
+
+		Command rocketLevelTwo = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO); 
+		SURAJ_B.whenPressed(rocketLevelTwo);
+		SURAJ_B.whenReleased(new CancelCommand(rocketLevelTwo));
+		
+
+		Command rocketLevelThree = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE); 
+		SURAJ_Y.whenPressed(rocketLevelThree);
+		SURAJ_Y.whenReleased(new CancelCommand(rocketLevelThree));
+		
+		
+		// SURAJ_A.whenPressed(new SetElevatorPosition(ElevatorLevel.FLOOR));
+		// // SURAJ_A.whenReleased(new CancelCommand(floor));
+		
+		// SURAJ_X.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));
+		// SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
+		// SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
+		
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
-		
 		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
 		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetRollers(0));
 

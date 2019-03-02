@@ -9,7 +9,7 @@ import org.usfirst.frc.team2485.util.ThresholdHandler;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ElevatorWithControllers extends Command {
-    public double holdPosition; 
+    public static double holdPosition = 0; 
 
     public ElevatorWithControllers() {
         setInterruptible(true);
@@ -18,7 +18,7 @@ public class ElevatorWithControllers extends Command {
 
     @Override
     protected void initialize() {
-        holdPosition = RobotMap.elevator.lastLevel.getPosition();
+        // holdPosition = RobotMap.elevator.lastLevel.getPosition();
     }
 
     @Override
