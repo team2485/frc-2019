@@ -400,10 +400,13 @@ public class DriveTrain extends Subsystem {
 		
     }
     
-    public static Pair[] generateSandstormControlPoints(double endpointX, double endpointY, double approachAngle, boolean cargoSidePath, boolean cargoFrontPath) {
+    public static Pair[] generateSandstormControlPoints(boolean cargoSidePath) {
         Pair[] controlPoints;
         RobotMap.driveLeftEncoder.reset();
         RobotMap.driveRightEncoder.reset();
+        double endpointX;
+        double endpointY;
+
 
 
         Pair startPosition; //keep for visualization
@@ -419,7 +422,7 @@ public class DriveTrain extends Subsystem {
             controlPoints[0] = new Pair(0, 150.25); 
             return controlPoints;
         } 
-        else {
+        else { //front
             double startPosX = 83.06; //change startPos x, y 
             double startPosY = -80;
             startPosition = new Pair(startPosX, startPosY); 
@@ -431,6 +434,18 @@ public class DriveTrain extends Subsystem {
             return controlPoints;
         }
         
+    }
+
+    public static Pair getSandstormEndpoint(boolean cargoSide){
+        Pair endPosition;
+        if(cargoSide){
+            endPosition = new Pair(-53.13, 150.25);
+            return endPosition;
+        } else {
+            endPosition = new Pair(-71.12, 109.65);
+            return endPosition;
+        }
+
     }
 
 	public double distInchesCenterVisionTarget() {
