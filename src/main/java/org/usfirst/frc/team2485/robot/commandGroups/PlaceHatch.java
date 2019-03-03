@@ -21,10 +21,11 @@ public class PlaceHatch extends CommandGroup {
         addParallel(new SetArmPosition(CargoArm.TOP_POSITION));
         addSequential(new Lift(true));
         addSequential(new Slide(true));
-        addSequential(new Hook(true));
-        addSequential(new WaitCommand(.05));
+
         addSequential(new Pushers(true));
-        addSequential(new WaitCommand(0.25));
+        addSequential(new WaitCommand(.05));
+        addSequential(new Hook(true));
+        addSequential(new WaitCommand(0.5));
         addSequential(new Pushers(false));
         addSequential(new AdjustElevatorPosition(-3));
         addSequential(new WaitCommand(0.5));

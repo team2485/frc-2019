@@ -19,15 +19,14 @@ public class SetElevatorPosition extends Command {
 
     @Override
     protected void initialize() {
+        RobotMap.elevator.lastLevel = elevatorLevel;
         RobotMap.elevator.setPosition(elevatorLevel.getPosition());
     }
 
     @Override
     protected void execute() {
         RobotMap.elevator.setPosition(elevatorLevel.getPosition());
-        System.out.println("Elevator Pos: " + elevatorLevel.getPosition());
         ElevatorWithControllers.holdPosition = RobotMap.elevatorEncoderWrapperDistance.pidGet();
-        System.out.println("Hold Position: " + ElevatorWithControllers.holdPosition);
     }
 
     @Override

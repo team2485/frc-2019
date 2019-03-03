@@ -162,7 +162,7 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.retractPushers();
 		RobotMap.hatchIntake.stow();
 		Scheduler.getInstance().add(new SetRollers(0));
-		Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
+		// Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
 		
 		UsbCamera jevoisCam = CameraServer.getInstance().startAutomaticCapture();
 		jevoisCam.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
@@ -220,7 +220,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Elevator Distance PID Enabled: ", RobotMap.elevator.distancePID.isEnabled());
 		SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
 		SmartDashboard.putNumber("Elevator Hatch Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3);
-		SmartDashboard.putNumber("Elevator Output: ", RobotMap.elevatorTalon1.getOutputCurrent());
+		SmartDashboard.putNumber("Elevator Output Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
 
 
 		SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint: ", RobotMap.cargoArm.distancePID.getSetpoint());

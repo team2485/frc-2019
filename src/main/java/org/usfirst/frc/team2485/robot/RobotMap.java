@@ -213,6 +213,39 @@ public class RobotMap {
 		driveRightTalon3 = new TalonSRX(driveRightTalonPort3);
 		driveRightTalon4 = new TalonSRX(driveRightTalonPort4);
 
+		driveLeftTalon1.configContinuousCurrentLimit(7);
+		driveLeftTalon2.configContinuousCurrentLimit(7);
+		driveLeftTalon3.configContinuousCurrentLimit(7);
+		driveLeftTalon4.configContinuousCurrentLimit(7);
+
+		driveRightTalon1.configContinuousCurrentLimit(7);
+		driveRightTalon2.configContinuousCurrentLimit(7);
+		driveRightTalon3.configContinuousCurrentLimit(7);
+		driveRightTalon4.configContinuousCurrentLimit(7);
+
+		driveLeftTalon1.configPeakCurrentLimit(7);
+		driveLeftTalon2.configPeakCurrentLimit(7);
+		driveLeftTalon3.configPeakCurrentLimit(7);
+		driveLeftTalon4.configPeakCurrentLimit(7);
+
+		driveRightTalon1.configPeakCurrentLimit(7);
+		driveRightTalon2.configPeakCurrentLimit(7);
+		driveRightTalon3.configPeakCurrentLimit(7);
+		driveRightTalon4.configPeakCurrentLimit(7);
+
+		driveLeftTalon1.enableCurrentLimit(true);
+		driveLeftTalon2.enableCurrentLimit(true);
+		driveLeftTalon3.enableCurrentLimit(true);
+		driveLeftTalon4.enableCurrentLimit(true);
+
+		driveRightTalon1.enableCurrentLimit(true);
+		driveRightTalon2.enableCurrentLimit(true);
+		driveRightTalon3.enableCurrentLimit(true);
+		driveRightTalon4.enableCurrentLimit(true);
+
+
+
+
 		gyroTalon = new TalonSRX(gyroTalonPort);
 
 		driveLeftTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, driveLeftTalon1);

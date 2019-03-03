@@ -97,7 +97,7 @@ public class OI {
 	public static JoystickButton SURAJ_START_BUTTON;
 	public static JoystickButton SURAJ_BACK_BUTTON;
 
-	public static TriggerButton SURAJ_RTRIGGER_BUTTON;
+	public static TriggerButton SURAJ_LTRIGGER_BUTTON;
 
 	public static void init(){
 		
@@ -136,7 +136,7 @@ public class OI {
 		SURAJ_LSTICK_BUTTON = new JoystickButton(suraj, XBOX_LSTICK_BUTTON_PORT);
 		SURAJ_RSTICK_BUTTON = new JoystickButton(suraj, XBOX_RSTICK_BUTTON_PORT);
 
-		SURAJ_RTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_RTRIGGER_PORT, 0.2);
+		SURAJ_LTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_LTRIGGER_PORT, 0.2);
 
 
 		// SURAJ_A.whenPressed(new Lift(false));
@@ -178,8 +178,8 @@ public class OI {
 		// SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
 		
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
-		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetRollers(0));
+		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
+		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));
 
 		// JACKET_A.whenPressed(new SetRollers(0.4));
 		// JACKET_B.whenPressed(new SetRollers(0));
@@ -200,7 +200,7 @@ public class OI {
 	}
 
 	public static double getDriveSteering() {
-		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1);
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1) * 0.5;
 	}
 
 	public static double getArmManual() {

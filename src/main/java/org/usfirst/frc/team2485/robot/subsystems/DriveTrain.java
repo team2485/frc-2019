@@ -132,6 +132,26 @@ public class DriveTrain extends Subsystem {
         angVelPID.setPID(ConstantsIO.kP_DriveAngVel, ConstantsIO.kI_DriveAngVel, ConstantsIO.kD_DriveAngVel, ConstantsIO.kF_DriveAngVel);
     }
 
+    public boolean driveTo(double distance, double maxSpeed, double angle, double curvature, double toleranceDist, double toleranceAngle) {
+		anglePID.enable();
+		distancePID.enable();
+		velocityPID.enable();
+		angVelPID.enable();
+		//velocityRampRate.enable();
+		leftMotorSetter.enable();
+		rightMotorSetter.enable();
+		angleSetpointTN.setOutput(angle);
+		distanceSetpointTN.setOutput(distance);
+		distancePID.setAbsoluteTolerance(toleranceDist);
+		anglePID.setAbsoluteTolerance(toleranceAngle);
+		
+		distancePID.setOutputRange(-maxSpeed, maxSpeed);
+
+		return distancePID.isOnTarget() && anglePID.isOnTarget();
+	}
+
+
+
     public void enablePID(boolean enabled) {
         if (enabled) {
             distancePID.enable();

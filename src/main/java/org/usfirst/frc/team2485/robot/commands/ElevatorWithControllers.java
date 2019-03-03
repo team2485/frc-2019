@@ -29,6 +29,7 @@ public class ElevatorWithControllers extends Command {
             RobotMap.elevator.enablePID(false);
             RobotMap.elevator.elevatorManual(-power);
             holdPosition = RobotMap.elevatorEncoderWrapperDistance.pidGet();
+            RobotMap.elevator.distanceSetpointTN.setOutput(holdPosition);
         } else {
             if(RobotMap.elevatorEncoderWrapperDistance.pidGet() < 6.5 && (RobotMap.elevator.lastLevel == ElevatorLevel.FLOOR || RobotMap.elevator.lastLevel == ElevatorLevel.HATCH_INTAKE_FLOOR)) {
                 RobotMap.elevator.enablePID(false);
@@ -38,7 +39,6 @@ public class ElevatorWithControllers extends Command {
             }
        }
 
-       System.out.println(holdPosition);
 
     }
 
