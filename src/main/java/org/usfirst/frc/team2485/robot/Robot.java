@@ -7,22 +7,38 @@
 
 package org.usfirst.frc.team2485.robot;
 
+import java.util.ArrayList;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import org.usfirst.frc.team2485.util.AutoPath.Pair;
+
+import edu.wpi.first.cameraserver.CameraServer;
+
+
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.vision.VisionThread;
 
-import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
-import org.usfirst.frc.team2485.robot.commands.EjectCargo;
-import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
-import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
-import org.usfirst.frc.team2485.robot.commands.SetRollers;
-import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
-import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
+
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
+import org.usfirst.frc.team2485.util.AutoPath;
+import org.usfirst.frc.team2485.util.GripPipeline;
+
+
+
+
+import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
+import org.usfirst.frc.team2485.robot.commands.SetRollers;
+import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 
 
 
@@ -37,6 +53,32 @@ import org.usfirst.frc.team2485.util.FastMath;
  */
 
 public class Robot extends TimedRobot {
+
+	public static final int IMG_WIDTH = 128;
+	public static final int IMG_HEIGHT = 96;
+	
+	private VisionThread visionThread;
+	public static double centerX = 0.0;
+	public static ArrayList<Double> samples;
+	public static boolean doneCollecting = false;
+
+	public static Pair[] controlPoints;
+	public Pair endpoint;
+
+
+	private static AutoPath path;
+
+
+	UsbCamera camera;
+	private final Object imgLock = new Object();
+	
+	
+	Command m_autonomousCommand;
+	SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+	public static boolean collectingSamples;
+
+	public static boolean contoursVisible;
 	
 	boolean ejecting = false;
 
