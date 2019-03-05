@@ -45,7 +45,7 @@ public class CargoRollersIntake extends Command {
                 }
             }
         } else {
-            RobotMap.cargoRollersPercentOutput.set(0.1);
+            RobotMap.cargoRollersPercentOutput.set(0.3);
         }
     }
 
@@ -57,6 +57,6 @@ public class CargoRollersIntake extends Command {
 
     @Override
     protected void end() {
-        RobotMap.cargoRollersPercentOutput.set(0.1);
+        RobotMap.cargoRollersPercentOutput.set(0.2);
     }
 }

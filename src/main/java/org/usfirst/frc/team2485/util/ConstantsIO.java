@@ -44,6 +44,7 @@ public class ConstantsIO {
 	public static double kI_DriveAngVel;
 	public static double kD_DriveAngVel;
 	public static double kF_DriveAngVel;
+	public static double kV_DriveAngVel;
 	
 	public static double filterCoefficient;
 	
@@ -102,7 +103,6 @@ public class ConstantsIO {
 		kI_DriveVelocity = Double.parseDouble(data.get("kI_DriveVelocity"));
 		kD_DriveVelocity = Double.parseDouble(data.get("kD_DriveVelocity"));
 		kF_DriveVelocity = Double.parseDouble(data.get("kF_DriveVelocity"));
-		kV_DriveVelocity = Double.parseDouble(data.get("kV_DriveVelocity"));
 		
 		kP_DriveAngle = Double.parseDouble(data.get("kP_DriveAngle"));
 		kI_DriveAngle = Double.parseDouble(data.get("kI_DriveAngle"));
@@ -112,6 +112,8 @@ public class ConstantsIO {
 		kI_DriveAngVel = Double.parseDouble(data.get("kI_DriveAngVel"));
 		kD_DriveAngVel = Double.parseDouble(data.get("kD_DriveAngVel"));
 		kF_DriveAngVel = Double.parseDouble(data.get("kF_DriveAngVel"));
+		kV_DriveAngVel = Double.parseDouble(data.get("kV_DriveAngVel"));
+
 		
 		filterCoefficient = Double.parseDouble(data.get("filterCoefficient"));
 		

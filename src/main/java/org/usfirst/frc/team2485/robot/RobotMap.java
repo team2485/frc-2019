@@ -23,6 +23,13 @@ import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
 import org.usfirst.frc.team2485.util.TalonSRXWrapper;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle.Units;
 
+import  org.usfirst.frc.team2485.util.LidarWrapper;
+import edu.wpi.first.wpilibj.I2C.Port;
+import java.nio.ByteBuffer;
+import edu.wpi.first.wpilibj.I2C;
+
+
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -42,6 +49,17 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class RobotMap {
 	//ROBOT CONSTANTS
 	public static int DRUM_RADIUS = 1;
+
+	//camera
+	private static final int IMG_WIDTH = 128;
+	private static final int IMG_HEIGHT = 96;
+
+	//
+	public static byte[] colorSensorOutput;
+	public static LidarWrapper lidar;
+
+	public static I2C colorSensor; 
+
 
 	//PORTS
 	//Speed Controllers
@@ -291,14 +309,23 @@ public class RobotMap {
 		driveLeftEncoder = new Encoder(driveLeftEncoderPort1, driveLeftEncoderPort2);
 		driveRightEncoder = new Encoder(driveRightEncoderPort1, driveRightEncoderPort2);
 		
+		driveLeftEncoder.setDistancePerPulse(3 * 2 * Math.PI/250);
+		driveRightEncoder.setDistancePerPulse(3 * 2 * Math.PI/250);
+
 		driveLeftEncoderWrapperDistance = new EncoderWrapperRateAndDistance(driveLeftEncoder, PIDSourceType.kDisplacement);
 		driveRightEncoderWrapperDistance = new EncoderWrapperRateAndDistance(driveRightEncoder, PIDSourceType.kDisplacement);
 		driveLeftEncoderWrapperRate = new EncoderWrapperRateAndDistance(driveLeftEncoder, PIDSourceType.kRate);
 		driveRightEncoderWrapperRate = new EncoderWrapperRateAndDistance(driveRightEncoder, PIDSourceType.kRate);
 
+		driveLeftEncoderWrapperDistance.setGearRatio(16.0/62);
+		driveLeftEncoderWrapperRate.setGearRatio(16.0/62);
+		driveRightEncoderWrapperDistance.setGearRatio(16.0/62);
+		driveRightEncoderWrapperRate.setGearRatio(16.0/62);
+
 		gyro = new PigeonIMU(gyroTalon);
 		gyroAngleWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kDisplacement, Units.RADS);
 		gyroRateWrapper = new PigeonWrapperRateAndAngle(gyro, PIDSourceType.kRate, Units.RADS);
+
 
 
 		//ELEVATOR
@@ -330,7 +357,7 @@ public class RobotMap {
 		//CARGO INTAKE ARM
 		cargoArmTalon = new TalonSRX(cargoArmTalonPort);
 
-		cargoArmTalon.setInverted(true);
+		cargoArmTalon.setInverted(false);
 
 		cargoArmTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoArmTalon);
 		cargoArmTalonWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoArmTalon);
@@ -382,6 +409,10 @@ public class RobotMap {
 		cargoArm = new CargoArm();
 		cargoRollers = new CargoRollers();
 		hatchIntake = new HatchIntake();
+
+		//I2C things
+		lidar = new LidarWrapper(I2C.Port.kOnboard);
+		colorSensor = new I2C(I2C.Port.kOnboard, 0x3C);
 		
 
 	}

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2485.util;
 
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,14 +10,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
 
-import edu.wpi.first.vision.VisionPipeline;
-
 import org.opencv.core.*;
 import org.opencv.core.Core.*;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
 import org.opencv.objdetect.*;
+import org.usfirst.frc.team2485.robot.Robot;
+
+import edu.wpi.first.vision.VisionPipeline;
 
 /**
 * GripPipeline class.
@@ -33,8 +35,8 @@ public class GripPipeline implements VisionPipeline {
 	private Mat cvGaussianblurOutput = new Mat();
 	private Mat cvCannyOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
-	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> convexHullsOutput = new ArrayList<MatOfPoint>();
+	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -43,19 +45,19 @@ public class GripPipeline implements VisionPipeline {
 	/**
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
 	 */
-	@Override	public void process(Mat source0) {
+	public void process(Mat source0) {
 		// Step Resize_Image0:
 		Mat resizeImageInput = source0;
-		double resizeImageWidth = 128.0;
-		double resizeImageHeight = 96.0;
+		double resizeImageWidth = Robot.IMG_WIDTH;
+		double resizeImageHeight = Robot.IMG_HEIGHT;
 		int resizeImageInterpolation = Imgproc.INTER_CUBIC;
 		resizeImage(resizeImageInput, resizeImageWidth, resizeImageHeight, resizeImageInterpolation, resizeImageOutput);
 
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = resizeImageOutput;
-		double[] hsvThresholdHue = {0.0, 0.0};
-		double[] hsvThresholdSaturation = {0.0, 145.95959800662416};
-		double[] hsvThresholdValue = {225.64748201438852, 255.0};
+		double[] hsvThresholdHue = {66.0, 100.0};
+		double[] hsvThresholdSaturation = {80.0, 167.0};
+		double[] hsvThresholdValue = {255.0, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_GaussianBlur0:
@@ -70,7 +72,7 @@ public class GripPipeline implements VisionPipeline {
 		Mat cvCannyImage = cvGaussianblurOutput;
 		double cvCannyThreshold1 = 100.0;
 		double cvCannyThreshold2 = 200.0;
-		double cvCannyAperturesize = 3.0;
+		double cvCannyAperturesize = 3;
 		boolean cvCannyL2gradient = false;
 		cvCanny(cvCannyImage, cvCannyThreshold1, cvCannyThreshold2, cvCannyAperturesize, cvCannyL2gradient, cvCannyOutput);
 
@@ -79,24 +81,24 @@ public class GripPipeline implements VisionPipeline {
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
-		// Step Filter_Contours0:
-		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 10.0;
-		double filterContoursMinPerimeter = 0.0;
-		double filterContoursMinWidth = 0.0;
-		double filterContoursMaxWidth = 100000.0;
-		double filterContoursMinHeight = 0.0;
-		double filterContoursMaxHeight = 1000.0;
-		double[] filterContoursSolidity = {0, 100};
-		double filterContoursMaxVertices = 1000000.0;
-		double filterContoursMinVertices = 0.0;
-		double filterContoursMinRatio = 0.0;
-		double filterContoursMaxRatio = 1000.0;
-		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
-
 		// Step Convex_Hulls0:
-		ArrayList<MatOfPoint> convexHullsContours = filterContoursOutput;
+		ArrayList<MatOfPoint> convexHullsContours = findContoursOutput;
 		convexHulls(convexHullsContours, convexHullsOutput);
+
+		// Step Filter_Contours0:
+		ArrayList<MatOfPoint> filterContoursContours = convexHullsOutput;
+		double filterContoursMinArea = 200.0;
+		double filterContoursMinPerimeter = 15.0;
+		double filterContoursMinWidth = 14.0;
+		double filterContoursMaxWidth = 50000.0;
+		double filterContoursMinHeight = 20;
+		double filterContoursMaxHeight = 1000;
+		double[] filterContoursSolidity = {0, 100};
+		double filterContoursMaxVertices = 1000000;
+		double filterContoursMinVertices = 0;
+		double filterContoursMinRatio = 0;
+		double filterContoursMaxRatio = 1000;
+		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}
 
@@ -141,19 +143,19 @@ public class GripPipeline implements VisionPipeline {
 	}
 
 	/**
-	 * This method is a generated getter for the output of a Filter_Contours.
-	 * @return ArrayList<MatOfPoint> output from Filter_Contours.
-	 */
-	public ArrayList<MatOfPoint> filterContoursOutput() {
-		return filterContoursOutput;
-	}
-
-	/**
 	 * This method is a generated getter for the output of a Convex_Hulls.
 	 * @return ArrayList<MatOfPoint> output from Convex_Hulls.
 	 */
 	public ArrayList<MatOfPoint> convexHullsOutput() {
 		return convexHullsOutput;
+	}
+
+	/**
+	 * This method is a generated getter for the output of a Filter_Contours.
+	 * @return ArrayList<MatOfPoint> output from Filter_Contours.
+	 */
+	public ArrayList<MatOfPoint> filterContoursOutput() {
+		return filterContoursOutput;
 	}
 
 
@@ -239,6 +241,29 @@ public class GripPipeline implements VisionPipeline {
 		Imgproc.findContours(input, contours, hierarchy, mode, method);
 	}
 
+	/**
+	 * Compute the convex hulls of contours.
+	 * @param inputContours The contours on which to perform the operation.
+	 * @param outputContours The contours where the output will be stored.
+	 */
+	private void convexHulls(List<MatOfPoint> inputContours,
+		ArrayList<MatOfPoint> outputContours) {
+		final MatOfInt hull = new MatOfInt();
+		outputContours.clear();
+		for (int i = 0; i < inputContours.size(); i++) {
+			final MatOfPoint contour = inputContours.get(i);
+			final MatOfPoint mopHull = new MatOfPoint();
+			Imgproc.convexHull(contour, hull);
+			mopHull.create((int) hull.size().height, 1, CvType.CV_32SC2);
+			for (int j = 0; j < hull.size().height; j++) {
+				int index = (int) hull.get(j, 0)[0];
+				double[] point = new double[] {contour.get(index, 0)[0], contour.get(index, 0)[1]};
+				mopHull.put(j, 0, point);
+			}
+			outputContours.add(mopHull);
+		}
+	}
+
 
 	/**
 	 * Filters out contours that do not meet certain criteria.
@@ -285,29 +310,6 @@ public class GripPipeline implements VisionPipeline {
 			final double ratio = bb.width / (double)bb.height;
 			if (ratio < minRatio || ratio > maxRatio) continue;
 			output.add(contour);
-		}
-	}
-
-	/**
-	 * Compute the convex hulls of contours.
-	 * @param inputContours The contours on which to perform the operation.
-	 * @param outputContours The contours where the output will be stored.
-	 */
-	private void convexHulls(List<MatOfPoint> inputContours,
-		ArrayList<MatOfPoint> outputContours) {
-		final MatOfInt hull = new MatOfInt();
-		outputContours.clear();
-		for (int i = 0; i < inputContours.size(); i++) {
-			final MatOfPoint contour = inputContours.get(i);
-			final MatOfPoint mopHull = new MatOfPoint();
-			Imgproc.convexHull(contour, hull);
-			mopHull.create((int) hull.size().height, 1, CvType.CV_32SC2);
-			for (int j = 0; j < hull.size().height; j++) {
-				int index = (int) hull.get(j, 0)[0];
-				double[] point = new double[] {contour.get(index, 0)[0], contour.get(index, 0)[1]};
-				mopHull.put(j, 0, point);
-			}
-			outputContours.add(mopHull);
 		}
 	}
 

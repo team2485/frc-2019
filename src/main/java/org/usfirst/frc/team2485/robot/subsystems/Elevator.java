@@ -22,13 +22,13 @@ public class Elevator extends Subsystem {
                 case FLOOR:
                     return 4.5;
                 case ROCKET_LEVEL_ONE:
-                    return 4;
+                    return 6;
                 case ROCKET_LEVEL_TWO:
-                    return 47-18;
+                    return 33.5;
                 case ROCKET_LEVEL_THREE:
-                    return 57;
+                    return 61;
                 case HATCH_LIFTING:
-                    return 7;
+                    return 12;
                 case HATCH_INTAKE_FLOOR:
                     return 0;
                 default:
@@ -100,5 +100,7 @@ public class Elevator extends Subsystem {
     public void updateConstants() {
         distanceSetpointRampRate.setRampRates(ConstantsIO.elevatorDistanceSetpointUpRamp, ConstantsIO.elevatorDistanceSetpointDownRamp);
         distancePID.setPID(ConstantsIO.kP_elevatorDistance, ConstantsIO.kI_elevatorDistance, ConstantsIO.kD_elevatorDistance);
+        
+        distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax);
     }
 }

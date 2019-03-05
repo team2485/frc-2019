@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  */
 public class WarlordsPIDController extends WarlordsControlSystem {
 	
-	private double kP, kI, kD, kF, kC, kV;
+	public double kP, kI, kD, kF, kC, kV;
 
 	private double vMax;
 

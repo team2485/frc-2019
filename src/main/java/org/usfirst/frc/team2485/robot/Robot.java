@@ -7,22 +7,39 @@
 
 package org.usfirst.frc.team2485.robot;
 
+import java.util.ArrayList;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import org.usfirst.frc.team2485.util.AutoPath.Pair;
+
+import edu.wpi.first.cameraserver.CameraServer;
+
+
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.vision.VisionThread;
 
-import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
-import org.usfirst.frc.team2485.robot.commands.EjectCargo;
-import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
-import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
-import org.usfirst.frc.team2485.robot.commands.SetRollers;
-import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
-import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
+
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
+import org.usfirst.frc.team2485.util.AutoPath;
+import org.usfirst.frc.team2485.util.GripPipeline;
+import org.usfirst.frc.team2485.robot.commandGroups.SandstormAuto;
+import org.usfirst.frc.team2485.robot.commands.DriveStraight;
+import org.usfirst.frc.team2485.robot.commands.DriveTo;
+import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
+import org.usfirst.frc.team2485.robot.commands.ElevatorWithControllers;
+import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
+import org.usfirst.frc.team2485.robot.commands.SetRollers;
+import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 
 
 
@@ -37,6 +54,32 @@ import org.usfirst.frc.team2485.util.FastMath;
  */
 
 public class Robot extends TimedRobot {
+
+	public static final int IMG_WIDTH = 128;
+	public static final int IMG_HEIGHT = 96;
+	
+	private VisionThread visionThread;
+	public static double centerX = 0.0;
+	public static ArrayList<Double> samples;
+	public static boolean doneCollecting = false;
+
+	public static Pair[] controlPoints;
+	public Pair endpoint;
+
+
+	private static AutoPath path;
+
+
+	UsbCamera camera;
+	private final Object imgLock = new Object();
+	
+	
+	Command m_autonomousCommand;
+	SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+	public static boolean collectingSamples;
+
+	public static boolean contoursVisible;
 	
 	boolean ejecting = false;
 
@@ -70,6 +113,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		updateSmartDashboard();
 	}
 
 	/**
@@ -86,8 +130,34 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		ConstantsIO.init();
-		RobotMap.updateConstants();
-	
+		RobotMap.driveTrain.updateConstants();
+		RobotMap.hatchIntake.slideIn();
+		RobotMap.hatchIntake.hookIn();
+		RobotMap.hatchIntake.retractPushers();
+		RobotMap.hatchIntake.stow();
+		RobotMap.cargoArmEncoder.reset();
+		RobotMap.elevatorEncoder.reset();
+		RobotMap.driveLeftEncoder.reset();
+		RobotMap.driveRightEncoder.reset();
+		RobotMap.gyroAngleWrapper.reset();
+		RobotMap.gyroRateWrapper.reset();
+		// Scheduler.getInstance().add(new SetArmPosition(1.7));
+		
+		// RobotMap.driveTrain.anglePID.enable();
+		// RobotMap.driveTrain.angVelPID.enable();
+		// RobotMap.driveTrain.leftMotorSetter.enable();
+		// RobotMap.driveTrain.rightMotorSetter.enable();
+		// RobotMap.driveTrain.angleSetpointTN.setOutput(Math.PI/2);
+		//RobotMap.driveTrain.setVelocities(0, 0.1);
+		// RobotMap.driveTrain.enablePID(true);		
+
+		// RobotMap.driveTrain.setVelocities(30, 0);
+		
+		//RobotMap.driveTrain.enablePID(true);
+		// RobotMap.driveTrain.distanceSetpointTN.setOutput(20);	
+		//RobotMap.driveTrain.setVelocities(30, 0);
+		//RobotMap.elevatorCurrent.set(0.2);
+
 
 		//RobotMap.driveTrain.enablePID(true);
 		// Pair[] controlPoints = { new Pair( 35.6, -255.0), new Pair(0, -110.0), new Pair(0.0, 0.0) };
@@ -119,8 +189,16 @@ public class Robot extends TimedRobot {
 
 		//RobotMap.elevator.setElevatorVelocity(15);
 
-		RobotMap.elevator.enablePID(true);
-		// RobotMap.elevator.setElevatorPosition(30);
+		// Scheduler.getInstance().add(new SandstormAuto());
+		//Scheduler.getInstance().add(new DriveTo(new AutoPath(AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 155.5),
+			//new Pair(53.5 - 6, 30.0), new Pair(-22.5, 155.5))), 60, false, 15000, false, true));
+		 
+
+		//RobotMap.driveTrain.distanceSetpointTN.setOutput(100);
+
+		// Scheduler.getInstance().add(new DriveStraight(100, 1000000));
+		
+	
 
 
 	}
@@ -130,20 +208,23 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		
+
+		
 		Scheduler.getInstance().run();
 		updateSmartDashboard();
 
 		// RobotMap.elevatorWrapperCurrent.set(1);
-		
+		//RobotMap.cargoArm.distanceSetpointTN.setOutput(1);
 
 
 	
 
-		//RobotMap.elevatorTalonWrapperCurrent1.set(5);
-		//RobotMap.elevatorTalonWrapperCurrent2.set(5);
+		// RobotMap.elevatorTalonWrapperCurrent1.set(15);
+		// RobotMap.elevatorTalonWrapperCurrent2.set(15);
 
 		//RobotMap.driveTrain.setAngle(Math.PI/2);
-		//RobotMap.driveTrain.setVelocities(30, 0.2);
+		
 		
 
 		
@@ -161,13 +242,16 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.hookIn();
 		RobotMap.hatchIntake.retractPushers();
 		RobotMap.hatchIntake.stow();
+		RobotMap.driveTrain.enablePID(false);
 		Scheduler.getInstance().add(new SetRollers(0));
+		Scheduler.getInstance().add(new DriveWithControllers());
 		// Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
+		
 		
 		UsbCamera jevoisCam = CameraServer.getInstance().startAutomaticCapture();
 		jevoisCam.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
 
-		//Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
+		Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
 
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
@@ -221,6 +305,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
 		SmartDashboard.putNumber("Elevator Hatch Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3);
 		SmartDashboard.putNumber("Elevator Output Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
+		SmartDashboard.putNumber("Elevator Encoder: ", RobotMap.elevatorEncoderWrapperDistance.pidGet());
 
 
 		SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint: ", RobotMap.cargoArm.distancePID.getSetpoint());
@@ -235,6 +320,34 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
 		SmartDashboard.putNumber("Cargo Roller Current", RobotMap.cargoRollersTalon.getOutputCurrent());
 
+		SmartDashboard.putNumber("Drive Train Distance Setpoint: ", RobotMap.driveTrain.distanceSetpointTN.pidGet());
+		SmartDashboard.putNumber("Drive Train Angle Setpoint: ", RobotMap.driveTrain.angleSetpointTN.pidGet());
+		SmartDashboard.putNumber("DT Control Point X: ", RobotMap.driveTrain.generateSandstormControlPoints(true)[0].getX());
+		SmartDashboard.putNumber("DT Control Point Y: ", RobotMap.driveTrain.generateSandstormControlPoints(true)[0].getY());
+		SmartDashboard.putNumber("DT Endpoint X: ", RobotMap.driveTrain.getSandstormEndpoint(true).getX());
+		SmartDashboard.putNumber("DT Endpoint Y: ", RobotMap.driveTrain.getSandstormEndpoint(true).getY());
+		SmartDashboard.putBoolean("Drive Train Distance PID Enabled: ", RobotMap.driveTrain.distancePID.isEnabled());
+		SmartDashboard.putBoolean("Drive Train Angle PID Enabled: ", RobotMap.driveTrain.anglePID.isEnabled());
+		SmartDashboard.putNumber("Drive Train Talon Current: ", RobotMap.driveLeftTalon1.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Train Distance Output: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
+		SmartDashboard.putNumber("Drive Train Velocity Output: ", RobotMap.driveTrain.velocityOutputTN.getOutput());
+		SmartDashboard.putNumber("Drive Train Talon Current Setpoint: ", RobotMap.driveLeftTalon1.getClosedLoopTarget());
+		SmartDashboard.putNumber("Drive Train Velocity PID Setpoint: ", RobotMap.driveTrain.velocityPID.getSetpoint());
+		SmartDashboard.putNumber("Drive Train Velocity PID Source: ", RobotMap.driveTrain.velocityPIDSource.pidGet());
+		SmartDashboard.putNumber("Drive Train Distance Output TN: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
+		SmartDashboard.putNumber("Drive Train Distance Error: ", RobotMap.driveTrain.distancePID.getError());
+		SmartDashboard.putNumber("Drive Train Velocity Error: ", RobotMap.driveTrain.velocityPID.getError());
+		SmartDashboard.putNumber("DriveTrain Distance Source: ", RobotMap.driveTrain.distancePIDSource.pidGet());
+		SmartDashboard.putNumber("Drive Train Left Encoder Wrapper Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
+		SmartDashboard.putNumber("Drive Train Right Encoder Wrapper Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
+		SmartDashboard.putNumber("Drive Train Ang Vel Error: ", RobotMap.driveTrain.angVelPID.getError());
+		SmartDashboard.putNumber("Drive Train Angle Error: ", RobotMap.driveTrain.anglePID.getError());
+		SmartDashboard.putNumber("Cargo Arm Talon Output", RobotMap.cargoArmTalon.getMotorOutputPercent());
+		SmartDashboard.putNumber("Drive Train Ang Vel Output", RobotMap.driveTrain.angVelOutputTN.getOutput());
+		SmartDashboard.putNumber("kP Ang Vel", ConstantsIO.kP_DriveAngVel);
+		SmartDashboard.putNumber("kP Ang Vel public version", RobotMap.driveTrain.angVelPID.kP);
+		SmartDashboard.putNumber("Gyro Value:", RobotMap.gyroAngleWrapper.pidGet());
+		SmartDashboard.putBoolean("Ang Vel Enabled: ", RobotMap.driveTrain.angVelPID.isEnabled());
 	}
 
 	

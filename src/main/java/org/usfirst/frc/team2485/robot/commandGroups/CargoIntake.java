@@ -21,9 +21,9 @@ public class CargoIntake extends CommandGroup {
         addSequential(new Slide(false));
         addSequential(new Lift(false));
         
-        // addParallel(new SetArmPosition(0));
+        addParallel(new SetArmPosition(0));
         addSequential(new CargoRollersIntake(power));
-        // addSequential(new SetArmPosition(CargoArm.TOP_POSITION));
+        addSequential(new SetArmPosition(CargoArm.TOP_POSITION));
     }
 
 }

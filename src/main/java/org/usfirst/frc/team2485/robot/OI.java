@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -98,6 +99,7 @@ public class OI {
 	public static JoystickButton SURAJ_BACK_BUTTON;
 
 	public static TriggerButton SURAJ_LTRIGGER_BUTTON;
+	public static TriggerButton SURAJ_LYJOYSTICK;
 
 	public static void init(){
 		
@@ -137,6 +139,7 @@ public class OI {
 		SURAJ_RSTICK_BUTTON = new JoystickButton(suraj, XBOX_RSTICK_BUTTON_PORT);
 
 		SURAJ_LTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_LTRIGGER_PORT, 0.2);
+		SURAJ_LYJOYSTICK = new TriggerButton(suraj, XBOX_LYJOYSTICK_PORT, 0.2);
 
 
 		// SURAJ_A.whenPressed(new Lift(false));
@@ -144,7 +147,9 @@ public class OI {
 		// SURAJ_X.whenPressed(new Pushers(true));
 		// SURAJ_Y.whenPressed(new Slide(true));
 
-		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
+		CommandGroup placeHatch = new PlaceHatch();
+		SURAJ_LBUMPER.whenPressed(placeHatch);
+		SURAJ_LYJOYSTICK.whenPressed(new CancelCommand(placeHatch));
 		// SURAJ_RBUMPER.whenPressed(new Hook(false));
 		// SURAJ_START_BUTTON.whenPressed(new Pushers(false));
 		SURAJ_RBUMPER.whenPressed(new LoadingStationIntake());
@@ -164,7 +169,6 @@ public class OI {
 		SURAJ_B.whenPressed(rocketLevelTwo);
 		SURAJ_B.whenReleased(new CancelCommand(rocketLevelTwo));
 		
-
 		Command rocketLevelThree = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE); 
 		SURAJ_Y.whenPressed(rocketLevelThree);
 		SURAJ_Y.whenReleased(new CancelCommand(rocketLevelThree));
@@ -176,6 +180,8 @@ public class OI {
 		// SURAJ_X.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));
 		// SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
 		// SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
+		
+	
 		
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
 		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
@@ -210,6 +216,8 @@ public class OI {
 	public static double getElevatorManual() {
 		return ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 0.6);
 	}
+
+
 
 
 }

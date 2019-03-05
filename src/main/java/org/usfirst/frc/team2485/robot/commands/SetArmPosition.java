@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class SetArmPosition extends Command {
     
     private double position;
+    public long time;
 
     public SetArmPosition(double position) {
         this.position = position;
@@ -16,6 +17,7 @@ public class SetArmPosition extends Command {
 
     @Override
     protected void initialize() {
+        time = System.currentTimeMillis();
         super.initialize();
         RobotMap.cargoArm.setPosition(position);
         RobotMap.cargoArm.distancePID.setAbsoluteTolerance(0.05);
@@ -34,12 +36,11 @@ public class SetArmPosition extends Command {
 
     @Override
     protected boolean isFinished() {
-        return RobotMap.cargoArm.distancePID.isOnTarget();
+        return RobotMap.cargoArm.distancePID.isOnTarget() || System.currentTimeMillis() - time > 15000;
     }
 
     @Override
     protected void end() {
-
         if (RobotMap.cargoArmLimitSwitchDown.get()) {
 			RobotMap.cargoArmEncoder.reset();            
         } else if (RobotMap.cargoArmLimitSwitchUp.get()) {
