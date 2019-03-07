@@ -96,12 +96,14 @@ public class DriveTrain extends Subsystem {
         anglePID.setSetpointSource(angleSetpointTN);
         anglePID.setSources(RobotMap.gyroAngleWrapper);
         anglePID.setOutputRange(-ConstantsIO.driveTrainIMax, ConstantsIO.driveTrainIMax);
-		anglePID.setOutputs(angleOutputTN);
+		anglePID.setOutputs(angVelOutputTN);
+		anglePID.setContinuous(true);
+		anglePID.setInputRange(0, 2 * Math.PI);
 		
-		angVelPID.setSetpointSource(angleOutputTN);
+		angVelPID.setSetpointSource(null);
 		angVelPID.setSources(RobotMap.gyroRateWrapper);
 		angVelPID.setOutputRange(-ConstantsIO.driveTrainIMax, ConstantsIO.driveTrainIMax);
-		angVelPID.setOutputs(angVelOutputTN);
+		angVelPID.setOutputs(null);
 
 
         leftCurrentPIDSource.setPidSource(() -> {
@@ -113,9 +115,9 @@ public class DriveTrain extends Subsystem {
         });
 
         leftMotorSetter.setSetpointSource(leftCurrentPIDSource);
-        leftMotorSetter.setOutputs(RobotMap.driveLeftCurrent);
+        leftMotorSetter.setOutputs(RobotMap.driveLeftPercentOutput);
         rightMotorSetter.setSetpointSource(rightCurrentPIDSource);
-        rightMotorSetter.setOutputs(RobotMap.driveRightCurrent);
+        rightMotorSetter.setOutputs(RobotMap.driveRightPercentOutput);
 
         distBetweenCenterTargets = distInchesCenterVisionTarget();
 
@@ -144,7 +146,7 @@ public class DriveTrain extends Subsystem {
     }
 
     public void initDefaultCommand() {
-       setDefaultCommand(new DriveWithControllers());
+       //setDefaultCommand(new DriveWithControllers());
     }
 
     public void updateConstants() {
@@ -191,7 +193,7 @@ public class DriveTrain extends Subsystem {
 		anglePID.enable();
 		distancePID.enable();
 		velocityPID.enable();
-		angVelPID.enable();
+		// angVelPID.enable();
 		leftMotorSetter.enable();
 		rightMotorSetter.enable();
 		angleSetpointTN.setOutput(angle);
@@ -228,7 +230,7 @@ public class DriveTrain extends Subsystem {
 		leftMotorSetter.enable();
 		rightMotorSetter.enable();
 		velocityPID.enable();
-		angVelPID.enable();
+		// angVelPID.enable();
 		//velocityRampRate.enable();
 		
 
@@ -245,7 +247,7 @@ public class DriveTrain extends Subsystem {
 		anglePID.enable();
 		distancePID.disable();
 		//velocityRampRate.disable();
-		angVelPID.enable();
+		// angVelPID.enable();
 		leftMotorSetter.enable();
 		rightMotorSetter.enable();
 		anglePID.setAbsoluteTolerance(tolerance);
@@ -529,14 +531,14 @@ public class DriveTrain extends Subsystem {
             distancePID.enable();
             velocityPID.enable();
             anglePID.enable();
-            angVelPID.enable();
+            // angVelPID.enable();
             leftMotorSetter.enable();
             rightMotorSetter.enable();
         } else {
             distancePID.disable();
             velocityPID.disable();
             anglePID.disable();
-            angVelPID.disable();
+            // angVelPID.disable();
             leftMotorSetter.disable();
             rightMotorSetter.disable();
         }

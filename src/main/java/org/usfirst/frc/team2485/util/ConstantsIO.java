@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
 
 import org.usfirst.frc.team2485.robot.Robot;
 
@@ -22,6 +23,8 @@ public class ConstantsIO {
 	public static final String ROBO_RIO_CONSTANTS_FILE_PATH = "/home/lvuser/constants.txt";
 
 	public static HashMap<String, String> data;
+
+	public static String lastModified;
 
 	public static double accelerationMax;
 
@@ -178,6 +181,10 @@ public class ConstantsIO {
 		File file = new File(filePath);
 
 		System.out.println("Resolved file path: " + file.getPath());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		
+		lastModified = sdf.format(file.lastModified());
 
 		String fileString;
 

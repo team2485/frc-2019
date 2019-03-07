@@ -18,9 +18,9 @@ public class DriveWithControllers extends Command {
         double steering = OI.getDriveSteering();
         boolean quickTurn = OI.getQuickTurn();
 
-        if (quickTurn) {
-            steering *= 0.7;
-        }
+        // if (quickTurn) {
+        //     steering *= 0.7;
+        // }
 
         RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn);
     }

@@ -13,28 +13,36 @@ public class SetAngle extends Command {
     public SetAngle(double angle, int timeout) {
         this.angle = angle;
         this.timeout = timeout;
+        requires(RobotMap.driveTrain);
+        setInterruptible(false);
+
     }
 
      @Override
     protected void initialize() {
         super.initialize();
         startTime = System.currentTimeMillis();
-        RobotMap.driveTrain.anglePID.setSetpoint(angle);
-        setInterruptible(false);
+        RobotMap.driveTrain.anglePID.enable();
+        RobotMap.driveTrain.angVelPID.enable();
+        RobotMap.driveTrain.leftMotorSetter.enable();
+        RobotMap.driveTrain.rightMotorSetter.enable();
+        RobotMap.driveTrain.angleSetpointTN.setOutput(angle);
     }
     protected void execute(){
+        System.out.println("Angling");
         finished = RobotMap.driveTrain.anglePID.isOnTarget();
     }
 
     @Override
     protected boolean isFinished() {
         return finished || (System.currentTimeMillis() - startTime) > timeout;
+        // return false;
     }
 
     @Override
 	protected void end() {
-        RobotMap.driveLeftEncoder.reset();
-        RobotMap.driveRightEncoder.reset();
+        // RobotMap.driveLeftEncoder.reset();
+        // RobotMap.driveRightEncoder.reset();
         super.end();
     }
 

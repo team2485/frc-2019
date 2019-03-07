@@ -13,6 +13,8 @@ public class DriveStraight extends Command {
     public DriveStraight(double dist, int timeout){
         this.dist = dist;
         this.timeout = timeout;
+        requires(RobotMap.driveTrain);
+        setInterruptible(false);
     }
 
      @Override
@@ -24,7 +26,7 @@ public class DriveStraight extends Command {
         RobotMap.driveTrain.leftMotorSetter.enable();
         RobotMap.driveTrain.rightMotorSetter.enable();
         RobotMap.driveTrain.distanceSetpointTN.setOutput(dist);
-        setInterruptible(false);
+        // RobotMap.driveTrain.angleSetpointTN.setOutput(0);
     }
     protected void execute(){
         System.out.println("Driving straight");
@@ -33,13 +35,16 @@ public class DriveStraight extends Command {
 
     @Override
     protected boolean isFinished() {
-        return finished || (System.currentTimeMillis() - startTime) > timeout;
+        // return (System.currentTimeMillis() - startTime) > timeout;
+        System.out.println("Running");
+        return true;
+
     }
 
     @Override
 	protected void end() {
-        RobotMap.driveLeftEncoder.reset();
-        RobotMap.driveRightEncoder.reset();
+        System.out.println("Ended");
+    //    RobotMap.driveTrain.enablePID(false);
         super.end();
     }
 

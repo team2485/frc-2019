@@ -10,6 +10,7 @@ import org.usfirst.frc.team2485.robot.commandGroups.CargoIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.PlaceHatch;
 import org.usfirst.frc.team2485.robot.commands.CancelCommand;
+import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
 import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
 import org.usfirst.frc.team2485.robot.commands.EjectCargo;
 import org.usfirst.frc.team2485.robot.commands.Hook;
@@ -19,6 +20,7 @@ import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
 import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.commands.Slide;
+import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
 import org.usfirst.frc.team2485.util.TriggerButton;
@@ -100,6 +102,7 @@ public class OI {
 
 	public static TriggerButton SURAJ_LTRIGGER_BUTTON;
 	public static TriggerButton SURAJ_LYJOYSTICK;
+	public static TriggerButton SURAJ_RYJOYSTICK;
 
 	public static void init(){
 		
@@ -139,8 +142,10 @@ public class OI {
 		SURAJ_RSTICK_BUTTON = new JoystickButton(suraj, XBOX_RSTICK_BUTTON_PORT);
 
 		SURAJ_LTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_LTRIGGER_PORT, 0.2);
-		SURAJ_LYJOYSTICK = new TriggerButton(suraj, XBOX_LYJOYSTICK_PORT, 0.2);
+		SURAJ_LYJOYSTICK = new TriggerButton(suraj, XBOX_LYJOYSTICK_PORT, 0.2, true);
 
+		
+		SURAJ_RYJOYSTICK = new TriggerButton(suraj, XBOX_RYJOYSTICK_PORT, 0.2, true);
 
 		// SURAJ_A.whenPressed(new Lift(false));
 		// SURAJ_B.whenPressed(new Hook(true));
@@ -181,7 +186,8 @@ public class OI {
 		// SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
 		// SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
 		
-	
+		
+		SURAJ_RYJOYSTICK.whenPressed(new CargoArmWithControllers());
 		
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
 		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
@@ -206,7 +212,7 @@ public class OI {
 	}
 
 	public static double getDriveSteering() {
-		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1) * 0.5;
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1);
 	}
 
 	public static double getArmManual() {

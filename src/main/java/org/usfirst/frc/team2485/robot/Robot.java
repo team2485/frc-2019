@@ -37,6 +37,8 @@ import org.usfirst.frc.team2485.robot.commands.DriveStraight;
 import org.usfirst.frc.team2485.robot.commands.DriveTo;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
 import org.usfirst.frc.team2485.robot.commands.ElevatorWithControllers;
+import org.usfirst.frc.team2485.robot.commands.Lift;
+import org.usfirst.frc.team2485.robot.commands.SetAngle;
 import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
@@ -65,6 +67,8 @@ public class Robot extends TimedRobot {
 
 	public static Pair[] controlPoints;
 	public Pair endpoint;
+
+	
 
 
 	private static AutoPath path;
@@ -129,6 +133,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		RobotMap.compressor.setClosedLoopControl(false);
 		ConstantsIO.init();
 		RobotMap.driveTrain.updateConstants();
 		RobotMap.hatchIntake.slideIn();
@@ -141,30 +146,59 @@ public class Robot extends TimedRobot {
 		RobotMap.driveRightEncoder.reset();
 		RobotMap.gyroAngleWrapper.reset();
 		RobotMap.gyroRateWrapper.reset();
-		// Scheduler.getInstance().add(new SetArmPosition(1.7));
 		
-		// RobotMap.driveTrain.anglePID.enable();
+		// Pair[] controlPoints = { new Pair(-193, -255), new Pair(-205, -215), new Pair(0.0, -215), 																	
+		// 	new Pair(0.0, 0.0), };
+		// double[] dists = { 50.0, 75.0, };
+
+
+		RobotMap.driveLeftTalon1.clearStickyFaults();
+		RobotMap.driveLeftTalon2.clearStickyFaults();
+		RobotMap.driveLeftTalon3.clearStickyFaults();
+		RobotMap.driveLeftTalon4.clearStickyFaults();
+		
+		RobotMap.driveRightTalon1.clearStickyFaults();
+		RobotMap.driveRightTalon2.clearStickyFaults();
+		RobotMap.driveRightTalon3.clearStickyFaults();
+		RobotMap.driveRightTalon4.clearStickyFaults();
+
+
+		// Scheduler.getInstance().add(new SetArmPosition(1.7));
+
+		// Scheduler.getInstance().add(new Lift(true));
+		
+		// RobotMap.driveTrain.anglePID.disable();
 		// RobotMap.driveTrain.angVelPID.enable();
 		// RobotMap.driveTrain.leftMotorSetter.enable();
 		// RobotMap.driveTrain.rightMotorSetter.enable();
 		// RobotMap.driveTrain.angleSetpointTN.setOutput(Math.PI/2);
 		//RobotMap.driveTrain.setVelocities(0, 0.1);
-		// RobotMap.driveTrain.enablePID(true);		
+		// RobotMap.driveTrain.enablePID(false);
 
-		// RobotMap.driveTrain.setVelocities(30, 0);
+
+
+		//  RobotMap.driveTrain.setVelocities(10, 0.2);
+
+		// RobotMap.driveTrain.anglePID.enable();
+		// RobotMap.driveTrain.leftMotorSetter.enable();
+		// RobotMap.driveTrain.rightMotorSetter.enable();
 		
-		//RobotMap.driveTrain.enablePID(true);
-		// RobotMap.driveTrain.distanceSetpointTN.setOutput(20);	
+		// RobotMap.driveTrain.angleSetpointTN.setOutput(Math.PI/2);
+
+		
+		RobotMap.driveTrain.enablePID(true);
+
+		//RobotMap.driveTrain.distanceSetpointTN.setOutput(100);	
 		//RobotMap.driveTrain.setVelocities(30, 0);
 		//RobotMap.elevatorCurrent.set(0.2);
 
 
 		//RobotMap.driveTrain.enablePID(true);
-		// Pair[] controlPoints = { new Pair( 35.6, -255.0), new Pair(0, -110.0), new Pair(0.0, 0.0) };
+		 Pair[] controlPoints = { new Pair( 0, 0), new Pair(0, 75), new Pair(53.13, 75) };
 		
 		// double[] dists = { 90.0, };
-	   	// AutoPath path = AutoPath.getAutoPathForClothoidSpline(controlPoints, dists);
-		// Scheduler.getInstance().add(new DriveTo(path, 50, false, 20000, false, false));
+		AutoPath path = new AutoPath(AutoPath.getPointsForBezier(1000, controlPoints[0], controlPoints[1], controlPoints[2]));
+		 Scheduler.getInstance().add(new DriveTo(path, 50, false, 15000, false, true));
 		//controlPoints = RobotMap.driveTrain.generateControlPoints(100, 70, 90);
 		//endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 70, 90);
 
@@ -190,13 +224,19 @@ public class Robot extends TimedRobot {
 		//RobotMap.elevator.setElevatorVelocity(15);
 
 		// Scheduler.getInstance().add(new SandstormAuto());
-		//Scheduler.getInstance().add(new DriveTo(new AutoPath(AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 155.5),
-			//new Pair(53.5 - 6, 30.0), new Pair(-22.5, 155.5))), 60, false, 15000, false, true));
-		 
+		// Scheduler.getInstance().add(new DriveTo(new AutoPath(AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 165.5),
+		// 	new Pair(-22.5, 165.5))), 60, false, 15000, false, true));
 
-		//RobotMap.driveTrain.distanceSetpointTN.setOutput(100);
+		// Scheduler.getInstance().add(new SetAngle(Math.PI/2, 10000));
+		// Scheduler.getInstance().add(new DriveStraight(70, 2000));
 
-		// Scheduler.getInstance().add(new DriveStraight(100, 1000000));
+		// AutoPath path = AutoPath.getAutoPathForClothoidSpline(controlPoints, dists);
+			
+		// Scheduler.getInstance().add(new DriveTo(path, 60, true, 15000, false, true));
+
+		//RobotMap.driveTrain.angleOutputTN.setOutput(0.2);
+
+		//Scheduler.getInstance().add(new DriveStraight(100, 1000000));
 		
 	
 
@@ -234,24 +274,26 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		RobotMap.compressor.setClosedLoopControl(false);
 		ConstantsIO.init();
 		RobotMap.cargoArmEncoder.reset();
 		RobotMap.elevatorEncoder.reset();
 		RobotMap.updateConstants();
-		RobotMap.hatchIntake.slideIn();
-		RobotMap.hatchIntake.hookIn();
-		RobotMap.hatchIntake.retractPushers();
-		RobotMap.hatchIntake.stow();
+		//RobotMap.hatchIntake.slideIn();
+		//RobotMap.hatchIntake.hookIn();
+		//RobotMap.hatchIntake.retractPushers();
+		//RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
-		Scheduler.getInstance().add(new SetRollers(0));
-		Scheduler.getInstance().add(new DriveWithControllers());
+		//Scheduler.getInstance().add(new SetRollers(0));
+		//Scheduler.getInstance().add(new DriveWithControllers());
 		// Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
 		
 		
 		UsbCamera jevoisCam = CameraServer.getInstance().startAutomaticCapture();
 		jevoisCam.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+		
 
-		Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
+		//Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
 
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
@@ -296,6 +338,9 @@ public class Robot extends TimedRobot {
 	}
 
 	public void updateSmartDashboard() {
+
+		SmartDashboard.putString("ConstantsIO Last Modified: ", ConstantsIO.lastModified);
+
 		SmartDashboard.putNumber("Elevator Distance PID Setpoint: ", RobotMap.elevator.distancePID.getSetpoint());
 		SmartDashboard.putNumber("Elevator Distance PID Error: ", RobotMap.elevator.distancePID.getError());
 		SmartDashboard.putNumber("Elevator Setpoint TN: ", RobotMap.elevator.distanceSetpointTN.getOutput());
@@ -331,7 +376,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Drive Train Talon Current: ", RobotMap.driveLeftTalon1.getOutputCurrent());
 		SmartDashboard.putNumber("Drive Train Distance Output: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
 		SmartDashboard.putNumber("Drive Train Velocity Output: ", RobotMap.driveTrain.velocityOutputTN.getOutput());
-		SmartDashboard.putNumber("Drive Train Talon Current Setpoint: ", RobotMap.driveLeftTalon1.getClosedLoopTarget());
+		// SmartDashboard.putNumber("Drive Train Talon Current Setpoint: ", RobotMap.driveLeftTalon1.getClosedLoopTarget());
 		SmartDashboard.putNumber("Drive Train Velocity PID Setpoint: ", RobotMap.driveTrain.velocityPID.getSetpoint());
 		SmartDashboard.putNumber("Drive Train Velocity PID Source: ", RobotMap.driveTrain.velocityPIDSource.pidGet());
 		SmartDashboard.putNumber("Drive Train Distance Output TN: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
@@ -348,7 +393,18 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("kP Ang Vel public version", RobotMap.driveTrain.angVelPID.kP);
 		SmartDashboard.putNumber("Gyro Value:", RobotMap.gyroAngleWrapper.pidGet());
 		SmartDashboard.putBoolean("Ang Vel Enabled: ", RobotMap.driveTrain.angVelPID.isEnabled());
+		SmartDashboard.putNumber("Drive Talon Left 1 Current:", RobotMap.driveLeftTalon1.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Talon Left 2 Current:", RobotMap.driveLeftTalon2.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Talon Left 3 Current:", RobotMap.driveLeftTalon3.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Talon Left 4 Current:", RobotMap.driveLeftTalon4.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Talon Right 1 Current:", RobotMap.driveRightTalon1.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
+		SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
+		
 	}
+	
+	
 
 	
 }

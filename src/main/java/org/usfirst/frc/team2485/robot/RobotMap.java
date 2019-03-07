@@ -27,9 +27,7 @@ import  org.usfirst.frc.team2485.util.LidarWrapper;
 import edu.wpi.first.wpilibj.I2C.Port;
 import java.nio.ByteBuffer;
 import edu.wpi.first.wpilibj.I2C;
-
-
-
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -209,6 +207,9 @@ public class RobotMap {
 	public static CargoRollers cargoRollers;
 	public static HatchIntake hatchIntake;
 
+	//compressor
+	public static Compressor compressor;
+
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
@@ -231,35 +232,35 @@ public class RobotMap {
 		driveRightTalon3 = new TalonSRX(driveRightTalonPort3);
 		driveRightTalon4 = new TalonSRX(driveRightTalonPort4);
 
-		driveLeftTalon1.configContinuousCurrentLimit(7);
-		driveLeftTalon2.configContinuousCurrentLimit(7);
-		driveLeftTalon3.configContinuousCurrentLimit(7);
-		driveLeftTalon4.configContinuousCurrentLimit(7);
+		// driveLeftTalon1.configContinuousCurrentLimit(7);
+		// driveLeftTalon2.configContinuousCurrentLimit(7);
+		// driveLeftTalon3.configContinuousCurrentLimit(7);
+		// driveLeftTalon4.configContinuousCurrentLimit(7);
 
-		driveRightTalon1.configContinuousCurrentLimit(7);
-		driveRightTalon2.configContinuousCurrentLimit(7);
-		driveRightTalon3.configContinuousCurrentLimit(7);
-		driveRightTalon4.configContinuousCurrentLimit(7);
+		// driveRightTalon1.configContinuousCurrentLimit(7);
+		// driveRightTalon2.configContinuousCurrentLimit(7);
+		// driveRightTalon3.configContinuousCurrentLimit(7);
+		// driveRightTalon4.configContinuousCurrentLimit(7);
 
-		driveLeftTalon1.configPeakCurrentLimit(7);
-		driveLeftTalon2.configPeakCurrentLimit(7);
-		driveLeftTalon3.configPeakCurrentLimit(7);
-		driveLeftTalon4.configPeakCurrentLimit(7);
+		// driveLeftTalon1.configPeakCurrentLimit(7);
+		// driveLeftTalon2.configPeakCurrentLimit(7);
+		// driveLeftTalon3.configPeakCurrentLimit(7);
+		// driveLeftTalon4.configPeakCurrentLimit(7);
 
-		driveRightTalon1.configPeakCurrentLimit(7);
-		driveRightTalon2.configPeakCurrentLimit(7);
-		driveRightTalon3.configPeakCurrentLimit(7);
-		driveRightTalon4.configPeakCurrentLimit(7);
+		// driveRightTalon1.configPeakCurrentLimit(7);
+		// driveRightTalon2.configPeakCurrentLimit(7);
+		// driveRightTalon3.configPeakCurrentLimit(7);
+		// driveRightTalon4.configPeakCurrentLimit(7);
 
-		driveLeftTalon1.enableCurrentLimit(true);
-		driveLeftTalon2.enableCurrentLimit(true);
-		driveLeftTalon3.enableCurrentLimit(true);
-		driveLeftTalon4.enableCurrentLimit(true);
+		driveLeftTalon1.enableCurrentLimit(false);
+		driveLeftTalon2.enableCurrentLimit(false);
+		driveLeftTalon3.enableCurrentLimit(false);
+		driveLeftTalon4.enableCurrentLimit(false);
 
-		driveRightTalon1.enableCurrentLimit(true);
-		driveRightTalon2.enableCurrentLimit(true);
-		driveRightTalon3.enableCurrentLimit(true);
-		driveRightTalon4.enableCurrentLimit(true);
+		driveRightTalon1.enableCurrentLimit(false);
+		driveRightTalon2.enableCurrentLimit(false);
+		driveRightTalon3.enableCurrentLimit(false);
+		driveRightTalon4.enableCurrentLimit(false);
 
 
 
@@ -413,6 +414,8 @@ public class RobotMap {
 		//I2C things
 		lidar = new LidarWrapper(I2C.Port.kOnboard);
 		colorSensor = new I2C(I2C.Port.kOnboard, 0x3C);
+
+		compressor = new Compressor();
 		
 
 	}
