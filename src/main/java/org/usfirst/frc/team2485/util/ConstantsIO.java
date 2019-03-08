@@ -63,6 +63,8 @@ public class ConstantsIO {
 
 	public static double elevatorDistanceSetpointDownRamp;
 	public static double elevatorDistanceSetpointUpRamp;
+	public static double armDistanceSetpointDownRamp;
+	public static double armDistanceSetpointUpRamp;
 	
 	public static double kP_cargoArmDistance;
 	public static double kI_cargoArmDistance;
@@ -133,6 +135,9 @@ public class ConstantsIO {
 	
 		elevatorDistanceSetpointDownRamp = Double.parseDouble(data.get("elevatorDistanceSetpointDownRamp"));
 		elevatorDistanceSetpointUpRamp = Double.parseDouble(data.get("elevatorDistanceSetpointUpRamp"));
+
+		armDistanceSetpointDownRamp = Double.parseDouble(data.get("armDistanceSetpointDownRamp"));
+		armDistanceSetpointUpRamp = Double.parseDouble(data.get("armDistanceSetpointUpRamp"));
 		
 		kP_cargoArmDistance = Double.parseDouble(data.get("kP_cargoArmDistance"));
 		kI_cargoArmDistance = Double.parseDouble(data.get("kI_cargoArmDistance"));

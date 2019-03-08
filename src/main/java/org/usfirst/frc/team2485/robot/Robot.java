@@ -42,6 +42,7 @@ import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
 import org.usfirst.frc.team2485.util.AutoPath;
 import org.usfirst.frc.team2485.util.GripPipeline;
+import org.usfirst.frc.team2485.util.RampRate;
 import org.usfirst.frc.team2485.util.SurajPipeline;
 import org.usfirst.frc.team2485.robot.commandGroups.SandstormAuto;
 import org.usfirst.frc.team2485.robot.commands.CancelCommand;
@@ -330,6 +331,7 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		RobotMap.compressor.setClosedLoopControl(true);
 		ConstantsIO.init();
+		
 		RobotMap.cargoArmEncoder.reset();
 		RobotMap.elevatorEncoder.reset();
 		RobotMap.updateConstants();
@@ -338,15 +340,18 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.retractPushers();
 		RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
+		RobotMap.cargoArm.enablePID(true);
 		//Scheduler.getInstance().add(new SetRollers(0));
 		//Scheduler.getInstance().add(new DriveWithControllers());
 		// Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
 		Scheduler.getInstance().add(new SetArmPosition(0));
+
 		// Scheduler.getInstance().add(new CancelCommand(auto));
 		//Scheduler.getInstance().add(new CargoArmWithControllers());
 		
 		// UsbCamera jevoisCam = CameraServer.getInstance().startAutomaticCapture();
 		// jevoisCam.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+
 
 		
 		
@@ -462,6 +467,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
 		SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
 		SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
+		SmartDashboard.putNumber("Suraj RYStick output: ", OI.getArmManual());
+		SmartDashboard.putNumber("Arm Ramped Setpoint:", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
+		SmartDashboard.putNumber("up ramp arm:", ConstantsIO.armDistanceSetpointUpRamp);
+		SmartDashboard.putNumber("Cargo Arm current", RobotMap.cargoArmCurrent.get());
 	}
 	
 	

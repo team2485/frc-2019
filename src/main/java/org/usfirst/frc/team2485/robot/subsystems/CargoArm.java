@@ -6,6 +6,7 @@ import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
 import org.usfirst.frc.team2485.util.MotorSetter;
 import org.usfirst.frc.team2485.util.PIDSourceWrapper;
+import org.usfirst.frc.team2485.util.RampRate;
 import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
 
@@ -19,6 +20,7 @@ public class CargoArm extends Subsystem {
     public double holdPosition;
 
     public TransferNode distanceSetpointTN;
+    public TransferNode distanceSetpointRampedTN;
     public TransferNode distanceOutputTN;
 
     public PIDSourceWrapper distanceOutputPIDSource;
@@ -27,9 +29,12 @@ public class CargoArm extends Subsystem {
 
     public MotorSetter motorSetter;
 
+    public RampRate distanceRampRate;
+
 
     public CargoArm() {
         distanceSetpointTN = new TransferNode(0);
+        distanceSetpointRampedTN = new TransferNode(0);
         distanceOutputTN = new TransferNode(0);
 
         distanceOutputPIDSource = new PIDSourceWrapper();
@@ -37,9 +42,15 @@ public class CargoArm extends Subsystem {
         distancePID = new WarlordsPIDController();
 
         motorSetter = new MotorSetter();
+        distanceRampRate = new RampRate();
+
+        distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
+
+        distanceRampRate.setSetpointSource(distanceSetpointTN);
+        distanceRampRate.setOutputs(distanceSetpointRampedTN);
 
 
-        distancePID.setSetpointSource(distanceSetpointTN);
+        distancePID.setSetpointSource(distanceSetpointRampedTN);
         distancePID.setOutputs(distanceOutputTN);
         distancePID.setSources(RobotMap.cargoArmEncoderWrapperDistance);
 
@@ -84,6 +95,7 @@ public class CargoArm extends Subsystem {
         if (enabled) {
             distancePID.enable();
             motorSetter.enable();
+            distanceRampRate.enable();
         } else {
             distanceOutputTN.setOutput(0);
             distancePID.disable();

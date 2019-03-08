@@ -179,6 +179,8 @@ public class OI {
 		SURAJ_LBUMPER_BACKUP = new JoystickButton(surajBackup, XBOX_LBUMPER_PORT);
 		SURAJ_RBUMPER_BACKUP = new JoystickButton(surajBackup, XBOX_RBUMPER_PORT);
 
+		
+
 		// SURAJ_START_BUTTON_BACKUP = new JoystickButton(surajBackup, XBOX_START_BUTTON);
 		// SURAJ_LTRIGGER_BUTTON_BACKUP = new TriggerButton(surajBackup, XBOX_LTRIGGER_PORT, 0.2);
 
@@ -195,7 +197,7 @@ public class OI {
 		// SURAJ_LBUMPER_BACKUP.whenPressed(placeHatch);
 		// SURAJ_LBUMPER_BACKUP.whenPressed(new CancelCommand(Robot.auto));
 
-		
+
 
 		
 		// SURAJ_LYJOYSTICK_BACKUP.whenPressed(new CancelCommand(placeHatch));
@@ -252,7 +254,8 @@ public class OI {
 		
 		
 		// SURAJ_RYJOYSTICK_BACKUP.whenPressed(new CargoArmWithControllers());
-		// SURAJ_RYJOYSTICK.whenPressed(new CancelCommand(Robot.auto));
+		//SURAJ_RYJOYSTICK.whenPressed(new CancelCommand(Robot.auto));
+
 		
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
 		// SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
@@ -297,7 +300,7 @@ public class OI {
 	}
 
 	public static double getArmManual() {
-		return ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 0.6);
+		return ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 1);
 	}
 
 	public static double getElevatorManual() {
