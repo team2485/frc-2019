@@ -71,7 +71,9 @@ public class ConstantsIO {
 	
 	public static double cargoRollersIMax;
 	public static double elevatorIMax;
-	public static double cargoArmIMax;
+	//public static double cargoArmIMax;
+	public static double cargoArmIMaxUp;
+	public static double cargoArmIMaxDown;
 	public static double driveTrainIMax;
 
 	public static void init() {
@@ -138,7 +140,9 @@ public class ConstantsIO {
 		levitateCargo = Double.parseDouble(data.get("levitateCargo"));
 		
 		elevatorIMax = Double.parseDouble(data.get("elevatorIMax"));
-		cargoArmIMax = Double.parseDouble(data.get("cargoArmIMax"));
+		//cargoArmIMax = Double.parseDouble(data.get("cargoArmIMax"));
+		cargoArmIMaxUp = Double.parseDouble(data.get("cargoArmIMaxUp"));
+		cargoArmIMaxDown = Double.parseDouble(data.get("cargoArmIMaxDown"));
 		driveTrainIMax = Double.parseDouble(data.get("driveTrainIMax"));
 	
 

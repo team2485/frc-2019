@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class CargoArm extends Subsystem {
 
-    public static  double HOLDING_CURRENT = 3;
+    public static  double HOLDING_CURRENT = 4.5;
     public static final double TOP_POSITION = 1.7;
     public double holdPosition;
 
@@ -42,7 +42,15 @@ public class CargoArm extends Subsystem {
         distancePID.setSetpointSource(distanceSetpointTN);
         distancePID.setOutputs(distanceOutputTN);
         distancePID.setSources(RobotMap.cargoArmEncoderWrapperDistance);
-        distancePID.setOutputRange(-ConstantsIO.cargoArmIMax, ConstantsIO.cargoArmIMax);
+
+        if(distancePID.getAvgError() > distanceSetpointTN.getOutput()) {
+            distancePID.setOutputRange(-ConstantsIO.cargoArmIMaxUp, ConstantsIO.cargoArmIMaxUp);
+        } else {
+            distancePID.setOutputRange(-ConstantsIO.cargoArmIMaxDown, ConstantsIO.cargoArmIMaxDown);
+        } 
+
+        
+       
 
         distanceOutputPIDSource.setPidSource(() -> {
             return (distanceOutputTN.getOutput() + ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet()));
