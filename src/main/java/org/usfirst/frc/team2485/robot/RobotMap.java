@@ -242,15 +242,15 @@ public class RobotMap {
 		driveRightTalon3.configContinuousCurrentLimit(7);
 		driveRightTalon4.configContinuousCurrentLimit(7);
 
-		driveLeftTalon1.configPeakCurrentLimit(10); //13's
-		driveLeftTalon2.configPeakCurrentLimit(10);
-		driveLeftTalon3.configPeakCurrentLimit(10);
-		driveLeftTalon4.configPeakCurrentLimit(10);
+		driveLeftTalon1.configPeakCurrentLimit(7); //13's
+		driveLeftTalon2.configPeakCurrentLimit(7);
+		driveLeftTalon3.configPeakCurrentLimit(7);
+		driveLeftTalon4.configPeakCurrentLimit(7);
 
-		driveRightTalon1.configPeakCurrentLimit(10); //13's
-		driveRightTalon2.configPeakCurrentLimit(10);
-		driveRightTalon3.configPeakCurrentLimit(10);
-		driveRightTalon4.configPeakCurrentLimit(10);
+		driveRightTalon1.configPeakCurrentLimit(7); //13's
+		driveRightTalon2.configPeakCurrentLimit(7);
+		driveRightTalon3.configPeakCurrentLimit(7);
+		driveRightTalon4.configPeakCurrentLimit(7);
 
 		driveLeftTalon1.enableCurrentLimit(true);
 		driveLeftTalon2.enableCurrentLimit(true);

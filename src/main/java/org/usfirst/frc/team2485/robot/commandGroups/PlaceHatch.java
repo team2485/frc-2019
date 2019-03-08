@@ -27,7 +27,7 @@ public class PlaceHatch extends CommandGroup {
         addSequential(new Hook(true));
         addSequential(new WaitCommand(0.5));
         addSequential(new Pushers(false));
-        addSequential(new AdjustElevatorPosition(-3));
+        addSequential(new AdjustElevatorPosition(-5));
         addSequential(new WaitCommand(0.5));
         addSequential(new Hook(false));
         addSequential(new Slide(false));
