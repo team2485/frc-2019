@@ -26,12 +26,12 @@ public class CargoArmWithControllers extends Command {
             RobotMap.cargoArm.enablePID(false);
             RobotMap.cargoArm.cargoArmManual(-power);
             // RobotMap.cargoArm.holdPosition = RobotMap.cargoArmEncoderWrapperDistance.pidGet();
-            if(power > 0) {
-                RobotMap.cargoArm.holdPosition = 0;
-            } else {
-                RobotMap.cargoArm.holdPosition = -1.7;
+            // if(power > 0) {  
+            //     RobotMap.cargoArm.holdPosition = 0;
+            // } else {
+            //     RobotMap.cargoArm.holdPosition = -1.7;
 
-            }
+          //  }
             RobotMap.hatchIntake.hookIn();
             RobotMap.hatchIntake.retractPushers();
             RobotMap.hatchIntake.slideIn();

@@ -188,8 +188,12 @@ public class Robot extends TimedRobot {
 		RobotMap.driveRightTalon3.clearStickyFaults();
 		RobotMap.driveRightTalon4.clearStickyFaults();
 
+		RobotMap.driveTrain.enablePID(false);
+		RobotMap.cargoArm.enablePID(true);
+		Scheduler.getInstance().add(new SetArmPosition(0));
+		Scheduler.getInstance().add(new DriveWithControllers());
 
-		// Scheduler.getInstance().add(new SetArmPosition(1.7));
+		
 
 		// Scheduler.getInstance().add(new Lift(true));
 		
@@ -228,14 +232,14 @@ public class Robot extends TimedRobot {
 		//RobotMap.elevatorCurrent.set(0.2);
 
 
-		RobotMap.driveTrain.enablePID(true);
+		//RobotMap.driveTrain.enablePID(true);
 		//  Pair[] controlPoints = { new Pair( 0, 0), new Pair(0, 214), new Pair(-35.5, 214) };
 		
 	// 	// double[] dists = { 90.0, };
 	// AutoPath path = new AutoPath(AutoPath.getPointsForBezier(1000, controlPoints[0], controlPoints[1], controlPoints[2]));
 	// 	 Scheduler.getInstance().add(new DriveTo(path, 50, false, 15000, false, true));
 
-		Scheduler.getInstance().add(auto);
+		//Scheduler.getInstance().add(auto);
 		//controlPoints = RobotMap.driveTrain.generateControlPoints(100, 70, 90);
 		//endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 70, 90);
 
@@ -291,18 +295,18 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		updateSmartDashboard();
 
-		if(OI.suraj.getRawButton(OI.XBOX_BACK_BUTTON)) {
-			Scheduler.getInstance().add(new CancelCommand(auto));
-		} 
+		// if(OI.suraj.getRawButton(OI.XBOX_BACK_BUTTON)) {
+		// 	Scheduler.getInstance().add(new CancelCommand(auto));
+		// } 
 
-		if(OI.getDriveThrottle() != 0) {
-			Scheduler.getInstance().add(new CancelCommand(auto));
-		}
+		// if(OI.getDriveThrottle() != 0) {
+		// 	Scheduler.getInstance().add(new CancelCommand(auto));
+		// }
 
-		if(OI.getDriveSteering() != 0) {
-			Scheduler.getInstance().add(new CancelCommand(auto));
+		// if(OI.getDriveSteering() != 0) {
+		// 	Scheduler.getInstance().add(new CancelCommand(auto));
 
-		}
+		// }
 
 		// RobotMap.elevatorWrapperCurrent.set(1);
 		//RobotMap.cargoArm.distanceSetpointTN.setOutput(1);

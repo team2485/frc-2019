@@ -232,25 +232,25 @@ public class RobotMap {
 		driveRightTalon3 = new TalonSRX(driveRightTalonPort3);
 		driveRightTalon4 = new TalonSRX(driveRightTalonPort4);
 
-		driveLeftTalon1.configContinuousCurrentLimit(13);
-		driveLeftTalon2.configContinuousCurrentLimit(13);
-		driveLeftTalon3.configContinuousCurrentLimit(13);
-		driveLeftTalon4.configContinuousCurrentLimit(13);
+		driveLeftTalon1.configContinuousCurrentLimit(7); //13's
+		driveLeftTalon2.configContinuousCurrentLimit(7);
+		driveLeftTalon3.configContinuousCurrentLimit(7);
+		driveLeftTalon4.configContinuousCurrentLimit(7);
 
-		driveRightTalon1.configContinuousCurrentLimit(13);
-		driveRightTalon2.configContinuousCurrentLimit(13);
-		driveRightTalon3.configContinuousCurrentLimit(13);
-		driveRightTalon4.configContinuousCurrentLimit(13);
+		driveRightTalon1.configContinuousCurrentLimit(7); //13's
+		driveRightTalon2.configContinuousCurrentLimit(7);
+		driveRightTalon3.configContinuousCurrentLimit(7);
+		driveRightTalon4.configContinuousCurrentLimit(7);
 
-		driveLeftTalon1.configPeakCurrentLimit(13);
-		driveLeftTalon2.configPeakCurrentLimit(13);
-		driveLeftTalon3.configPeakCurrentLimit(13);
-		driveLeftTalon4.configPeakCurrentLimit(13);
+		driveLeftTalon1.configPeakCurrentLimit(10); //13's
+		driveLeftTalon2.configPeakCurrentLimit(10);
+		driveLeftTalon3.configPeakCurrentLimit(10);
+		driveLeftTalon4.configPeakCurrentLimit(10);
 
-		driveRightTalon1.configPeakCurrentLimit(13);
-		driveRightTalon2.configPeakCurrentLimit(13);
-		driveRightTalon3.configPeakCurrentLimit(13);
-		driveRightTalon4.configPeakCurrentLimit(13);
+		driveRightTalon1.configPeakCurrentLimit(10); //13's
+		driveRightTalon2.configPeakCurrentLimit(10);
+		driveRightTalon3.configPeakCurrentLimit(10);
+		driveRightTalon4.configPeakCurrentLimit(10);
 
 		driveLeftTalon1.enableCurrentLimit(true);
 		driveLeftTalon2.enableCurrentLimit(true);
