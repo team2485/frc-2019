@@ -15,8 +15,14 @@ public class DriveWithControllers extends Command {
     @Override
     protected void execute() {
         double throttle = OI.getDriveThrottle();
-        double steering = OI.getDriveSteering();
+        double steering = OI.getDriveSteering() * Math.abs(OI.getDriveSteering());
         boolean quickTurn = OI.getQuickTurn();
+
+        // if(throttle == 0 && steering == 0) {
+        //     throttle = ThresholdHandler.deadbandAndScale(OI.jacketBackup.getRawAxis(3) - OI.jacketBackup.getRawAxis(2), 0.1, 0, 1);
+        //     steering = ThresholdHandler.deadbandAndScale(OI.jacketBackup.getRawAxis(0), 0.2, 0, 1);
+        //     quickTurn = OI.jacketBackup.getRawButton(OI.XBOX_X_PORT);
+        // }
 
         // if (quickTurn) {
         //     steering *= 0.7;

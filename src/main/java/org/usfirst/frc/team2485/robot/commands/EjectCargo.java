@@ -20,6 +20,7 @@ public class EjectCargo extends Command {
     protected void initialize() {
         startTime = System.currentTimeMillis();
         RobotMap.cargoRollers.cargoRollersManual(power);
+        
     }
 
     @Override
@@ -30,6 +31,7 @@ public class EjectCargo extends Command {
 
     @Override
     protected void end() {
+        RobotMap.cargoRollers.intaken = false;
         RobotMap.cargoRollers.cargoRollersManual(0);
     }
 }

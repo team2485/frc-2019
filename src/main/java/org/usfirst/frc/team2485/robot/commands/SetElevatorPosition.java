@@ -12,7 +12,7 @@ public class SetElevatorPosition extends Command {
 
     public SetElevatorPosition(ElevatorLevel elevatorLevel) {
         requires(RobotMap.elevator);
-        setInterruptible(false);
+        setInterruptible(true);
         this.elevatorPosition = elevatorLevel.getPosition();
         this.elevatorLevel = elevatorLevel;
     }

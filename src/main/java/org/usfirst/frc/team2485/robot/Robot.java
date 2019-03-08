@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -28,11 +29,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.vision.VisionThread;
 
 
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.vision.VisionRunner;
+
+
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
 import org.usfirst.frc.team2485.util.AutoPath;
 import org.usfirst.frc.team2485.util.GripPipeline;
+import org.usfirst.frc.team2485.util.SurajPipeline;
 import org.usfirst.frc.team2485.robot.commandGroups.SandstormAuto;
+import org.usfirst.frc.team2485.robot.commands.CancelCommand;
+import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
 import org.usfirst.frc.team2485.robot.commands.DriveStraight;
 import org.usfirst.frc.team2485.robot.commands.DriveTo;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
@@ -57,8 +70,8 @@ import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 
 public class Robot extends TimedRobot {
 
-	public static final int IMG_WIDTH = 128;
-	public static final int IMG_HEIGHT = 96;
+	public static final int IMG_WIDTH = 160;
+	public static final int IMG_HEIGHT = 120;
 	
 	private VisionThread visionThread;
 	public static double centerX = 0.0;
@@ -74,7 +87,6 @@ public class Robot extends TimedRobot {
 	private static AutoPath path;
 
 
-	UsbCamera camera;
 	private final Object imgLock = new Object();
 	
 	
@@ -87,6 +99,10 @@ public class Robot extends TimedRobot {
 	
 	boolean ejecting = false;
 
+	public static Command auto;
+
+	public CvSource output;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -95,10 +111,24 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		
 		FastMath.init();
-		// chooser.addObject("My Auto", new MyAutoCommand());
 		ConstantsIO.init();
 		RobotMap.init();
 		OI.init();
+
+		SandstormAuto.init(false); 
+		auto = new SandstormAuto();
+
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+		
+		output = CameraServer.getInstance().putVideo("Processed: ", 640, 480);
+
+		
+		VisionThread visionThread = new VisionThread(camera, new SurajPipeline(), pipeline -> {
+			output.putFrame(pipeline.cvRectangleOutput());
+
+		});
+		visionThread.start();
 
 	
 	
@@ -133,13 +163,13 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		RobotMap.compressor.setClosedLoopControl(false);
+		RobotMap.compressor.setClosedLoopControl(true);
 		ConstantsIO.init();
 		RobotMap.driveTrain.updateConstants();
 		RobotMap.hatchIntake.slideIn();
 		RobotMap.hatchIntake.hookIn();
 		RobotMap.hatchIntake.retractPushers();
-		RobotMap.hatchIntake.stow();
+		RobotMap.hatchIntake.lift();
 		RobotMap.cargoArmEncoder.reset();
 		RobotMap.elevatorEncoder.reset();
 		RobotMap.driveLeftEncoder.reset();
@@ -147,11 +177,7 @@ public class Robot extends TimedRobot {
 		RobotMap.gyroAngleWrapper.reset();
 		RobotMap.gyroRateWrapper.reset();
 		
-		// Pair[] controlPoints = { new Pair(-193, -255), new Pair(-205, -215), new Pair(0.0, -215), 																	
-		// 	new Pair(0.0, 0.0), };
-		// double[] dists = { 50.0, 75.0, };
-
-
+		
 		RobotMap.driveLeftTalon1.clearStickyFaults();
 		RobotMap.driveLeftTalon2.clearStickyFaults();
 		RobotMap.driveLeftTalon3.clearStickyFaults();
@@ -174,6 +200,15 @@ public class Robot extends TimedRobot {
 		// RobotMap.driveTrain.angleSetpointTN.setOutput(Math.PI/2);
 		//RobotMap.driveTrain.setVelocities(0, 0.1);
 		// RobotMap.driveTrain.enablePID(false);
+		// Scheduler.getInstance().add(auto);
+
+		// RobotMap.driveTrain.distancePID.enable();
+		// RobotMap.driveTrain.velocityPID.enable();
+		// RobotMap.driveTrain.leftMotorSetter.enable();
+		// RobotMap.driveTrain.rightMotorSetter.enable();
+		// RobotMap.driveTrain.distanceSetpointTN.setOutput(40);
+		
+
 
 
 
@@ -186,19 +221,21 @@ public class Robot extends TimedRobot {
 		// RobotMap.driveTrain.angleSetpointTN.setOutput(Math.PI/2);
 
 		
-		RobotMap.driveTrain.enablePID(true);
+		// RobotMap.driveTrain.enablePID(true);
 
 		//RobotMap.driveTrain.distanceSetpointTN.setOutput(100);	
 		//RobotMap.driveTrain.setVelocities(30, 0);
 		//RobotMap.elevatorCurrent.set(0.2);
 
 
-		//RobotMap.driveTrain.enablePID(true);
-		 Pair[] controlPoints = { new Pair( 0, 0), new Pair(0, 75), new Pair(53.13, 75) };
+		RobotMap.driveTrain.enablePID(true);
+		//  Pair[] controlPoints = { new Pair( 0, 0), new Pair(0, 214), new Pair(-35.5, 214) };
 		
-		// double[] dists = { 90.0, };
-		AutoPath path = new AutoPath(AutoPath.getPointsForBezier(1000, controlPoints[0], controlPoints[1], controlPoints[2]));
-		 Scheduler.getInstance().add(new DriveTo(path, 50, false, 15000, false, true));
+	// 	// double[] dists = { 90.0, };
+	// AutoPath path = new AutoPath(AutoPath.getPointsForBezier(1000, controlPoints[0], controlPoints[1], controlPoints[2]));
+	// 	 Scheduler.getInstance().add(new DriveTo(path, 50, false, 15000, false, true));
+
+		Scheduler.getInstance().add(auto);
 		//controlPoints = RobotMap.driveTrain.generateControlPoints(100, 70, 90);
 		//endpoint = RobotMap.driveTrain.getAutoAlignEndpoint(100, 70, 90);
 
@@ -254,6 +291,19 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		updateSmartDashboard();
 
+		if(OI.suraj.getRawButton(OI.XBOX_BACK_BUTTON)) {
+			Scheduler.getInstance().add(new CancelCommand(auto));
+		} 
+
+		if(OI.getDriveThrottle() != 0) {
+			Scheduler.getInstance().add(new CancelCommand(auto));
+		}
+
+		if(OI.getDriveSteering() != 0) {
+			Scheduler.getInstance().add(new CancelCommand(auto));
+
+		}
+
 		// RobotMap.elevatorWrapperCurrent.set(1);
 		//RobotMap.cargoArm.distanceSetpointTN.setOutput(1);
 
@@ -274,23 +324,27 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		RobotMap.compressor.setClosedLoopControl(false);
+		RobotMap.compressor.setClosedLoopControl(true);
 		ConstantsIO.init();
 		RobotMap.cargoArmEncoder.reset();
 		RobotMap.elevatorEncoder.reset();
 		RobotMap.updateConstants();
-		//RobotMap.hatchIntake.slideIn();
-		//RobotMap.hatchIntake.hookIn();
-		//RobotMap.hatchIntake.retractPushers();
-		//RobotMap.hatchIntake.stow();
+		RobotMap.hatchIntake.slideIn();
+		RobotMap.hatchIntake.hookIn();
+		RobotMap.hatchIntake.retractPushers();
+		RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
 		//Scheduler.getInstance().add(new SetRollers(0));
 		//Scheduler.getInstance().add(new DriveWithControllers());
 		// Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
+		Scheduler.getInstance().add(new SetArmPosition(0));
+		// Scheduler.getInstance().add(new CancelCommand(auto));
+		//Scheduler.getInstance().add(new CargoArmWithControllers());
 		
+		// UsbCamera jevoisCam = CameraServer.getInstance().startAutomaticCapture();
+		// jevoisCam.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+
 		
-		UsbCamera jevoisCam = CameraServer.getInstance().startAutomaticCapture();
-		jevoisCam.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
 		
 
 		//Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
@@ -320,10 +374,8 @@ public class Robot extends TimedRobot {
 		// }
 
 
-		if (RobotMap.cargoArmLimitSwitchDown.get()) {
+		if (RobotMap.cargoArmLimitSwitchUp.get()) {
 			RobotMap.cargoArmEncoder.reset();
-		} else if (RobotMap.cargoArmLimitSwitchUp.get()) {
-			
 		}
 
 
@@ -335,6 +387,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {
 		updateSmartDashboard();
+		RobotMap.compressor.setClosedLoopControl(true);
 	}
 
 	public void updateSmartDashboard() {
@@ -353,7 +406,6 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Elevator Encoder: ", RobotMap.elevatorEncoderWrapperDistance.pidGet());
 
 
-		SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint: ", RobotMap.cargoArm.distancePID.getSetpoint());
 		SmartDashboard.putNumber("Cargo Arm Distance PID Error: ", RobotMap.cargoArm.distancePID.getError());
 		SmartDashboard.putNumber("Cargo Arm Setpoint TN: ", RobotMap.cargoArm.distanceSetpointTN.getOutput());
 		SmartDashboard.putBoolean("Cargo Arm Distance PID Enabled: ", RobotMap.cargoArm.distancePID.isEnabled());
@@ -363,7 +415,11 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Cargo Arm Up Limit Switch: ", RobotMap.cargoArmLimitSwitchUp.get());
 		SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
 		SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
+		SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint Please: ", RobotMap.cargoArm.distancePID.getSetpoint());
+
+
 		SmartDashboard.putNumber("Cargo Roller Current", RobotMap.cargoRollersTalon.getOutputCurrent());
+		SmartDashboard.putBoolean("Cargo Intaken: ", RobotMap.cargoRollers.intaken);
 
 		SmartDashboard.putNumber("Drive Train Distance Setpoint: ", RobotMap.driveTrain.distanceSetpointTN.pidGet());
 		SmartDashboard.putNumber("Drive Train Angle Setpoint: ", RobotMap.driveTrain.angleSetpointTN.pidGet());
@@ -376,7 +432,6 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Drive Train Talon Current: ", RobotMap.driveLeftTalon1.getOutputCurrent());
 		SmartDashboard.putNumber("Drive Train Distance Output: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
 		SmartDashboard.putNumber("Drive Train Velocity Output: ", RobotMap.driveTrain.velocityOutputTN.getOutput());
-		// SmartDashboard.putNumber("Drive Train Talon Current Setpoint: ", RobotMap.driveLeftTalon1.getClosedLoopTarget());
 		SmartDashboard.putNumber("Drive Train Velocity PID Setpoint: ", RobotMap.driveTrain.velocityPID.getSetpoint());
 		SmartDashboard.putNumber("Drive Train Velocity PID Source: ", RobotMap.driveTrain.velocityPIDSource.pidGet());
 		SmartDashboard.putNumber("Drive Train Distance Output TN: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
@@ -401,7 +456,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
 		SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
 		SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
-		
+		SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
+		SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
 	}
 	
 	

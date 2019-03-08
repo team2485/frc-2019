@@ -17,13 +17,12 @@ import edu.wpi.first.wpilibj.command.WaitUntilCommand;
 
 public class LoadingStationIntake extends CommandGroup {
     public LoadingStationIntake() {
-        addParallel(new SetArmPosition(1.8));
+        addParallel(new SetArmPosition(0));
         addSequential(new Lift(true));
         addSequential(new Slide(false));
         addSequential(new Hook(true));
         addSequential(new WaitCommand(.25));
         addSequential(new SetElevatorPosition(ElevatorLevel.HATCH_LIFTING));
-        addSequential(new WaitCommand(1));
         // addSequential(new Hook(false));
         // addSequential(new WaitCommand(1));
         // addSequential(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));

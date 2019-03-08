@@ -5,6 +5,7 @@ import org.usfirst.frc.team2485.robot.commands.DriveStraight;
 import org.usfirst.frc.team2485.robot.commands.DriveTo;
 import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.SetAngle;
+import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.util.AutoPath;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.AutoPath.Pair;
@@ -12,11 +13,11 @@ import org.usfirst.frc.team2485.util.AutoPath.Pair;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class SandstormAuto extends CommandGroup {
-    AutoPath sideCargo, frontCargo;
+    public static AutoPath sideCargo, frontCargo;
     public SandstormAuto() {
-        Pair[] sideCargoControlPoint = RobotMap.driveTrain.generateSandstormControlPoints(true);
-        sideCargo = new AutoPath(AutoPath.getPointsForBezier(1000, new Pair (0,0), sideCargoControlPoint[0], RobotMap.driveTrain.getSandstormEndpoint(true)));
-        addSequential(new DriveTo(sideCargo, 60, false, 15000, false, true));
+        // Pair[] sideCargoControlPoint = RobotMap.driveTrain.generateSandstormControlPoints(true);
+        // sideCargo = new AutoPath(AutoPath.getPointsForBezier(1000, new Pair (0,0), sideCargoControlPoint[0], RobotMap.driveTrain.getSandstormEndpoint(true)));
+        // addSequential(new DriveTo(sideCargo, 60, false, 15000, false, true));
         // addSequential(new PlaceHatch());
         // addSequential(new DriveStraight(-108, 5000));
         // addSequential(new SetAngle(-Math.PI/2, 2000));
@@ -29,7 +30,18 @@ public class SandstormAuto extends CommandGroup {
         // addSequential(new DriveTo(frontCargo, 60, false, 15000, false, true));
         // addSequential(new PlaceHatch());
         // addSequential(new DriveStraight(-10, 5000));
+        addSequential(new SetArmPosition(0));
+        addSequential(new DriveTo(sideCargo, 70, false, 15000, false, false));
+        // addSequential(new DriveTo(frontCargo, 70, false, 15000, false, false));
+        addSequential(new PlaceHatch());
 
 
     }
+
+    public static void init(boolean right) {
+        int sign = right ? 1 : -1;
+        sideCargo = new AutoPath(AutoPath.getPointsForBezier(1000, new Pair(0, 0), new Pair(0, 214), new Pair(sign*35.5, 214)));
+        frontCargo = new AutoPath(AutoPath.getPointsForBezier(1000, new Pair(0,0), new Pair(0, 174)));
+    }
+
 }

@@ -42,6 +42,7 @@ public class CargoRollersIntake extends Command {
             if(spiking) {
                 if(System.currentTimeMillis() - startSpikeTime > spikeTime) {
                     intakingMode = false;
+                    RobotMap.cargoRollers.intaken = true;
                 }
             }
         } else {

@@ -24,6 +24,8 @@ public class ElevatorWithControllers extends Command {
     @Override
     protected void execute() {
         double power = OI.getElevatorManual();
+        // double powerBackup = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(5), 0.2, 0, 1);
+        // power = power == 0 ? powerBackup : power;
 
         if(power != 0) {
             RobotMap.elevator.enablePID(false);

@@ -31,7 +31,7 @@ public class DriveTo extends Command{
 		this.angleTolerance = 0.08;
 		this.variableVMax = variableVMax;
 		this.isDeadReckoning = isDeadReckoning;
-		setInterruptible(false);
+		setInterruptible(true);
 		requires(RobotMap.driveTrain);
 	}
 	
