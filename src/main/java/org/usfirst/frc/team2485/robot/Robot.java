@@ -71,8 +71,8 @@ import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 
 public class Robot extends TimedRobot {
 
-	public static final int IMG_WIDTH = 160;
-	public static final int IMG_HEIGHT = 120;
+	public static final int IMG_WIDTH = 120;
+	public static final int IMG_HEIGHT = 90;
 	
 	private VisionThread visionThread;
 	public static double centerX = 0.0;
