@@ -14,6 +14,10 @@ public class CargoArmWithControllers extends Command {
         requires(RobotMap.cargoArm);
     }
 
+    protected void initialze(){
+        RobotMap.cargoArm.enablePID(true);
+    }
+
     @Override
     protected void execute() {
 
@@ -23,7 +27,7 @@ public class CargoArmWithControllers extends Command {
 
         if(power != 0) {
            // if(!RobotMap.liftSolenoidOut.get()) {
-            RobotMap.cargoArm.enablePID(false);
+            RobotMap.cargoArm.enablePID(false); //change to false
             RobotMap.cargoArm.cargoArmManual(-power); 
             RobotMap.cargoArm.holdPosition = RobotMap.cargoArmEncoderWrapperDistance.pidGet();
             RobotMap.cargoArm.distanceSetpointTN.setOutput(RobotMap.cargoArm.holdPosition);

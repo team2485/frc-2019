@@ -260,7 +260,8 @@ public class OI {
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
 		// SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
 		// SURAJ_START_BUTTON.whenPressed(new CancelCommand(Robot.auto));
-		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
+		SURAJ_LTRIGGER_BUTTON.whenPressed(
+			new SetRollers(-0.4));
 		// SURAJ_LTRIGGER_BUTTON.whenPressed(new C/\@
 		// ancelCommand(Robot.auto));
 		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));

@@ -193,7 +193,6 @@ public class Robot extends TimedRobot {
 		RobotMap.cargoArm.enablePID(true);
 		Scheduler.getInstance().add(new SetArmPosition(0));
 		Scheduler.getInstance().add(new DriveWithControllers());
-
 		
 
 		// Scheduler.getInstance().add(new Lift(true));
@@ -470,7 +469,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Suraj RYStick output: ", OI.getArmManual());
 		SmartDashboard.putNumber("Arm Ramped Setpoint:", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
 		SmartDashboard.putNumber("up ramp arm:", ConstantsIO.armDistanceSetpointUpRamp);
-		SmartDashboard.putNumber("Cargo Arm current", RobotMap.cargoArmCurrent.get());
+		SmartDashboard.putNumber("Cargo Arm output current", RobotMap.cargoArmTalon.getOutputCurrent());
 	}
 	
 	
