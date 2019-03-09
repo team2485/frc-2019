@@ -44,28 +44,43 @@ public class CargoArm extends Subsystem {
         motorSetter = new MotorSetter();
         distanceRampRate = new RampRate();
 
-       // distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
-
-        //distanceRampRate.setSetpointSource(distanceSetpointTN);
-        //distanceRampRate.setOutputs(distanceSetpointRampedTN);
+        distanceRampRate.setSetpointSource(distanceSetpointTN);
+        distanceRampRate.setOutputs(distanceSetpointRampedTN);
 
 
-        distancePID.setSetpointSource(distanceSetpointTN);//ramped is arm fix
+        distancePID.setSetpointSource(distanceSetpointRampedTN); 
         distancePID.setOutputs(distanceOutputTN);
         distancePID.setSources(RobotMap.cargoArmEncoderWrapperDistance);
 
-        if(distancePID.getAvgError() > distanceSetpointTN.getOutput()) {
-            distancePID.setOutputRange(-ConstantsIO.cargoArmIMaxUp, ConstantsIO.cargoArmIMaxUp);
-        } else {
-            distancePID.setOutputRange(-ConstantsIO.cargoArmIMaxDown, ConstantsIO.cargoArmIMaxDown);
-        } 
 
         
        
 
         distanceOutputPIDSource.setPidSource(() -> {
-            return (distanceOutputTN.getOutput() + ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet()));
+            double output = distanceOutputTN.getOutput() + ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet());
+            if(distanceSetpointTN.getOutput() < RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
+                if(output > ConstantsIO.cargoArmIMaxDown){
+                    return ConstantsIO.cargoArmIMaxDown;
+                } else if (output < -ConstantsIO.cargoArmIMaxDown){
+                    return -ConstantsIO.cargoArmIMaxDown;
+                } else { 
+                    return output;
+                }
+            } else if (distanceSetpointTN.getOutput() > RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
+                if(output > ConstantsIO.cargoArmIMaxUp){
+                    return ConstantsIO.cargoArmIMaxUp;
+                } else if (output < -ConstantsIO.cargoArmIMaxUp){
+                    return -ConstantsIO.cargoArmIMaxUp;
+                } else { 
+                    return output;
+                }
+            } else { 
+                return 0;
+            }
+            
         });
+
+        
 
         motorSetter.setSetpointSource(distanceOutputPIDSource);
         motorSetter.setOutputs(RobotMap.cargoArmCurrent);
@@ -88,6 +103,7 @@ public class CargoArm extends Subsystem {
     }
 
     public void updateConstants() {
+        distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
         distancePID.setPID(ConstantsIO.kP_cargoArmDistance, ConstantsIO.kI_cargoArmDistance, ConstantsIO.kD_cargoArmDistance);
     }
 
