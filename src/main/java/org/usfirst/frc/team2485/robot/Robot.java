@@ -338,7 +338,7 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.slideIn();
 		RobotMap.hatchIntake.hookIn();
 		RobotMap.hatchIntake.retractPushers();
-		RobotMap.hatchIntake.stow();
+		//RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
 		RobotMap.cargoArm.enablePID(true);
 		//Scheduler.getInstance().add(new SetRollers(0));

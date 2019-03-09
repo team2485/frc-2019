@@ -44,13 +44,13 @@ public class CargoArm extends Subsystem {
         motorSetter = new MotorSetter();
         distanceRampRate = new RampRate();
 
-        distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
+       // distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
 
-        distanceRampRate.setSetpointSource(distanceSetpointTN);
-        distanceRampRate.setOutputs(distanceSetpointRampedTN);
+        //distanceRampRate.setSetpointSource(distanceSetpointTN);
+        //distanceRampRate.setOutputs(distanceSetpointRampedTN);
 
 
-        distancePID.setSetpointSource(distanceSetpointRampedTN);
+        distancePID.setSetpointSource(distanceSetpointTN);//ramped is arm fix
         distancePID.setOutputs(distanceOutputTN);
         distancePID.setSources(RobotMap.cargoArmEncoderWrapperDistance);
 

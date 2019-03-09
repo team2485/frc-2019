@@ -300,7 +300,7 @@ public class OI {
 	}
 
 	public static double getArmManual() {
-		return ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 1);
+		return ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 0.6);
 	}
 
 	public static double getElevatorManual() {
