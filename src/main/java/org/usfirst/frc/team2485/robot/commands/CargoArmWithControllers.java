@@ -22,33 +22,34 @@ public class CargoArmWithControllers extends Command {
         // power = power == 0 ? powerBackup : power;
 
         if(power != 0) {
-        // if(power != 0 && !RobotMap.liftSolenoidOut.get()) {
+           // if(!RobotMap.liftSolenoidOut.get()) {
             RobotMap.cargoArm.enablePID(false);
-           // RobotMap.cargoArm.distanceSetpointTN.setOutput(power);
-            RobotMap.cargoArm.cargoArmManual(-power);
-           // RobotMap.cargoArm.holdPosition = RobotMap.cargoArmEncoderWrapperDistance.pidGet();
-            // if(power > 0) {  
-            //     RobotMap.cargoArm.holdPosition = 0;
-            // } else {
-            //     RobotMap.cargoArm.holdPosition = -1.7;
+            RobotMap.cargoArm.cargoArmManual(-power); 
+            RobotMap.cargoArm.holdPosition = RobotMap.cargoArmEncoderWrapperDistance.pidGet();
+            RobotMap.cargoArm.distanceSetpointTN.setOutput(RobotMap.cargoArm.holdPosition);
+           
 
-          //  }
+        
             RobotMap.hatchIntake.hookIn();
             RobotMap.hatchIntake.retractPushers();
             RobotMap.hatchIntake.slideIn();
-            RobotMap.hatchIntake.stow();
-        } else if(RobotMap.cargoArmLimitSwitchUp.get() && Math.abs(RobotMap.cargoArm.distancePID.getError()) < 0.1) {
+            RobotMap.hatchIntake.stow(); 
+            //} 
+        } else {
+            if(RobotMap.cargoArmLimitSwitchUp.get() && Math.abs(RobotMap.cargoArm.distancePID.getError()) < 0.1) {
             RobotMap.cargoArm.enablePID(false);
             RobotMap.cargoArmTalonWrapperCurrent.set(CargoArm.HOLDING_CURRENT);
             RobotMap.cargoArm.holdPosition = 0;
-        } else if(RobotMap.cargoArmLimitSwitchDown.get() && Math.abs(RobotMap.cargoArm.distancePID.getError()) < 0.1) {
+        } 
+            if(RobotMap.cargoArmLimitSwitchDown.get() && Math.abs(RobotMap.cargoArm.distancePID.getError()) < 0.1) {
             RobotMap.cargoArm.enablePID(false);
             RobotMap.cargoArmTalonWrapperPercentOutput.set(0);
             RobotMap.cargoArm.holdPosition = -1.7;
-        } else {
+        }   else {
             RobotMap.cargoArm.enablePID(true);
-            RobotMap.cargoArm.setPosition(RobotMap.cargoArm.holdPosition);
+            RobotMap.cargoArm.setPosition(RobotMap.cargoArm.holdPosition); 
         }
+    }
 
     }
 
