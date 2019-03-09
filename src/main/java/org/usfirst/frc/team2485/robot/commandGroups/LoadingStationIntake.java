@@ -2,6 +2,7 @@ package org.usfirst.frc.team2485.robot.commandGroups;
 
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.commands.AdjustElevatorPosition;
+import org.usfirst.frc.team2485.robot.commands.HoldingCurrent;
 import org.usfirst.frc.team2485.robot.commands.Hook;
 import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
@@ -17,7 +18,9 @@ import edu.wpi.first.wpilibj.command.WaitUntilCommand;
 
 public class LoadingStationIntake extends CommandGroup {
     public LoadingStationIntake() {
+
         addParallel(new SetArmPosition(0));
+        addParallel(new HoldingCurrent());
         addSequential(new Lift(true));
         addSequential(new Slide(false));
         addSequential(new Hook(true));

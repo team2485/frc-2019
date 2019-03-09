@@ -37,7 +37,8 @@ public class CargoArmWithControllers extends Command {
             RobotMap.hatchIntake.hookIn();
             RobotMap.hatchIntake.retractPushers();
             RobotMap.hatchIntake.slideIn();
-            RobotMap.hatchIntake.stow(); 
+            RobotMap.hatchIntake.stow();
+            
             //} 
         } else {
             if(RobotMap.cargoArmLimitSwitchUp.get() && Math.abs(RobotMap.cargoArm.distancePID.getError()) < 0.1) {

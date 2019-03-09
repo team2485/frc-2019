@@ -36,7 +36,7 @@ public class SetArmPosition extends Command {
 
     @Override
     protected boolean isFinished() {
-        return RobotMap.cargoArm.distancePID.isOnTarget() || System.currentTimeMillis() - time > 10000;
+        return RobotMap.cargoArm.distancePID.isOnTarget() || System.currentTimeMillis() - time > 7000;
     }
 
     @Override
