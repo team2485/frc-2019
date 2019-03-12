@@ -31,6 +31,8 @@ public class SandstormAuto extends CommandGroup {
         // addSequential(new PlaceHatch());
         // addSequential(new DriveStraight(-10, 5000));
         addSequential(new SetArmPosition(0));
+        addSequential(new DriveStraight(100, 5000)); //go off platform
+        addSequential(new DriveStraight(-100, 5000)); //by here, we should stall against side of lvl 2 platform and drive normal 3 pt. path
         addSequential(new DriveTo(sideCargo, 70, false, 15000, false, false));
         // addSequential(new DriveTo(frontCargo, 70, false, 15000, false, false));
         addSequential(new PlaceHatch());
@@ -38,8 +40,8 @@ public class SandstormAuto extends CommandGroup {
 
     }
 
-    public static void init(boolean right) {
-        int sign = right ? 1 : -1;
+    public static void init(boolean left) {
+        int sign = left ? 1 : -1;
         sideCargo = new AutoPath(AutoPath.getPointsForBezier(1000, new Pair(0, 0), new Pair(0, 214), new Pair(sign*35.5, 214)));
         frontCargo = new AutoPath(AutoPath.getPointsForBezier(1000, new Pair(0,0), new Pair(0, 174)));
     }

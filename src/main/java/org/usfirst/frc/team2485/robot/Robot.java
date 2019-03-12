@@ -189,10 +189,12 @@ public class Robot extends TimedRobot {
 		RobotMap.driveRightTalon3.clearStickyFaults();
 		RobotMap.driveRightTalon4.clearStickyFaults();
 
-		RobotMap.driveTrain.enablePID(false);
+		RobotMap.driveTrain.enablePID(true);
 		RobotMap.cargoArm.enablePID(true);
+		SandstormAuto.init(true); //true is left side, false for right
 		Scheduler.getInstance().add(new SetArmPosition(0));
-		Scheduler.getInstance().add(new DriveWithControllers());
+		//Scheduler.getInstance().add(new DriveWithControllers());
+		Scheduler.getInstance().add(new SandstormAuto());
 		
 
 		// Scheduler.getInstance().add(new Lift(true));

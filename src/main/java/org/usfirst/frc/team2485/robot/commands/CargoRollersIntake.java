@@ -21,7 +21,7 @@ public class CargoRollersIntake extends Command {
     @Override
     protected void initialize() {
         RobotMap.cargoRollersPercentOutput.set(power);
-        holdingCurrent = CargoRollers.HOLDING_CURRENT;
+       // holdingCurrent = CargoRollers.HOLDING_CURRENT;
         cargoIntakenCurrent = 12;
         spikeTime = 500;
         intakingMode = true;
