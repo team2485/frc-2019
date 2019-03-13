@@ -140,8 +140,8 @@ public class DriveTrain extends Subsystem {
                 right /= Math.abs(right);
             }
 
-            RobotMap.driveLeftPercentOutput.set(left);
-            RobotMap.driveRightPercentOutput.set(right);
+            RobotMap.driveLeftCurrent.set(left);
+            RobotMap.driveRightCurrent.set(right);
         }
     }
 

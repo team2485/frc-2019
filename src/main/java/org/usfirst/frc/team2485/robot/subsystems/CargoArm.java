@@ -24,6 +24,7 @@ public class CargoArm extends Subsystem {
     public TransferNode distanceSetpointRampedTN;
     public TransferNode distanceOutputTN;
     public TransferNode armEncoderTN;
+    public TransferNode failsafeTN;
 
     public PIDSourceWrapper armEncoderPIDSource;
     public PIDSourceWrapper distanceOutputPIDSource;
@@ -42,6 +43,7 @@ public class CargoArm extends Subsystem {
         distanceSetpointTN = new TransferNode(0);
         distanceSetpointRampedTN = new TransferNode(0);
         distanceOutputTN = new TransferNode(0);
+        failsafeTN = new TransferNode(0);
 
         armEncoderPIDSource = new PIDSourceWrapper();
         distanceOutputPIDSource = new PIDSourceWrapper();
@@ -72,7 +74,9 @@ public class CargoArm extends Subsystem {
 
         distanceOutputPIDSource.setPidSource(() -> {
             double output = distanceOutputTN.getOutput() + ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet());
-            if(distanceSetpointTN.getOutput() < RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
+            if(failsafeTN.getOutput() != 0) {
+                return failsafeTN.getOutput();
+            } else if(distanceSetpointTN.getOutput() < RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
                 if(output > ConstantsIO.cargoArmIMaxDown){
                     return ConstantsIO.cargoArmIMaxDown;
                 } else if (output < -ConstantsIO.cargoArmIMaxDown){
