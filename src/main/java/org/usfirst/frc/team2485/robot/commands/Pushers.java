@@ -16,6 +16,7 @@ public class Pushers extends InstantCommand {
 
     @Override
     protected void initialize() {
+        RobotMap.warlordsCompressor.airRemaining -= 10;
         if(pushers) {
             RobotMap.hatchIntake.extendPushers();
         } else {

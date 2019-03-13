@@ -23,6 +23,7 @@ import org.usfirst.frc.team2485.robot.commands.SetRollersCurrent;
 import org.usfirst.frc.team2485.robot.commands.Slide;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
+import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
 import org.usfirst.frc.team2485.util.TriggerButton;
 
@@ -293,12 +294,12 @@ public class OI {
 	}
 
 	public static double getDriveThrottle() {
-		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_RTRIGGER_PORT), 0.2, 0, 1) 
-		- ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LTRIGGER_PORT), 0.2, 0, 1);
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_RTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax) 
+		- ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax);
 	}
 
 	public static double getDriveSteering() {
-		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1);
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, ConstantsIO.driveTrainIMax);
 	}
 
 	public static double getArmManual() {

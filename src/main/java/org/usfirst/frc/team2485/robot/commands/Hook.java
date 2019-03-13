@@ -15,6 +15,7 @@ public class Hook extends InstantCommand {
 
     @Override
     protected void initialize() {
+        RobotMap.warlordsCompressor.airRemaining -= 10;
         if(hook) {
             RobotMap.hatchIntake.hookOut();
         } else {

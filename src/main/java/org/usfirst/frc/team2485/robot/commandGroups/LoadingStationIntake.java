@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.command.WaitUntilCommand;
 
 public class LoadingStationIntake extends CommandGroup {
     public LoadingStationIntake() {
-
+        RobotMap.compressor.setClosedLoopControl(false);
         addParallel(new SetArmPosition(0));
         addParallel(new HoldingCurrent());
         addSequential(new Lift(true));

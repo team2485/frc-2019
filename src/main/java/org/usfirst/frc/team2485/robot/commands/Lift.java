@@ -17,6 +17,7 @@ public class Lift extends InstantCommand {
 
     @Override
     protected void initialize() {
+        RobotMap.warlordsCompressor.airRemaining -= 40;
         if(lift) {
             RobotMap.hatchIntake.lift();
         } else {

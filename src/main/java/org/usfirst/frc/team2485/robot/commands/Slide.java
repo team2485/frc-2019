@@ -17,6 +17,7 @@ public class Slide extends InstantCommand {
 
     @Override
     protected void initialize() {
+        RobotMap.warlordsCompressor.airRemaining -= 10;
         if(slide) {
             RobotMap.hatchIntake.slideOut();
         } else {

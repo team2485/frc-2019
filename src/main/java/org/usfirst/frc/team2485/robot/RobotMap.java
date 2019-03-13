@@ -17,6 +17,7 @@ import org.usfirst.frc.team2485.robot.subsystems.CargoRollers;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator;
 import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
+import org.usfirst.frc.team2485.robot.subsystems.WarlordsCompressor;
 import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
 import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
@@ -199,6 +200,9 @@ public class RobotMap {
 	public static Solenoid hookSolenoidIn, hookSolenoidOut;
 
 
+	//COMPRESSOR
+	public static Compressor compressor;
+
 
 	//SUBSYSTEMS
 	public static DriveTrain driveTrain;
@@ -206,9 +210,7 @@ public class RobotMap {
 	public static CargoArm cargoArm;
 	public static CargoRollers cargoRollers;
 	public static HatchIntake hatchIntake;
-
-	//compressor
-	public static Compressor compressor;
+	public static WarlordsCompressor warlordsCompressor;
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -403,6 +405,9 @@ public class RobotMap {
 		hookSolenoidOut = new Solenoid(hookSolenoidPortOut);
 
 
+		//COMPRESSOR
+		compressor = new Compressor();
+
 
 		//SUBSYSTEMS
 		driveTrain = new DriveTrain();
@@ -410,6 +415,7 @@ public class RobotMap {
 		cargoArm = new CargoArm();
 		cargoRollers = new CargoRollers();
 		hatchIntake = new HatchIntake();
+		warlordsCompressor = new WarlordsCompressor();
 
 		//I2C things
 		lidar = new LidarWrapper(I2C.Port.kOnboard);

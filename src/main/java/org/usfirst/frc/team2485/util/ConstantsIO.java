@@ -31,6 +31,9 @@ public class ConstantsIO {
 	public static double kDrift;
 	public static double kPath;
 
+	public static double driveTrainUpRamp;
+	public static double driveTrainDownRamp;
+
 	public static double kPMax_Distance;
 
 	public static double kP_DriveVelocity;
@@ -103,6 +106,9 @@ public class ConstantsIO {
 
 		kPath = Double.parseDouble(data.get("kPath"));
 		kDrift = Double.parseDouble(data.get("kDrift"));
+
+		driveTrainUpRamp = Double.parseDouble(data.get("driveTrainUpRamp"));
+		driveTrainDownRamp = Double.parseDouble(data.get("driveTrainDownRamp"));
 
 		kPMax_Distance = Double.parseDouble(data.get("kPMax_Distance"));
 

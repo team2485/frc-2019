@@ -19,9 +19,10 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class PlaceHatch extends CommandGroup {
     public PlaceHatch(){
-
-        addParallel(new SetArmPosition(CargoArm.TOP_POSITION));
-        addParallel(new HoldingCurrent());
+        CommandGroup setPosition = new CommandGroup();
+        setPosition.addParallel(new SetArmPosition(CargoArm.TOP_POSITION));
+        setPosition.addParallel(new HoldingCurrent());
+        addSequential(setPosition);
         addSequential(new Lift(true));
         addSequential(new Slide(true));
 
@@ -36,6 +37,7 @@ public class PlaceHatch extends CommandGroup {
         addSequential(new Slide(false));
         addSequential(new WaitCommand(0.25));
         addSequential(new AdjustElevatorPosition(-3));
+        RobotMap.compressor.setClosedLoopControl(true);
     }
 
 }
