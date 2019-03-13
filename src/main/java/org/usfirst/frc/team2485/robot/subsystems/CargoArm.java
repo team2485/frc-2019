@@ -4,6 +4,7 @@ import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
+import org.usfirst.frc.team2485.util.LowPassFilter;
 import org.usfirst.frc.team2485.util.MotorSetter;
 import org.usfirst.frc.team2485.util.PIDSourceWrapper;
 import org.usfirst.frc.team2485.util.RampRate;
@@ -22,10 +23,14 @@ public class CargoArm extends Subsystem {
     public TransferNode distanceSetpointTN;
     public TransferNode distanceSetpointRampedTN;
     public TransferNode distanceOutputTN;
+    public TransferNode armEncoderTN;
 
+    public PIDSourceWrapper armEncoderPIDSource;
     public PIDSourceWrapper distanceOutputPIDSource;
 
     public WarlordsPIDController distancePID;
+
+    public LowPassFilter encoderFilter;
 
     public MotorSetter motorSetter;
 
@@ -33,13 +38,17 @@ public class CargoArm extends Subsystem {
 
 
     public CargoArm() {
+        armEncoderTN = new TransferNode(0);
         distanceSetpointTN = new TransferNode(0);
         distanceSetpointRampedTN = new TransferNode(0);
         distanceOutputTN = new TransferNode(0);
 
+        armEncoderPIDSource = new PIDSourceWrapper();
         distanceOutputPIDSource = new PIDSourceWrapper();
 
         distancePID = new WarlordsPIDController();
+
+        encoderFilter = new LowPassFilter();
 
         motorSetter = new MotorSetter();
         distanceRampRate = new RampRate();
@@ -47,13 +56,18 @@ public class CargoArm extends Subsystem {
         distanceRampRate.setSetpointSource(distanceSetpointTN);
         distanceRampRate.setOutputs(distanceSetpointRampedTN);
 
+        encoderFilter.setFilterCoefficient(ConstantsIO.kEncoderFilterCoefficient);
+        encoderFilter.setSetpointSource(RobotMap.cargoArmEncoder);
+        encoderFilter.setOutputs(armEncoderTN);
+
+        armEncoderPIDSource.setPidSource(() -> {
+            return armEncoderTN.pidGet();
+        });
 
         distancePID.setSetpointSource(distanceSetpointRampedTN); 
         distancePID.setOutputs(distanceOutputTN);
-        distancePID.setSources(RobotMap.cargoArmEncoderWrapperDistance);
-
-
-        
+        distancePID.setSources(armEncoderPIDSource);
+        distancePID.setOutputRange(ConstantsIO.cargoArmIMaxDown, ConstantsIO.cargoArmIMaxUp);
        
 
         distanceOutputPIDSource.setPidSource(() -> {

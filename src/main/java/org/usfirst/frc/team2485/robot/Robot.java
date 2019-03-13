@@ -164,7 +164,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		RobotMap.compressor.setClosedLoopControl(true);
 		ConstantsIO.init();
 		RobotMap.driveTrain.updateConstants();
 		RobotMap.hatchIntake.slideIn();
@@ -330,7 +329,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		RobotMap.compressor.setClosedLoopControl(true);
 		ConstantsIO.init();
 		
 		RobotMap.cargoArmEncoder.reset();
@@ -397,7 +395,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {
 		updateSmartDashboard();
-		RobotMap.compressor.setClosedLoopControl(true);
 	}
 
 	public void updateSmartDashboard() {

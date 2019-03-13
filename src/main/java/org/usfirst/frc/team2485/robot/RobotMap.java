@@ -18,6 +18,7 @@ import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator;
 import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
 import org.usfirst.frc.team2485.robot.subsystems.WarlordsCompressor;
+import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
 import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
@@ -302,6 +303,8 @@ public class RobotMap {
 
 		driveRightCurrent = new SpeedControllerWrapper(driveRightTalonsCurrent);
 		driveRightPercentOutput = new SpeedControllerWrapper(driveRightTalonsPercentOutput);
+
+		driveLeftCurrent.setRampRate(ConstantsIO.driveTrainUpRamp, ConstantsIO.driveTrainDownRamp);
 
 		driveLeftCurrent.setInverted(true);
 		driveLeftPercentOutput.setInverted(true);

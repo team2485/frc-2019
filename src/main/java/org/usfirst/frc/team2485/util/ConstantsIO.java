@@ -68,11 +68,14 @@ public class ConstantsIO {
 	public static double elevatorDistanceSetpointUpRamp;
 	public static double armDistanceSetpointDownRamp;
 	public static double armDistanceSetpointUpRamp;
+	public static double armDistanceSetpointDownRampClose;
+	public static double armDistanceSetpointUpRampClose;
 	
 	public static double kP_cargoArmDistance;
 	public static double kI_cargoArmDistance;
 	public static double kD_cargoArmDistance;
 	public static double levitateCargo;
+	public static double kEncoderFilterCoefficient;
 	
 	public static double cargoRollersIMax;
 	public static double elevatorIMax;
@@ -144,11 +147,14 @@ public class ConstantsIO {
 
 		armDistanceSetpointDownRamp = Double.parseDouble(data.get("armDistanceSetpointDownRamp"));
 		armDistanceSetpointUpRamp = Double.parseDouble(data.get("armDistanceSetpointUpRamp"));
+		armDistanceSetpointDownRampClose = Double.parseDouble(data.get("armDistanceSetpointDownRampClose"));
+		armDistanceSetpointUpRampClose = Double.parseDouble(data.get("armDistanceSetpointUpRampClose")); 
 		
 		kP_cargoArmDistance = Double.parseDouble(data.get("kP_cargoArmDistance"));
 		kI_cargoArmDistance = Double.parseDouble(data.get("kI_cargoArmDistance"));
 		kD_cargoArmDistance = Double.parseDouble(data.get("kD_cargoArmDistance"));
 		levitateCargo = Double.parseDouble(data.get("levitateCargo"));
+		kEncoderFilterCoefficient = Double.parseDouble(data.get("kEncoderFilterCoefficient"));
 		
 		elevatorIMax = Double.parseDouble(data.get("elevatorIMax"));
 		//cargoArmIMax = Double.parseDouble(data.get("cargoArmIMax"));

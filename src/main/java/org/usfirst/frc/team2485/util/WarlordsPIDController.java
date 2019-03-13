@@ -100,6 +100,10 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 		this.vMax = vMax;
 		frictionTerm = true;
 	}
+
+	public void resetIntegrator() {
+		integralTerm = 0;
+	}
 	
 	/**
 	 * Disables and clears integral and derivative terms
