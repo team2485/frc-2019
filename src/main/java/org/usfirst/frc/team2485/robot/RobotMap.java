@@ -91,9 +91,9 @@ public class RobotMap {
 	public static int driveLeftEncoderPort1 = 0, driveLeftEncoderPort2 = 1;
 	public static int driveRightEncoderPort1 = 2, driveRightEncoderPort2 = 3;
 
-	public static int elevatorEncoderPort1 = 6, elevatorEncoderPort2 = 7;
+	public static int elevatorEncoderPort1 = 4, elevatorEncoderPort2 = 5;
 
-	public static int cargoArmEncoderPort1 = 4, cargoArmEncoderPort2 = 5;
+	public static int cargoArmEncoderPort1 = 6, cargoArmEncoderPort2 = 7;
 
 
 
@@ -377,8 +377,8 @@ public class RobotMap {
 
 		cargoArmEncoder.setDistancePerPulse(2 * Math.PI / 1024);
 
-		cargoArmLimitSwitchUp = new DigitalInput(8);
-		cargoArmLimitSwitchDown = new DigitalInput(9);
+		cargoArmLimitSwitchUp = new DigitalInput(9);
+		cargoArmLimitSwitchDown = new DigitalInput(8);
 
 
 		//CARGO INTAKE ROLLERS

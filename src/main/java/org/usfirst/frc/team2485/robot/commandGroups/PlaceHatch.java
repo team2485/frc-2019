@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class PlaceHatch extends CommandGroup {
     public PlaceHatch(){
         CommandGroup setPosition = new CommandGroup();
-        setPosition.addParallel(new SetArmPosition(CargoArm.TOP_POSITION));
+        setPosition.addParallel(new SetArmPosition(0));
         setPosition.addParallel(new HoldingCurrent());
         addSequential(setPosition);
         addSequential(new Lift(true));

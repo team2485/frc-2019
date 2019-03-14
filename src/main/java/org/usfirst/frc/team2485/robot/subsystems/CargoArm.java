@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class CargoArm extends Subsystem {
 
-    public static  double HOLDING_CURRENT = 5.5;
-    public static final double TOP_POSITION = 1.7;
+    public static final double STARTING_CURRENT = 6.5;
+    public static  final double HOLDING_CURRENT = 3;
     public double holdPosition;
 
     public TransferNode distanceSetpointTN;
@@ -52,13 +52,14 @@ public class CargoArm extends Subsystem {
 
         encoderFilter = new LowPassFilter();
 
-        motorSetter = new MotorSetter();
         distanceRampRate = new RampRate();
+
+        motorSetter = new MotorSetter();
 
         distanceRampRate.setSetpointSource(distanceSetpointTN);
         distanceRampRate.setOutputs(distanceSetpointRampedTN);
 
-        encoderFilter.setFilterCoefficient(ConstantsIO.kEncoderFilterCoefficient);
+        encoderFilter.setFilterCoefficient(ConstantsIO.kArmEncoderFilterCoefficient);
         encoderFilter.setSetpointSource(RobotMap.cargoArmEncoder);
         encoderFilter.setOutputs(armEncoderTN);
 
@@ -68,18 +69,19 @@ public class CargoArm extends Subsystem {
 
         distancePID.setSetpointSource(distanceSetpointRampedTN); 
         distancePID.setOutputs(distanceOutputTN);
-        distancePID.setSources(armEncoderPIDSource);
+        distancePID.setSources(RobotMap.cargoArmEncoderWrapperDistance);
         distancePID.setOutputRange(ConstantsIO.cargoArmIMaxDown, ConstantsIO.cargoArmIMaxUp);
        
 
         distanceOutputPIDSource.setPidSource(() -> {
-            double output = distanceOutputTN.getOutput() + ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet());
+            double output = distanceOutputTN.getOutput() - ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - Math.PI/2); 
+            System.out.println("levitate: "+ -(ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - Math.PI/2)));
             if(failsafeTN.getOutput() != 0) {
                 return failsafeTN.getOutput();
             } else if(distanceSetpointTN.getOutput() < RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
-                if(output > ConstantsIO.cargoArmIMaxDown){
+                if(output < ConstantsIO.cargoArmIMaxDown){
                     return ConstantsIO.cargoArmIMaxDown;
-                } else if (output < -ConstantsIO.cargoArmIMaxDown){
+                } else if (output > -ConstantsIO.cargoArmIMaxDown){
                     return -ConstantsIO.cargoArmIMaxDown;
                 } else { 
                     return output;
@@ -113,7 +115,7 @@ public class CargoArm extends Subsystem {
     }
 
     public void initDefaultCommand() {
-       setDefaultCommand(new CargoArmWithControllers());
+      setDefaultCommand(new CargoArmWithControllers());
     }
 
     public void setPosition(double position) {

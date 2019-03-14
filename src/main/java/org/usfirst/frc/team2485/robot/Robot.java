@@ -191,9 +191,9 @@ public class Robot extends TimedRobot {
 		RobotMap.driveTrain.enablePID(true);
 		RobotMap.cargoArm.enablePID(true);
 		SandstormAuto.init(true); //true is left side, false for right
-		Scheduler.getInstance().add(new SetArmPosition(0));
+		// Scheduler.getInstance().add(new SetArmPosition(0));
 		//Scheduler.getInstance().add(new DriveWithControllers());
-		Scheduler.getInstance().add(new SandstormAuto());
+		// Scheduler.getInstance().add(new SandstormAuto());
 		
 
 		// Scheduler.getInstance().add(new Lift(true));
@@ -330,7 +330,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		ConstantsIO.init();
-		
+		RobotMap.compressor.setClosedLoopControl(true);
 		RobotMap.cargoArmEncoder.reset();
 		RobotMap.elevatorEncoder.reset();
 		RobotMap.updateConstants();
@@ -339,11 +339,12 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.retractPushers();
 		//RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
-		RobotMap.cargoArm.enablePID(true);
+		//RobotMap.cargoArm.enablePID(false);
+		//RobotMap.cargoArm.distanceSetpointTN.setOutput(1);
 		//Scheduler.getInstance().add(new SetRollers(0));
-		//Scheduler.getInstance().add(new DriveWithControllers());
+		
 		// Scheduler.getInstance().add(new SetArmPosition(CargoArm.TOP_POSITION));
-		Scheduler.getInstance().add(new SetArmPosition(0));
+		// Scheduler.getInstance().add(new SetArmPosition(0));
 
 		// Scheduler.getInstance().add(new CancelCommand(auto));
 		//Scheduler.getInstance().add(new CargoArmWithControllers());
@@ -394,6 +395,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		RobotMap.compressor.setClosedLoopControl(true);
 		updateSmartDashboard();
 	}
 
@@ -423,6 +425,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
 		SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
 		SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint Please: ", RobotMap.cargoArm.distancePID.getSetpoint());
+		SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
+		SmartDashboard.putNumber("Cargo Arm Error: ", RobotMap.cargoArm.distancePID.getError());
 
 
 		SmartDashboard.putNumber("Cargo Roller Current", RobotMap.cargoRollersTalon.getOutputCurrent());
@@ -469,6 +473,11 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Arm Ramped Setpoint:", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
 		SmartDashboard.putNumber("up ramp arm:", ConstantsIO.armDistanceSetpointUpRamp);
 		SmartDashboard.putNumber("Cargo Arm output current", RobotMap.cargoArmTalon.getOutputCurrent());
+		SmartDashboard.putNumber("Cargo Arm Distance Output TN ", RobotMap.cargoArm.distanceOutputTN.getOutput());
+		SmartDashboard.putNumber("Cargo Arm Ramped Distance Setpoint TN: ", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
+		SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
+
+
 	}
 	
 	
