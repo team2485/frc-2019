@@ -48,9 +48,7 @@ public class CargoArmWithControllers extends Command {
                 power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet());
             } else if (!zero) {
                 power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet(), 1.9);
-            } else {
-
-            }
+            } 
             System.out.println("Power: " + power);
 
             RobotMap.cargoArm.distanceSetpointTN.setOutput(power);

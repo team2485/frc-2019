@@ -14,6 +14,8 @@ public class ElevatorWithControllers extends Command {
     private boolean spiking;
     private long startSpikeTime;
     private int spikeTime = 1000;
+    public static double power;
+    public static boolean init = true;
 
     public ElevatorWithControllers() {
         setInterruptible(true);
@@ -23,21 +25,27 @@ public class ElevatorWithControllers extends Command {
     @Override
     protected void initialize() {
         holdPosition = RobotMap.elevator.lastLevel.getPosition();
-        RobotMap.elevator.enablePID(true);
+       
         RobotMap.elevator.distanceSetpointTN.setOutput(holdPosition); //so that handoff between SetElevatorPosition is smooth :)
     }
 
     @Override
     protected void execute() {
         // dont make same ramp rate changes
+        if(init){      
+                RobotMap.elevator.enablePID(true);
+                RobotMap.elevatorEncoder.reset();
+                power = 0;
+                init = false;
+        } else {
         boolean up = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 1) > 0;
         boolean zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 1) == 0;
-        double power = 0;
+        power = 0;
 
         if(up) {
-            power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, RobotMap.elevatorEncoderWrapperDistance.pidGet(), ElevatorLevel.ROCKET_LEVEL_THREE.getPosition());
+            power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2,ElevatorLevel.ROCKET_LEVEL_THREE.getPosition(), -RobotMap.elevatorEncoderWrapperDistance.pidGet());
         } else if (!up && !zero) {
-            power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, ElevatorLevel.HATCH_INTAKE_FLOOR.getPosition(), RobotMap.elevatorEncoderWrapperDistance.pidGet());
+            power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, -RobotMap.elevatorEncoderWrapperDistance.pidGet(),  ElevatorLevel.HATCH_INTAKE_FLOOR.getPosition());
         }
 
         RobotMap.elevator.distanceSetpointTN.setOutput(power);
@@ -62,6 +70,8 @@ public class ElevatorWithControllers extends Command {
                 RobotMap.cargoArm.failsafeTN.setOutput(RobotMap.elevator.HOLDING_CURRENT); //make sure this value can actually hold elevator up :)
             }
         }
+
+    }
 
 
 
