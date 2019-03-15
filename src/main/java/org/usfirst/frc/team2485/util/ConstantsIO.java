@@ -52,7 +52,8 @@ public class ConstantsIO {
 	public static double kF_DriveAngVel;
 	public static double kV_DriveAngVel;
 	
-	
+	public static double teleopUpRamp;
+	public static double teleopDownRamp;
 	public static double kUpRamp_Velocity;
 	public static double kDownRamp_Velocity;
 	public static double kUpRamp_AngVelocity;
@@ -63,6 +64,7 @@ public class ConstantsIO {
 	public static double kD_elevatorDistance;
 	public static double levitateElevatorDistance;
 	public static double kElevatorEncoderFilterCoefficient;
+	
 
 	public static double elevatorDistanceSetpointDownRamp;
 	public static double elevatorDistanceSetpointUpRamp;
@@ -74,8 +76,10 @@ public class ConstantsIO {
 	public static double kP_cargoArmDistance;
 	public static double kI_cargoArmDistance;
 	public static double kD_cargoArmDistance;
+	public static double kF_cargoArmDistance;
 	public static double levitateCargo;
 	public static double kArmEncoderFilterCoefficient;
+	public static double kDistanceOutputFilterCoefficient;
 	
 	public static double cargoRollersIMax;
 	public static double elevatorIMax;
@@ -130,7 +134,8 @@ public class ConstantsIO {
 		kF_DriveAngVel = Double.parseDouble(data.get("kF_DriveAngVel"));
 		kV_DriveAngVel = Double.parseDouble(data.get("kV_DriveAngVel"));
 
-				
+		teleopUpRamp = Double.parseDouble(data.get("teleopUpRamp"));		
+		teleopDownRamp = Double.parseDouble(data.get("teleopDownRamp"));		
 		kUpRamp_Velocity = Double.parseDouble(data.get("kUpRamp_Velocity"));
 		kDownRamp_Velocity = Double.parseDouble(data.get("kDownRamp_Velocity"));
 		kUpRamp_AngVelocity = Double.parseDouble(data.get("kUpRamp_AngVelocity"));
@@ -152,8 +157,10 @@ public class ConstantsIO {
 		kP_cargoArmDistance = Double.parseDouble(data.get("kP_cargoArmDistance"));
 		kI_cargoArmDistance = Double.parseDouble(data.get("kI_cargoArmDistance"));
 		kD_cargoArmDistance = Double.parseDouble(data.get("kD_cargoArmDistance"));
+		kF_cargoArmDistance = Double.parseDouble(data.get("kF_cargoArmDistance"));
 		levitateCargo = Double.parseDouble(data.get("levitateCargo"));
 		kArmEncoderFilterCoefficient = Double.parseDouble(data.get("kArmEncoderFilterCoefficient"));
+		kDistanceOutputFilterCoefficient = Double.parseDouble(data.get("kDistanceOutputFilterCoefficient"));
 		
 		elevatorIMax = Double.parseDouble(data.get("elevatorIMax"));
 		//cargoArmIMax = Double.parseDouble(data.get("cargoArmIMax"));

@@ -11,11 +11,16 @@ public class DriveWithControllers extends Command {
         setInterruptible(true);
         requires(RobotMap.driveTrain);
     }
+    
+    @Override
+    protected void initialize() {
+        RobotMap.driveTrain.enableTeleopPID(true);
+    }
 
     @Override
     protected void execute() {
         double throttle = OI.getDriveThrottle();
-        double steering = OI.getDriveSteering() * OI.getDriveSteering(); //do we keep this squared?
+        double steering = OI.getDriveSteering(); //do we keep this squared? //no
         boolean quickTurn = OI.getQuickTurn();
 
         // if(throttle == 0 && steering == 0) {

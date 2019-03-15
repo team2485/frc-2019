@@ -25,6 +25,7 @@ public class CargoArm extends Subsystem {
     public TransferNode distanceOutputTN;
     public TransferNode armEncoderTN;
     public TransferNode failsafeTN;
+    public TransferNode distanceOutputFilteredTN;
 
     public PIDSourceWrapper armEncoderPIDSource;
     public PIDSourceWrapper distanceOutputPIDSource;
@@ -32,6 +33,7 @@ public class CargoArm extends Subsystem {
     public WarlordsPIDController distancePID;
 
     public LowPassFilter encoderFilter;
+    public LowPassFilter distanceOutputFilter;
 
     public MotorSetter motorSetter;
 
@@ -44,6 +46,7 @@ public class CargoArm extends Subsystem {
         distanceSetpointRampedTN = new TransferNode(0);
         distanceOutputTN = new TransferNode(0);
         failsafeTN = new TransferNode(0);
+        distanceOutputFilteredTN = new TransferNode(0);
 
         armEncoderPIDSource = new PIDSourceWrapper();
         distanceOutputPIDSource = new PIDSourceWrapper();
@@ -51,6 +54,7 @@ public class CargoArm extends Subsystem {
         distancePID = new WarlordsPIDController();
 
         encoderFilter = new LowPassFilter();
+        distanceOutputFilter = new LowPassFilter();
 
         distanceRampRate = new RampRate();
 
@@ -59,8 +63,8 @@ public class CargoArm extends Subsystem {
         distanceRampRate.setSetpointSource(distanceSetpointTN);
         distanceRampRate.setOutputs(distanceSetpointRampedTN);
 
-        encoderFilter.setFilterCoefficient(ConstantsIO.kArmEncoderFilterCoefficient);
-        encoderFilter.setSetpointSource(RobotMap.cargoArmEncoder);
+        
+        encoderFilter.setSetpointSource(RobotMap.cargoArmEncoderWrapperDistance);
         encoderFilter.setOutputs(armEncoderTN);
 
         armEncoderPIDSource.setPidSource(() -> {
@@ -69,13 +73,21 @@ public class CargoArm extends Subsystem {
 
         distancePID.setSetpointSource(distanceSetpointRampedTN); 
         distancePID.setOutputs(distanceOutputTN);
-        distancePID.setSources(RobotMap.cargoArmEncoderWrapperDistance);
+        distancePID.setSources(armEncoderPIDSource);
         distancePID.setOutputRange(ConstantsIO.cargoArmIMaxDown, ConstantsIO.cargoArmIMaxUp);
+
+       
+        distanceOutputFilter.setSetpointSource(distanceOutputTN);
+        distanceOutputFilter.setOutputs(distanceOutputFilteredTN);
+
+
+
+
        
 
         distanceOutputPIDSource.setPidSource(() -> {
-            double output = distanceOutputTN.getOutput() - ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - Math.PI/2); 
-            System.out.println("levitate: "+ -(ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - Math.PI/2)));
+            double output = (ConstantsIO.kF_cargoArmDistance * distanceOutputFilteredTN.getOutput()) - ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - Math.PI/2); 
+            System.out.println("levitate: "+ -(ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet())));
             if(failsafeTN.getOutput() != 0) {
                 return failsafeTN.getOutput();
             } else if(distanceSetpointTN.getOutput() < RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
@@ -100,6 +112,8 @@ public class CargoArm extends Subsystem {
             
         });
 
+
+
         
 
         motorSetter.setSetpointSource(distanceOutputPIDSource);
@@ -115,7 +129,7 @@ public class CargoArm extends Subsystem {
     }
 
     public void initDefaultCommand() {
-      setDefaultCommand(new CargoArmWithControllers());
+       setDefaultCommand(new CargoArmWithControllers());
     }
 
     public void setPosition(double position) {
@@ -125,6 +139,8 @@ public class CargoArm extends Subsystem {
     public void updateConstants() {
         distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
         distancePID.setPID(ConstantsIO.kP_cargoArmDistance, ConstantsIO.kI_cargoArmDistance, ConstantsIO.kD_cargoArmDistance);
+        encoderFilter.setFilterCoefficient(ConstantsIO.kArmEncoderFilterCoefficient);
+        distanceOutputFilter.setFilterCoefficient(ConstantsIO.kDistanceOutputFilterCoefficient);
     }
 
     public void enablePID(boolean enabled) {
@@ -132,6 +148,8 @@ public class CargoArm extends Subsystem {
             distancePID.enable();
             motorSetter.enable();
             distanceRampRate.enable();
+            encoderFilter.enable();
+            distanceOutputFilter.enable();
         } else {
             distanceOutputTN.setOutput(0);
             distancePID.disable();

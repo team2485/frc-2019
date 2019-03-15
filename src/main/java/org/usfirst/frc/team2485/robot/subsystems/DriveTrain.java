@@ -9,6 +9,7 @@ import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.FastMath;
 import org.usfirst.frc.team2485.util.MotorSetter;
 import org.usfirst.frc.team2485.util.PIDSourceWrapper;
+import org.usfirst.frc.team2485.util.RampRate;
 import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
 import org.usfirst.frc.team2485.util.AutoPath.Pair;
@@ -33,21 +34,31 @@ public class DriveTrain extends Subsystem {
     public TransferNode distanceOutputTN;
     public TransferNode velocityOutputTN;
     public TransferNode angleOutputTN;
-    public TransferNode angVelOutputTN;
+	public TransferNode angVelOutputTN;
+	public TransferNode teleopSetpointLeftTN;
+	public TransferNode teleopSetpointLeftRampedTN;
+	public TransferNode teleopSetpointRightTN;
+	public TransferNode teleopSetpointRightRampedTN;
 
 	public PIDSourceWrapper kPDistancePIDSource;
     public PIDSourceWrapper distancePIDSource;
     public PIDSourceWrapper velocityPIDSource;
     public PIDSourceWrapper leftCurrentPIDSource;
-    public PIDSourceWrapper rightCurrentPIDSource;
+	public PIDSourceWrapper rightCurrentPIDSource;
+	
+	public RampRate teleopSetpointLeftRamp;
+	public RampRate teleopSetpointRightRamp;
 
     public MotorSetter leftMotorSetter;
-    public MotorSetter rightMotorSetter;
+	public MotorSetter rightMotorSetter;
+	
+	public MotorSetter teleopLeftMotorSetter;
+	public MotorSetter teleopRightMotorSetter;
 
     public double distBetweenCenterTargets;
 
     public DriveTrain() {
-
+		//AUTONOMOUS
         distancePID = new WarlordsPIDController();
         velocityPID = new WarlordsPIDController();
 		anglePID = new WarlordsPIDController();
@@ -117,20 +128,49 @@ public class DriveTrain extends Subsystem {
         leftMotorSetter.setSetpointSource(leftCurrentPIDSource);
         leftMotorSetter.setOutputs(RobotMap.driveLeftCurrent);
         rightMotorSetter.setSetpointSource(rightCurrentPIDSource);
-        rightMotorSetter.setOutputs(RobotMap.driveRightCurrent);
+		rightMotorSetter.setOutputs(RobotMap.driveRightCurrent);
+		
 
-        distBetweenCenterTargets = distInchesCenterVisionTarget();
+		distBetweenCenterTargets = distInchesCenterVisionTarget();
+		
+
+
+		//TELEOP
+		teleopSetpointLeftTN = new TransferNode(0);
+		teleopSetpointLeftRampedTN = new TransferNode(0);
+		teleopSetpointRightTN = new TransferNode(0);
+		teleopSetpointRightRampedTN = new TransferNode(0);
+
+		teleopSetpointLeftRamp = new RampRate();
+		teleopSetpointRightRamp = new RampRate();
+
+		teleopLeftMotorSetter = new MotorSetter();
+		teleopRightMotorSetter = new MotorSetter();
+
+
+		teleopSetpointLeftRamp.setSetpointSource(teleopSetpointLeftTN);
+		teleopSetpointLeftRamp.setOutputs(teleopSetpointLeftRampedTN);
+
+		teleopSetpointRightRamp.setSetpointSource(teleopSetpointRightTN);
+		teleopSetpointRightRamp.setOutputs(teleopSetpointRightRampedTN);
+
+		teleopLeftMotorSetter.setSetpointSource(teleopSetpointLeftRampedTN);
+		teleopLeftMotorSetter.setOutputs(RobotMap.driveLeftCurrent);
+		teleopRightMotorSetter.setSetpointSource(teleopSetpointRightRampedTN);
+		teleopRightMotorSetter.setOutputs(RobotMap.driveRightCurrent);
 
 
     }
 
     public void WarlordsDrive(double throttle, double steering, boolean quickTurn) {
         if(quickTurn) {
-            RobotMap.driveLeftPercentOutput.set(steering);
-            RobotMap.driveRightPercentOutput.set(-steering);
-        } else {
-            double left = throttle + Math.abs(throttle)*steering;
-            double right = throttle - Math.abs(throttle)*steering;
+            teleopSetpointLeftTN.setOutput(steering);
+            teleopSetpointRightTN.setOutput(-steering);
+        } else if(throttle != 0 || steering != 0) {
+			double sign = steering >= 0 ? 1 : -1;
+			sign *= throttle < 0 ? -1 : 1;
+            double left = throttle + sign*Math.sqrt(Math.abs(steering));
+            double right = throttle - sign*Math.sqrt(Math.abs(steering));
 
             if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
                 right /= Math.abs(left);
@@ -140,9 +180,14 @@ public class DriveTrain extends Subsystem {
                 right /= Math.abs(right);
             }
 
-            RobotMap.driveLeftCurrent.set(left);
-            RobotMap.driveRightCurrent.set(right);
-        }
+            teleopSetpointLeftTN.setOutput(left);
+            teleopSetpointRightTN.setOutput(right);
+        } else {
+			teleopSetpointLeftTN.setOutput(0);
+			teleopSetpointRightTN.setOutput(0);
+			teleopSetpointLeftRampedTN.setOutput(0);
+			teleopSetpointRightRampedTN.setOutput(0);
+		}
     }
 
     public void initDefaultCommand() {
@@ -155,6 +200,8 @@ public class DriveTrain extends Subsystem {
         anglePID.setPID(ConstantsIO.kP_DriveAngle, ConstantsIO.kI_DriveAngle, ConstantsIO.kD_DriveAngle);
 		angVelPID.setPID(ConstantsIO.kP_DriveAngVel, ConstantsIO.kI_DriveAngVel, ConstantsIO.kD_DriveAngVel, ConstantsIO.kF_DriveAngVel);
 		angVelPID.setFrictionTerm(ConstantsIO.kV_DriveAngVel, 0.5);
+		teleopSetpointLeftRamp.setRampRates(ConstantsIO.teleopUpRamp, ConstantsIO.teleopDownRamp);
+		teleopSetpointRightRamp.setRampRates(ConstantsIO.teleopUpRamp, ConstantsIO.teleopDownRamp);
     }
 
 
@@ -542,5 +589,17 @@ public class DriveTrain extends Subsystem {
             leftMotorSetter.disable();
             rightMotorSetter.disable();
         }
-    }
+	}
+	
+	public void enableTeleopPID(boolean enabled) {
+		if(enabled) {
+			teleopSetpointLeftRamp.enable();
+			teleopSetpointRightRamp.enable();
+			teleopLeftMotorSetter.enable();
+			teleopRightMotorSetter.enable();
+		} else {
+			teleopLeftMotorSetter.disable();
+			teleopRightMotorSetter.disable();
+		}
+	}
 }

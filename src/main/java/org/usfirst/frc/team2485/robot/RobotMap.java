@@ -235,38 +235,26 @@ public class RobotMap {
 		driveRightTalon3 = new TalonSRX(driveRightTalonPort3);
 		driveRightTalon4 = new TalonSRX(driveRightTalonPort4);
 
-		driveLeftTalon1.configContinuousCurrentLimit(8); //13's
-		driveLeftTalon2.configContinuousCurrentLimit(8);
-		driveLeftTalon3.configContinuousCurrentLimit(8);
-		driveLeftTalon4.configContinuousCurrentLimit(8);
+		driveLeftTalon1.enableCurrentLimit(false);
+		driveLeftTalon2.enableCurrentLimit(false);
+		driveLeftTalon3.enableCurrentLimit(false);
+		driveLeftTalon4.enableCurrentLimit(false);
 
-		driveRightTalon1.configContinuousCurrentLimit(8); //13's
-		driveRightTalon2.configContinuousCurrentLimit(8);
-		driveRightTalon3.configContinuousCurrentLimit(8);
-		driveRightTalon4.configContinuousCurrentLimit(8);
-
-		driveLeftTalon1.configPeakCurrentLimit(8); //13's
-		driveLeftTalon2.configPeakCurrentLimit(8);
-		driveLeftTalon3.configPeakCurrentLimit(8);
-		driveLeftTalon4.configPeakCurrentLimit(8);
-
-		driveRightTalon1.configPeakCurrentLimit(8); //13's
-		driveRightTalon2.configPeakCurrentLimit(8);
-		driveRightTalon3.configPeakCurrentLimit(8);
-		driveRightTalon4.configPeakCurrentLimit(8);
-
-		driveLeftTalon1.enableCurrentLimit(true);
-		driveLeftTalon2.enableCurrentLimit(true);
-		driveLeftTalon3.enableCurrentLimit(true);
-		driveLeftTalon4.enableCurrentLimit(true);
-
-		driveRightTalon1.enableCurrentLimit(true);
-		driveRightTalon2.enableCurrentLimit(true);
-		driveRightTalon3.enableCurrentLimit(true);
-		driveRightTalon4.enableCurrentLimit(true);
+		driveRightTalon1.enableCurrentLimit(false);
+		driveRightTalon2.enableCurrentLimit(false);
+		driveRightTalon3.enableCurrentLimit(false);
+		driveRightTalon4.enableCurrentLimit(false);
 
 
+		driveLeftTalon1.configClosedloopRamp(0);
+		driveLeftTalon2.configClosedloopRamp(0);
+		driveLeftTalon3.configClosedloopRamp(0);
+		driveLeftTalon4.configClosedloopRamp(0);
 
+		driveRightTalon1.configClosedloopRamp(0);
+		driveRightTalon2.configClosedloopRamp(0);
+		driveRightTalon3.configClosedloopRamp(0);
+		driveRightTalon4.configClosedloopRamp(0);
 
 		gyroTalon = new TalonSRX(gyroTalonPort);
 

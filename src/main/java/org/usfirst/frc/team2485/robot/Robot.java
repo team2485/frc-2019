@@ -120,17 +120,17 @@ public class Robot extends TimedRobot {
 		SandstormAuto.init(false); 
 		auto = new SandstormAuto();
 
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+		// UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		// camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		
-		output = CameraServer.getInstance().putVideo("Processed: ", 640, 480);
+		// output = CameraServer.getInstance().putVideo("Processed: ", 640, 480);
 
 		
-		VisionThread visionThread = new VisionThread(camera, new SurajPipeline(), pipeline -> {
-			output.putFrame(pipeline.cvRectangleOutput());
+		// VisionThread visionThread = new VisionThread(camera, new SurajPipeline(), pipeline -> {
+		// 	output.putFrame(pipeline.cvRectangleOutput());
 
-		});
-		visionThread.start();
+		// });
+		// visionThread.start();
 
 	
 	
@@ -340,6 +340,9 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.retractPushers();
 		RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
+		RobotMap.elevator.enablePID(false);
+		// RobotMap.cargoArm.enablePID(true);
+		// RobotMap.cargoArm.distanceSetpointTN.setOutput(1);
 		//RobotMap.elevator.enablePID(true);
 		//RobotMap.elevator.distanceSetpointTN.setOutput(ElevatorLevel.ROCKET_LEVEL_TWO.getPosition());
 		//RobotMap.cargoArm.enablePID(false);
@@ -389,6 +392,7 @@ public class Robot extends TimedRobot {
 		if (RobotMap.cargoArmLimitSwitchUp.get()) {
 			RobotMap.cargoArmEncoder.reset();
 		}
+		
 
 
 	}

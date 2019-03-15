@@ -10,7 +10,7 @@ import org.usfirst.frc.team2485.util.ThresholdHandler;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class CargoArmWithControllers extends Command {
-    private double threshold = 0.05;
+    private double threshold = 0.2;
     private double cargoArmSpikeCurrent = 5;
     private boolean spiking;
     private long startSpikeTime;
@@ -58,9 +58,9 @@ public class CargoArmWithControllers extends Command {
             }
 
             if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet() + 1.7) < threshold) {
-                RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRampClose);
+                RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRampClose);
             } else if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - 0) < threshold) {
-                RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRamp);
+                RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRampClose);
             } else {
                 RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRamp);
 
