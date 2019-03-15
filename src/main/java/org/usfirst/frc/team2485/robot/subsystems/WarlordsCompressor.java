@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class WarlordsCompressor extends Subsystem {
     public double airRemaining;
-    public static final double POUNDS_PER_MILLI = 4.0/1000;
+    public static final double POUNDS_PER_MILLI = 2.4/1000;
     public double demand;
     public static final double CURRENT_THRESHOLD = 50;
 

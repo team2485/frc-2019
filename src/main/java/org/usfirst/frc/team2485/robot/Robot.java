@@ -56,6 +56,7 @@ import org.usfirst.frc.team2485.robot.commands.SetAngle;
 import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
+import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 
 
 
@@ -337,8 +338,10 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.slideIn();
 		RobotMap.hatchIntake.hookIn();
 		RobotMap.hatchIntake.retractPushers();
-		//RobotMap.hatchIntake.stow();
+		RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
+		//RobotMap.elevator.enablePID(true);
+		//RobotMap.elevator.distanceSetpointTN.setOutput(ElevatorLevel.ROCKET_LEVEL_TWO.getPosition());
 		//RobotMap.cargoArm.enablePID(false);
 		//RobotMap.cargoArm.distanceSetpointTN.setOutput(1);
 		//Scheduler.getInstance().add(new SetRollers(0));
@@ -476,6 +479,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Cargo Arm Distance Output TN ", RobotMap.cargoArm.distanceOutputTN.getOutput());
 		SmartDashboard.putNumber("Cargo Arm Ramped Distance Setpoint TN: ", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
 		SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
+		SmartDashboard.putNumber("ELevator Distance Output TN: ", RobotMap.elevator.distanceOutputTN.getOutput());
 
 
 	}

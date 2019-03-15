@@ -115,9 +115,9 @@ public class DriveTrain extends Subsystem {
         });
 
         leftMotorSetter.setSetpointSource(leftCurrentPIDSource);
-        leftMotorSetter.setOutputs(RobotMap.driveLeftPercentOutput);
+        leftMotorSetter.setOutputs(RobotMap.driveLeftCurrent);
         rightMotorSetter.setSetpointSource(rightCurrentPIDSource);
-        rightMotorSetter.setOutputs(RobotMap.driveRightPercentOutput);
+        rightMotorSetter.setOutputs(RobotMap.driveRightCurrent);
 
         distBetweenCenterTargets = distInchesCenterVisionTarget();
 
@@ -132,10 +132,10 @@ public class DriveTrain extends Subsystem {
             double left = throttle + Math.abs(throttle)*steering;
             double right = throttle - Math.abs(throttle)*steering;
 
-            if(Math.abs(left) > 1) {
+            if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
                 right /= Math.abs(left);
                 left /= Math.abs(left);
-            } else if (Math.abs(right) > 1) {
+            } else if (Math.abs(right) > ConstantsIO.driveTrainIMax) {
                 left /= Math.abs(right);
                 right /= Math.abs(right);
             }

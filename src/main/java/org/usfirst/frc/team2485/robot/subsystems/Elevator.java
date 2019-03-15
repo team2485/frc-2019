@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 
 public class Elevator extends Subsystem {
-    public final double HOLDING_CURRENT = 7;
+    public static boolean enableFailsafe = false;
 
     public enum ElevatorLevel {
         FLOOR, ROCKET_LEVEL_ONE, ROCKET_LEVEL_TWO, ROCKET_LEVEL_THREE, HATCH_LIFTING, HATCH_INTAKE_FLOOR;
@@ -83,7 +83,7 @@ public class Elevator extends Subsystem {
         distanceSetpointRampRate.setOutputs(distanceSetpointRampedTN);
 
         elevatorEncoderFilter.setFilterCoefficient(ConstantsIO.kElevatorEncoderFilterCoefficient);
-        elevatorEncoderFilter.setSetpointSource(RobotMap.elevatorEncoder);
+        elevatorEncoderFilter.setSetpointSource(RobotMap.elevatorEncoderWrapperDistance);
         elevatorEncoderFilter.setOutputs(elevatorEncoderTN);
 
         elevatorEncoderPIDSource.setPidSource(() -> {
@@ -93,15 +93,15 @@ public class Elevator extends Subsystem {
 
         distancePID.setSetpointSource(distanceSetpointRampedTN);
         distancePID.setOutputs(distanceOutputTN);
-        distancePID.setSources(elevatorEncoderPIDSource);
+        distancePID.setSources(RobotMap.elevatorEncoderWrapperDistance);
         distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax);
 
 
         distanceOutputPIDSource.setPidSource(() -> {
             double output = distanceOutputTN.getOutput();
-            if(failsafeTN.getOutput() != 0) {
-                return failsafeTN.getOutput();
-            } else if(failsafeTN.getOutput() == 0){ //this is dumb but it doesn't matter if elevator setpoint is above or below elevator current position so...
+            if(enableFailsafe) {
+                return 0;
+            } else { 
                 if(output > ConstantsIO.elevatorIMax){
                     return ConstantsIO.elevatorIMax;
                 } else if (output < -ConstantsIO.elevatorIMax){
@@ -109,9 +109,7 @@ public class Elevator extends Subsystem {
                 } else { 
                     return output;
                 }
-            } else { 
-                return 0;
-            }
+            } 
         });
 
         
@@ -146,6 +144,7 @@ public class Elevator extends Subsystem {
         if (enable) {
             distancePID.enable();
             distanceSetpointRampRate.enable();
+            motorSetter.enable();
         } else {
             // distanceSetpointTN.setOutput(0);
             // distanceSetpointRampedTN.setOutput(0);

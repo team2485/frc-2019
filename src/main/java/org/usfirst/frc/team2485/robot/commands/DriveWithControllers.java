@@ -15,7 +15,7 @@ public class DriveWithControllers extends Command {
     @Override
     protected void execute() {
         double throttle = OI.getDriveThrottle();
-        double steering = OI.getDriveSteering() * Math.abs(OI.getDriveSteering());
+        double steering = OI.getDriveSteering() * OI.getDriveSteering(); //do we keep this squared?
         boolean quickTurn = OI.getQuickTurn();
 
         // if(throttle == 0 && steering == 0) {
