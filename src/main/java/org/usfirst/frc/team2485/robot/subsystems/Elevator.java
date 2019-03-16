@@ -113,7 +113,7 @@ public class Elevator extends Subsystem {
        
 
         antiGravityPID.setSources(elevatorAntiGravityPIDSource);
-        antiGravityPID.setSetpointSource(distanceSetpointRampedTN);
+        antiGravityPID.setSetpoint(0);
         antiGravityPID.setOutputs(antiGravityOutputTN);
 
 
@@ -124,8 +124,8 @@ public class Elevator extends Subsystem {
             } else { 
                 if(output > ConstantsIO.elevatorAntiGravityIMax){
                     return ConstantsIO.elevatorAntiGravityIMax;
-                } else if (output < -ConstantsIO.elevatorAntiGravityIMax){
-                    return -ConstantsIO.elevatorAntiGravityIMax;
+                } else if (output < 0){
+                    return 0;
                 } else { 
                     return output;
                 }
@@ -180,7 +180,7 @@ public class Elevator extends Subsystem {
         distancePID.setPID(ConstantsIO.kP_elevatorDistance, ConstantsIO.kI_elevatorDistance, ConstantsIO.kD_elevatorDistance);
         elevatorEncoderFilter.setFilterCoefficient(ConstantsIO.kElevatorEncoderFilterCoefficient);
         distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax); //1-2 amps
-        antiGravityPID.setOutputRange(-ConstantsIO.elevatorAntiGravityIMax, ConstantsIO.elevatorAntiGravityIMax); //these should be more like 5-6 amps
+        antiGravityPID.setOutputRange(0, ConstantsIO.elevatorAntiGravityIMax); //these should be more like 5-6 amps
         antiGravityPID.setPID(ConstantsIO.kP_elevatorAntiGravityDistance, ConstantsIO.kI_elevatorAntiGravityDistance, ConstantsIO.kD_elevatorAntiGravityDistance);
        
     }
