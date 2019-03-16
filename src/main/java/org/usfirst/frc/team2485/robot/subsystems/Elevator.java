@@ -106,7 +106,7 @@ public class Elevator extends Subsystem {
         distancePID.setSources(elevatorEncoderPIDSource);
 
         elevatorAntiGravityPIDSource.setPidSource(() -> {
-            return distanceOutputTN.getOutput() * ConstantsIO.kF_elevatorAntiGravity;
+            return distanceOutputTN.getOutput();
         });
 
 
@@ -121,15 +121,9 @@ public class Elevator extends Subsystem {
             double output = antiGravityOutputTN.getOutput();
             if(enableFailsafe) {
                 return 0;
-            } else { 
-                if(output > ConstantsIO.elevatorAntiGravityIMax){
-                    return ConstantsIO.elevatorAntiGravityIMax;
-                } else if (output < 0){
-                    return 0;
-                } else { 
-                    return output;
-                }
-            } 
+            } else{
+                return output;
+            }
         });
 
         
@@ -179,9 +173,9 @@ public class Elevator extends Subsystem {
         distanceSetpointRampRate.setRampRates(ConstantsIO.elevatorDistanceSetpointUpRamp, ConstantsIO.elevatorDistanceSetpointDownRamp);
         distancePID.setPID(ConstantsIO.kP_elevatorDistance, ConstantsIO.kI_elevatorDistance, ConstantsIO.kD_elevatorDistance);
         elevatorEncoderFilter.setFilterCoefficient(ConstantsIO.kElevatorEncoderFilterCoefficient);
-        distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax); //1-2 amps
+        distancePID.setOutputRange(-ConstantsIO.elevatorIMaxDown, ConstantsIO.elevatorIMaxUp); //1-2 amps
         antiGravityPID.setOutputRange(0, ConstantsIO.elevatorAntiGravityIMax); //these should be more like 5-6 amps
-        antiGravityPID.setPID(ConstantsIO.kP_elevatorAntiGravityDistance, ConstantsIO.kI_elevatorAntiGravityDistance, ConstantsIO.kD_elevatorAntiGravityDistance);
+        antiGravityPID.setPID(ConstantsIO.kP_elevatorAntiGravityDistance, ConstantsIO.kI_elevatorAntiGravityDistance, ConstantsIO.kD_elevatorAntiGravityDistance, ConstantsIO.kF_elevatorAntiGravity);
        
     }
 }

@@ -421,6 +421,11 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Elevator Hatch Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3);
 		SmartDashboard.putNumber("Elevator Output Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
 		SmartDashboard.putNumber("Elevator Encoder: ", RobotMap.elevatorEncoderWrapperDistance.pidGet());
+		SmartDashboard.putNumber("Elevator Distance Output TN:", RobotMap.elevator.distanceOutputTN.getOutput());
+		SmartDashboard.putNumber("Elevator AntiGravityPIDSource:", RobotMap.elevator.elevatorAntiGravityPIDSource.pidGet());
+		SmartDashboard.putNumber("Elevator antiGravity Output TN:", RobotMap.elevator.antiGravityOutputTN.getOutput());
+		SmartDashboard.putNumber("ConstantsIO.kF_elevatorAntiGravity:", ConstantsIO.kF_elevatorAntiGravity);
+		SmartDashboard.putNumber("distanceOutputPIDSource:", RobotMap.elevator.distanceOutputPIDSource.pidGet());
 
 
 		SmartDashboard.putNumber("Cargo Arm Distance PID Error: ", RobotMap.cargoArm.distancePID.getError());

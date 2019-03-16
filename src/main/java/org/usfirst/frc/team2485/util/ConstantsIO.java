@@ -91,7 +91,9 @@ public class ConstantsIO {
 	public static double kDistanceOutputFilterCoefficient;
 	
 	public static double cargoRollersIMax;
-	public static double elevatorIMax;
+	public static double elevatorIMaxUp;
+	public static double elevatorIMaxDown;
+
 	//public static double cargoArmIMax;
 	public static double cargoArmIMaxUp;
 	public static double cargoArmIMaxDown;
@@ -156,6 +158,12 @@ public class ConstantsIO {
 		kF_elevatorDistance = Double.parseDouble(data.get("kF_elevatorDistance"));
 		kElevatorEncoderFilterCoefficient = Double.parseDouble(data.get("kElevatorEncoderFilterCoefficient"));
 		kElevatorDistanceOutputFilterCoefficient = Double.parseDouble(data.get("kElevatorDistanceOutputFilterCoefficient"));
+
+		kP_elevatorAntiGravityDistance = Double.parseDouble(data.get("kP_elevatorAntiGravityDistance"));
+		kI_elevatorAntiGravityDistance = Double.parseDouble(data.get("kI_elevatorAntiGravityDistance"));
+		kD_elevatorAntiGravityDistance = Double.parseDouble(data.get("kD_elevatorAntiGravityDistance"));
+		kF_elevatorAntiGravity = Double.parseDouble(data.get("kF_elevatorAntiGravity"));
+		elevatorAntiGravityIMax = Double.parseDouble(data.get("elevatorAntiGravityIMax"));
 	
 		elevatorDistanceSetpointDownRamp = Double.parseDouble(data.get("elevatorDistanceSetpointDownRamp"));
 		elevatorDistanceSetpointUpRamp = Double.parseDouble(data.get("elevatorDistanceSetpointUpRamp"));
@@ -173,7 +181,8 @@ public class ConstantsIO {
 		kArmEncoderFilterCoefficient = Double.parseDouble(data.get("kArmEncoderFilterCoefficient"));
 		kDistanceOutputFilterCoefficient = Double.parseDouble(data.get("kDistanceOutputFilterCoefficient"));
 		
-		elevatorIMax = Double.parseDouble(data.get("elevatorIMax"));
+		elevatorIMaxUp = Double.parseDouble(data.get("elevatorIMaxUp"));
+		elevatorIMaxDown = Double.parseDouble(data.get("elevatorIMaxDown"));
 		//cargoArmIMax = Double.parseDouble(data.get("cargoArmIMax"));
 		cargoArmIMaxUp = Double.parseDouble(data.get("cargoArmIMaxUp"));
 		cargoArmIMaxDown = Double.parseDouble(data.get("cargoArmIMaxDown"));
