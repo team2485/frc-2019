@@ -340,8 +340,9 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.retractPushers();
 		RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
-		RobotMap.elevator.enablePID(false);
-		// RobotMap.cargoArm.enablePID(true);
+		//RobotMap.elevator.enablePID(true);
+		//RobotMap.elevator.distanceSetpointTN.setOutput(33.5);
+		RobotMap.cargoArm.enablePID(false);
 		// RobotMap.cargoArm.distanceSetpointTN.setOutput(1);
 		//RobotMap.elevator.enablePID(true);
 		//RobotMap.elevator.distanceSetpointTN.setOutput(ElevatorLevel.ROCKET_LEVEL_TWO.getPosition());
@@ -485,6 +486,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
 		SmartDashboard.putNumber("ELevator Distance Output TN: ", RobotMap.elevator.distanceOutputTN.getOutput());
 
+		SmartDashboard.putNumber("Cargo Arm Ramped TN: ", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
 
 	}
 	

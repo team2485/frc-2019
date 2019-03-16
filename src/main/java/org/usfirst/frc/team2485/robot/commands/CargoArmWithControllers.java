@@ -45,9 +45,9 @@ public class CargoArmWithControllers extends Command {
 
 
             if(up && !zero) {
-                power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet());
+                power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, -RobotMap.cargoArmEncoderWrapperDistance.pidGet());
             } else if (!zero) {
-                power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet(), 1.9);
+                power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet(), 1.75);
             } 
             System.out.println("Power: " + power);
 
@@ -59,12 +59,13 @@ public class CargoArmWithControllers extends Command {
 
             if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet() + 1.7) < threshold) {
                 RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRampClose);
-            } else if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - 0) < threshold) {
+            } else if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet()) < threshold) {
                 RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRampClose);
             } else {
                 RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRamp);
 
             }
+
             System.out.println(System.currentTimeMillis() - startSpikeTime);
 
             if(RobotMap.cargoArmTalon.getOutputCurrent() >= cargoArmSpikeCurrent && !RobotMap.cargoArm.distancePID.isOnTarget()) {

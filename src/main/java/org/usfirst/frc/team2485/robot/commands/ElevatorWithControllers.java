@@ -33,9 +33,6 @@ public class ElevatorWithControllers extends Command {
     @Override
     protected void execute() {
         // dont make same ramp rate changes
-        System.out.println("yeet");
-
-       
         boolean up = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 1) > 0;
         boolean zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 1) == 0;
 

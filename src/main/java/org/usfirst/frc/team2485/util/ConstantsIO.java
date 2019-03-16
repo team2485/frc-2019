@@ -62,8 +62,10 @@ public class ConstantsIO {
 	public static double kP_elevatorDistance;
 	public static double kI_elevatorDistance;
 	public static double kD_elevatorDistance;
+	public static double kF_elevatorDistance;
 	public static double levitateElevatorDistance;
 	public static double kElevatorEncoderFilterCoefficient;
+	public static double kElevatorDistanceOutputFilterCoefficient;
 	
 
 	public static double elevatorDistanceSetpointDownRamp;
@@ -144,7 +146,9 @@ public class ConstantsIO {
 		kP_elevatorDistance = Double.parseDouble(data.get("kP_elevatorDistance"));
 		kI_elevatorDistance = Double.parseDouble(data.get("kI_elevatorDistance"));
 		kD_elevatorDistance = Double.parseDouble(data.get("kD_elevatorDistance"));
+		kF_elevatorDistance = Double.parseDouble(data.get("kF_elevatorDistance"));
 		kElevatorEncoderFilterCoefficient = Double.parseDouble(data.get("kElevatorEncoderFilterCoefficient"));
+		kElevatorDistanceOutputFilterCoefficient = Double.parseDouble(data.get("kElevatorDistanceOutputFilterCoefficient"));
 	
 		elevatorDistanceSetpointDownRamp = Double.parseDouble(data.get("elevatorDistanceSetpointDownRamp"));
 		elevatorDistanceSetpointUpRamp = Double.parseDouble(data.get("elevatorDistanceSetpointUpRamp"));

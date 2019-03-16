@@ -294,12 +294,12 @@ public class OI {
 	}
 
 	public static double getDriveThrottle() {
-		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_RTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax) 
-		- ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax);
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_RTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax/2) 
+		- ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax/2);
 	}
 
 	public static double getDriveSteering() {
-		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, ConstantsIO.driveTrainIMax);
+		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, ConstantsIO.driveTrainIMax/2);
 	}
 
 	public static double getArmManual() {

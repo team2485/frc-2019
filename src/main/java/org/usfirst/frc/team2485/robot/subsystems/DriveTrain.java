@@ -169,15 +169,22 @@ public class DriveTrain extends Subsystem {
         } else if(throttle != 0 || steering != 0) {
 			double sign = steering >= 0 ? 1 : -1;
 			sign *= throttle < 0 ? -1 : 1;
-            double left = throttle + sign*Math.sqrt(Math.abs(steering));
-            double right = throttle - sign*Math.sqrt(Math.abs(steering));
+			double left;
+			double right;
+			left = throttle + sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
+			right = throttle - sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
+			
 
             if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
                 right /= Math.abs(left);
-                left /= Math.abs(left);
+				left /= Math.abs(left);
+				right *= ConstantsIO.driveTrainIMax;
+				left *= ConstantsIO.driveTrainIMax;
             } else if (Math.abs(right) > ConstantsIO.driveTrainIMax) {
                 left /= Math.abs(right);
-                right /= Math.abs(right);
+				right /= Math.abs(right);
+				right *= ConstantsIO.driveTrainIMax;
+				left *= ConstantsIO.driveTrainIMax;
             }
 
             teleopSetpointLeftTN.setOutput(left);

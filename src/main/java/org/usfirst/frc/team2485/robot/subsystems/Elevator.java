@@ -46,8 +46,10 @@ public class Elevator extends Subsystem {
     public TransferNode elevatorEncoderTN;
     public TransferNode failsafeTN;
     public TransferNode distanceOutputTN;
+    public TransferNode distanceOutputFilteredTN;
 
     public LowPassFilter elevatorEncoderFilter;
+    public LowPassFilter distanceOutputFilter;
 
     public RampRate distanceSetpointRampRate;
 
@@ -67,6 +69,7 @@ public class Elevator extends Subsystem {
         elevatorEncoderTN = new TransferNode(0);
         failsafeTN = new TransferNode(0);
         distanceOutputTN = new TransferNode(0);
+        distanceOutputFilteredTN = new TransferNode(0);
 
         distanceSetpointRampRate = new RampRate();
 
@@ -76,13 +79,14 @@ public class Elevator extends Subsystem {
         distanceOutputPIDSource = new PIDSourceWrapper();
 
         elevatorEncoderFilter = new LowPassFilter();
+        distanceOutputFilter = new LowPassFilter();
 
         motorSetter = new MotorSetter();
 
         distanceSetpointRampRate.setSetpointSource(distanceSetpointTN);
         distanceSetpointRampRate.setOutputs(distanceSetpointRampedTN);
 
-        elevatorEncoderFilter.setFilterCoefficient(ConstantsIO.kElevatorEncoderFilterCoefficient);
+       
         elevatorEncoderFilter.setSetpointSource(RobotMap.elevatorEncoderWrapperDistance);
         elevatorEncoderFilter.setOutputs(elevatorEncoderTN);
 
@@ -93,12 +97,15 @@ public class Elevator extends Subsystem {
 
         distancePID.setSetpointSource(distanceSetpointRampedTN);
         distancePID.setOutputs(distanceOutputTN);
-        distancePID.setSources(RobotMap.elevatorEncoderWrapperDistance);
+        distancePID.setSources(elevatorEncoderPIDSource);
         distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax);
+
+        distanceOutputFilter.setSetpointSource(distanceOutputTN);
+        distanceOutputFilter.setOutputs(distanceOutputFilteredTN);
 
 
         distanceOutputPIDSource.setPidSource(() -> {
-            double output = distanceOutputTN.getOutput();
+            double output = distanceOutputFilteredTN.getOutput() * ConstantsIO.kF_elevatorDistance;
             if(enableFailsafe) {
                 return 0;
             } else { 
@@ -145,6 +152,8 @@ public class Elevator extends Subsystem {
             distancePID.enable();
             distanceSetpointRampRate.enable();
             motorSetter.enable();
+            elevatorEncoderFilter.enable();
+            distanceOutputFilter.enable();
         } else {
             // distanceSetpointTN.setOutput(0);
             // distanceSetpointRampedTN.setOutput(0);
@@ -155,7 +164,8 @@ public class Elevator extends Subsystem {
     public void updateConstants() {
         distanceSetpointRampRate.setRampRates(ConstantsIO.elevatorDistanceSetpointUpRamp, ConstantsIO.elevatorDistanceSetpointDownRamp);
         distancePID.setPID(ConstantsIO.kP_elevatorDistance, ConstantsIO.kI_elevatorDistance, ConstantsIO.kD_elevatorDistance);
-        
+        elevatorEncoderFilter.setFilterCoefficient(ConstantsIO.kElevatorEncoderFilterCoefficient);
         distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax);
+        distanceOutputFilter.setFilterCoefficient(ConstantsIO.kElevatorDistanceOutputFilterCoefficient);
     }
 }
