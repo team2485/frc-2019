@@ -46,6 +46,7 @@ public class ElevatorWithControllers extends Command {
 
         if(RobotMap.elevatorEncoder.pidGet() <= 0) {
             RobotMap.elevator.distancePID.resetIntegrator();
+            RobotMap.elevator.antiGravityPID.resetIntegrator();
         }
 
 

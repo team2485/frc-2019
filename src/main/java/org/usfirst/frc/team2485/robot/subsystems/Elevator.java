@@ -47,6 +47,7 @@ public class Elevator extends Subsystem {
     public TransferNode failsafeTN;
     public TransferNode distanceOutputTN;
     public TransferNode distanceOutputFilteredTN;
+    public TransferNode antiGravityOutputTN;
 
     public LowPassFilter elevatorEncoderFilter;
     public LowPassFilter distanceOutputFilter;
@@ -54,8 +55,10 @@ public class Elevator extends Subsystem {
     public RampRate distanceSetpointRampRate;
 
     public PIDSourceWrapper elevatorEncoderPIDSource;
+    public PIDSourceWrapper elevatorAntiGravityPIDSource;
 
     public WarlordsPIDController distancePID;
+    public WarlordsPIDController antiGravityPID;
 
     public MotorSetter motorSetter;
     public PIDSourceWrapper distanceOutputPIDSource;
@@ -70,13 +73,16 @@ public class Elevator extends Subsystem {
         failsafeTN = new TransferNode(0);
         distanceOutputTN = new TransferNode(0);
         distanceOutputFilteredTN = new TransferNode(0);
+        antiGravityOutputTN = new TransferNode(0);
 
         distanceSetpointRampRate = new RampRate();
 
         distancePID = new WarlordsPIDController();
+        antiGravityPID = new WarlordsPIDController(); //tune w/ low p and i
 
         elevatorEncoderPIDSource = new PIDSourceWrapper();
         distanceOutputPIDSource = new PIDSourceWrapper();
+        elevatorAntiGravityPIDSource = new PIDSourceWrapper();
 
         elevatorEncoderFilter = new LowPassFilter();
         distanceOutputFilter = new LowPassFilter();
@@ -98,21 +104,28 @@ public class Elevator extends Subsystem {
         distancePID.setSetpointSource(distanceSetpointRampedTN);
         distancePID.setOutputs(distanceOutputTN);
         distancePID.setSources(elevatorEncoderPIDSource);
-        distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax);
 
-        distanceOutputFilter.setSetpointSource(distanceOutputTN);
-        distanceOutputFilter.setOutputs(distanceOutputFilteredTN);
+        elevatorAntiGravityPIDSource.setPidSource(() -> {
+            return distanceOutputTN.getOutput() * ConstantsIO.kF_elevatorAntiGravity;
+        });
+
+
+       
+
+        antiGravityPID.setSources(elevatorAntiGravityPIDSource);
+        antiGravityPID.setSetpointSource(distanceSetpointRampedTN);
+        antiGravityPID.setOutputs(antiGravityOutputTN);
 
 
         distanceOutputPIDSource.setPidSource(() -> {
-            double output = distanceOutputFilteredTN.getOutput() * ConstantsIO.kF_elevatorDistance;
+            double output = antiGravityOutputTN.getOutput();
             if(enableFailsafe) {
                 return 0;
             } else { 
-                if(output > ConstantsIO.elevatorIMax){
-                    return ConstantsIO.elevatorIMax;
-                } else if (output < -ConstantsIO.elevatorIMax){
-                    return -ConstantsIO.elevatorIMax;
+                if(output > ConstantsIO.elevatorAntiGravityIMax){
+                    return ConstantsIO.elevatorAntiGravityIMax;
+                } else if (output < -ConstantsIO.elevatorAntiGravityIMax){
+                    return -ConstantsIO.elevatorAntiGravityIMax;
                 } else { 
                     return output;
                 }
@@ -153,11 +166,12 @@ public class Elevator extends Subsystem {
             distanceSetpointRampRate.enable();
             motorSetter.enable();
             elevatorEncoderFilter.enable();
-            distanceOutputFilter.enable();
+            antiGravityPID.enable();
         } else {
             // distanceSetpointTN.setOutput(0);
             // distanceSetpointRampedTN.setOutput(0);
             distancePID.disable();
+            antiGravityPID.disable();
         }
     }
 
@@ -165,7 +179,9 @@ public class Elevator extends Subsystem {
         distanceSetpointRampRate.setRampRates(ConstantsIO.elevatorDistanceSetpointUpRamp, ConstantsIO.elevatorDistanceSetpointDownRamp);
         distancePID.setPID(ConstantsIO.kP_elevatorDistance, ConstantsIO.kI_elevatorDistance, ConstantsIO.kD_elevatorDistance);
         elevatorEncoderFilter.setFilterCoefficient(ConstantsIO.kElevatorEncoderFilterCoefficient);
-        distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax);
-        distanceOutputFilter.setFilterCoefficient(ConstantsIO.kElevatorDistanceOutputFilterCoefficient);
+        distancePID.setOutputRange(-ConstantsIO.elevatorIMax, ConstantsIO.elevatorIMax); //1-2 amps
+        antiGravityPID.setOutputRange(-ConstantsIO.elevatorAntiGravityIMax, ConstantsIO.elevatorAntiGravityIMax); //these should be more like 5-6 amps
+        antiGravityPID.setPID(ConstantsIO.kP_elevatorAntiGravityDistance, ConstantsIO.kI_elevatorAntiGravityDistance, ConstantsIO.kD_elevatorAntiGravityDistance);
+       
     }
 }

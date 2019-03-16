@@ -67,6 +67,13 @@ public class ConstantsIO {
 	public static double kElevatorEncoderFilterCoefficient;
 	public static double kElevatorDistanceOutputFilterCoefficient;
 	
+	public static double kP_elevatorAntiGravityDistance;
+	public static double kI_elevatorAntiGravityDistance;
+	public static double kD_elevatorAntiGravityDistance;
+	public static double kF_elevatorAntiGravity;
+	public static double elevatorAntiGravityIMax;
+
+	
 
 	public static double elevatorDistanceSetpointDownRamp;
 	public static double elevatorDistanceSetpointUpRamp;
