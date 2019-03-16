@@ -19,19 +19,15 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class PlaceHatch extends CommandGroup {
     public PlaceHatch(){
-        CommandGroup setPosition = new CommandGroup();
-        setPosition.addParallel(new SetArmPosition(0));
-        setPosition.addParallel(new HoldingCurrent());
-        addSequential(setPosition);
+        addSequential(new SetArmPosition(0));
         addSequential(new Lift(true));
         addSequential(new Slide(true));
-
         addSequential(new Pushers(true));
-        addSequential(new WaitCommand(.1));
+        addSequential(new WaitCommand(.25));
         addSequential(new Hook(true));
-        addSequential(new WaitCommand(0.5));
+        addSequential(new WaitCommand(0.25));
         addSequential(new Pushers(false));
-        addSequential(new AdjustElevatorPosition(-5));
+        addSequential(new AdjustElevatorPosition(-3));
         addSequential(new WaitCommand(0.5));
         addSequential(new Hook(false));
         addSequential(new Slide(false));
