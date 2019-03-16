@@ -59,11 +59,10 @@ public class CargoArmWithControllers extends Command {
 
             if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet() + 1.7) < threshold) {
                 RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRampClose);
-            } else if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet()) < threshold) {
+            } else if(Math.abs(RobotMap.cargoArmEncoderWrapperDistance.pidGet()) > threshold) {
                 RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRampClose);
             } else {
                 RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRamp);
-
             }
 
             System.out.println(System.currentTimeMillis() - startSpikeTime);
