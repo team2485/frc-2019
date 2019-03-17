@@ -51,6 +51,13 @@ public class CargoArmWithControllers extends Command {
             } 
             System.out.println("Power: " + power);
 
+            if(Math.abs(power - RobotMap.cargoArmEncoderWrapperDistance.pidGet()) > 0.1) {
+                RobotMap.hatchIntake.hookIn();
+                RobotMap.hatchIntake.retractPushers();
+                RobotMap.hatchIntake.slideIn();
+                RobotMap.hatchIntake.stow();
+            }
+
             RobotMap.cargoArm.distanceSetpointTN.setOutput(power);
 
             if(RobotMap.cargoArmLimitSwitchUp.get()) {

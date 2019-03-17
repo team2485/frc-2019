@@ -22,6 +22,7 @@ public class SetElevatorPosition extends InstantCommand {
     protected void initialize() {
         RobotMap.elevator.lastLevel = elevatorLevel;
         RobotMap.elevator.setPosition(elevatorLevel.getPosition());
+        RobotMap.elevator.enablePID(true);
     }
 
     @Override

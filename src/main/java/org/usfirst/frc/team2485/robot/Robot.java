@@ -117,8 +117,8 @@ public class Robot extends TimedRobot {
 		RobotMap.init();
 		OI.init();
 
-		SandstormAuto.init(false); 
-		auto = new SandstormAuto();
+		// SandstormAuto.init(false); 
+		// auto = new SandstormAuto();
 
 		// UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		// camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
@@ -267,8 +267,8 @@ public class Robot extends TimedRobot {
 		//RobotMap.elevator.setElevatorVelocity(15);
 
 		// Scheduler.getInstance().add(new SandstormAuto());
-		// Scheduler.getInstance().add(new DriveTo(new AutoPath(AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 165.5),
-		// 	new Pair(-22.5, 165.5))), 60, false, 15000, false, true));
+		Scheduler.getInstance().add(new DriveTo(new AutoPath(AutoPath.getPointsForBezier(2000, new Pair(0.0, 0.0), new Pair(0, 165.5),
+			new Pair(-22.5, 165.5))), 60, false, 15000, false, true));
 
 		// Scheduler.getInstance().add(new SetAngle(Math.PI/2, 10000));
 		// Scheduler.getInstance().add(new DriveStraight(70, 2000));
@@ -332,7 +332,6 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		ConstantsIO.init();
 		RobotMap.compressor.setClosedLoopControl(true);
-		RobotMap.cargoArmEncoder.reset();
 		RobotMap.elevatorEncoder.reset();
 		RobotMap.updateConstants();
 		RobotMap.hatchIntake.slideIn();
@@ -340,9 +339,9 @@ public class Robot extends TimedRobot {
 		RobotMap.hatchIntake.retractPushers();
 		RobotMap.hatchIntake.stow();
 		RobotMap.driveTrain.enablePID(false);
+		
 		//RobotMap.elevator.enablePID(true);
 		//RobotMap.elevator.distanceSetpointTN.setOutput(33.5);
-		RobotMap.cargoArm.enablePID(false);
 		// RobotMap.cargoArm.distanceSetpointTN.setOutput(1);
 		//RobotMap.elevator.enablePID(true);
 		//RobotMap.elevator.distanceSetpointTN.setOutput(ElevatorLevel.ROCKET_LEVEL_TWO.getPosition());

@@ -159,11 +159,11 @@ public class ConstantsIO {
 		kElevatorEncoderFilterCoefficient = Double.parseDouble(data.get("kElevatorEncoderFilterCoefficient"));
 		kElevatorDistanceOutputFilterCoefficient = Double.parseDouble(data.get("kElevatorDistanceOutputFilterCoefficient"));
 
-		kP_elevatorAntiGravityDistance = Double.parseDouble(data.get("kP_elevatorAntiGravityDistance"));
-		kI_elevatorAntiGravityDistance = Double.parseDouble(data.get("kI_elevatorAntiGravityDistance"));
-		kD_elevatorAntiGravityDistance = Double.parseDouble(data.get("kD_elevatorAntiGravityDistance"));
-		kF_elevatorAntiGravity = Double.parseDouble(data.get("kF_elevatorAntiGravity"));
-		elevatorAntiGravityIMax = Double.parseDouble(data.get("elevatorAntiGravityIMax"));
+		// kP_elevatorAntiGravityDistance = Double.parseDouble(data.get("kP_elevatorAntiGravityDistance"));
+		// kI_elevatorAntiGravityDistance = Double.parseDouble(data.get("kI_elevatorAntiGravityDistance"));
+		// kD_elevatorAntiGravityDistance = Double.parseDouble(data.get("kD_elevatorAntiGravityDistance"));
+		// kF_elevatorAntiGravity = Double.parseDouble(data.get("kF_elevatorAntiGravity"));
+		// elevatorAntiGravityIMax = Double.parseDouble(data.get("elevatorAntiGravityIMax"));
 	
 		elevatorDistanceSetpointDownRamp = Double.parseDouble(data.get("elevatorDistanceSetpointDownRamp"));
 		elevatorDistanceSetpointUpRamp = Double.parseDouble(data.get("elevatorDistanceSetpointUpRamp"));
