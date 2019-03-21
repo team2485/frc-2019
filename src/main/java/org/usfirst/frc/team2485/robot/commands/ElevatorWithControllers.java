@@ -1,73 +1,95 @@
 package org.usfirst.frc.team2485.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator;
-import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
+import org.usfirst.frc.team2485.util.ConstantsIO;
+import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
-
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team2485.util.TransferNode;
+import org.usfirst.frc.team2485.util.WarlordsPIDController;
 
 public class ElevatorWithControllers extends Command {
-    public static double holdPosition = 0; 
-    private double elevatorSpikeCurrent = 10;
+    public static double holdPosition = 0.0;
+    private double elevatorSpikeCurrent = 10.0;
     private boolean spiking;
     private long startSpikeTime;
     private int spikeTime = 20000;
-    public static double power = 0;
+    public static double power = 0.0;
+    private boolean first;
+    private int fullPowerTime = 100;
+    public static boolean encoderMovement = true;
+    public static boolean manualMovement = false;
+    private long startEncoderLossTime;
 
     public ElevatorWithControllers() {
-        setInterruptible(true);
-        requires(RobotMap.elevator);
+        this.setInterruptible(true);
+        this.requires(RobotMap.elevator);
+        this.first = false;
     }
 
     @Override
     protected void initialize() {
-        holdPosition = RobotMap.elevator.lastLevel.getPosition();
-       
-        RobotMap.elevator.distanceSetpointTN.setOutput(power); //so that handoff between SetElevatorPosition is smooth :)
-
-        RobotMap.elevator.enablePID(true);
+        if(!manualMovement) {
+            holdPosition = RobotMap.elevator.lastLevel.getPosition();
+            RobotMap.elevator.distanceSetpointTN.setOutput(power);
+            RobotMap.elevator.enablePID(true);
+        }
     }
 
     @Override
     protected void execute() {
-        // dont make same ramp rate changes
-        boolean up = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 1) > 0;
-        boolean zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 1) == 0;
-
-        if(up) {
-            power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, RobotMap.elevatorEncoderWrapperDistance.pidGet(), ElevatorLevel.ROCKET_LEVEL_THREE.getPosition());
-        } else if (!up && !zero) {
-            power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, RobotMap.elevatorEncoderWrapperDistance.pidGet(), 0);
-        }
-
-        RobotMap.elevator.distanceSetpointTN.setOutput(power);
-
-        if(RobotMap.elevatorEncoder.pidGet() <= 0) {
-            RobotMap.elevator.distancePID.resetIntegrator();
-            RobotMap.elevator.antiGravityPID.resetIntegrator();
-        }
-
-
-
-        if(RobotMap.elevatorTalon1.getOutputCurrent() >= elevatorSpikeCurrent && !RobotMap.elevator.distancePID.isOnTarget()) {
-            if(!spiking) {
-                startSpikeTime = System.currentTimeMillis();
-                spiking = true;
+        System.out.println("EncoderMovement: " + encoderMovement);
+        if(!manualMovement) {
+            boolean zero;
+            boolean bl = zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(1), 0.2, 0.0, 1.0) == 0.0;
+            if (!zero) {
+                power -= ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(1), 0.2, 0.0, 1.0) * 1.2;
+                this.first = true;
+            } else if (this.first) {
+                power = RobotMap.elevatorEncoderWrapperDistance.pidGet();
+                this.first = false;
+            }
+            RobotMap.elevator.distanceSetpointTN.setOutput(power);
+            if (RobotMap.elevatorEncoder.pidGet() <= 0.0) {
+                RobotMap.elevator.distancePID.resetIntegrator();
+            }
+            if (RobotMap.elevatorTalon1.getOutputCurrent() >= this.elevatorSpikeCurrent && !RobotMap.elevator.distancePID.isOnTarget()) {
+                if (!this.spiking) {
+                    this.startSpikeTime = System.currentTimeMillis();
+                    this.spiking = true;
+                }
+            } else {
+                this.spiking = false;
+                Elevator.enableFailsafe = false;
+            }
+            if (this.spiking && System.currentTimeMillis() - this.startSpikeTime >= (long)this.spikeTime) {
+                Elevator.enableFailsafe = true;
+            }
+            
+            if(RobotMap.elevator.distanceOutputTN.pidGet() > 5 && RobotMap.elevatorEncoderWrapperDistance.pidGet() == 0 && encoderMovement) {
+                RobotMap.elevator.enablePID(false);
+                encoderMovement = false;
+                startEncoderLossTime = System.currentTimeMillis();
+                manualMovement = true;
+            } if(!encoderMovement) {
+                if(RobotMap.elevatorEncoderWrapperDistance.pidGet() != 0) {
+                    encoderMovement = true;
+                } 
+                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime) {
+                    manualMovement = true;
+                }
             }
         } else {
-            spiking = false;
-            RobotMap.elevator.enableFailsafe = false;
-        } 
-        if(spiking && System.currentTimeMillis() - startSpikeTime >= spikeTime) {   
-                RobotMap.elevator.enableFailsafe = true; //make sure this value can actually hold elevator up :)
+            RobotMap.elevator.enablePID(false);
+            RobotMap.elevator.motorSetter.disable();
+            RobotMap.elevator.elevatorManual(-ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0, 1));
         }
-
-
-
-       
-
     }
 
     @Override

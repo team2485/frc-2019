@@ -168,7 +168,7 @@ public class DriveTrain extends Subsystem {
             teleopSetpointRightTN.setOutput(-steering);
         } else if(throttle != 0 || steering != 0) {
 			double sign = steering >= 0 ? 1 : -1;
-			sign *= throttle < 0 ? -1 : 1;
+			sign *= throttle < 0 ? 1 : 1;
 			double left;
 			double right;
 			left = throttle + sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));

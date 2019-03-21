@@ -7,17 +7,22 @@
 
 package org.usfirst.frc.team2485.robot;
 import org.usfirst.frc.team2485.robot.commandGroups.CargoIntake;
+import org.usfirst.frc.team2485.robot.commandGroups.IntakeHatch;
 import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.PlaceHatch;
 import org.usfirst.frc.team2485.robot.commands.CancelCommand;
 import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
 import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
 import org.usfirst.frc.team2485.robot.commands.EjectCargo;
+import org.usfirst.frc.team2485.robot.commands.HatchRollersIntake;
 import org.usfirst.frc.team2485.robot.commands.Hook;
 import org.usfirst.frc.team2485.robot.commands.Lift;
+import org.usfirst.frc.team2485.robot.commands.PrepareToIntake;
 import org.usfirst.frc.team2485.robot.commands.Pushers;
 import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
+import org.usfirst.frc.team2485.robot.commands.SetHatchRollersCurrent;
+import org.usfirst.frc.team2485.robot.commands.SetHatchRollersPWM;
 import org.usfirst.frc.team2485.robot.commands.SetRollers;
 import org.usfirst.frc.team2485.robot.commands.SetRollersCurrent;
 import org.usfirst.frc.team2485.robot.commands.Slide;
@@ -120,6 +125,7 @@ public class OI {
 
 
 	public static TriggerButton SURAJ_LTRIGGER_BUTTON;
+	public static TriggerButton SURAJ_RTRIGGER_BUTTON;
 	
 
 
@@ -181,6 +187,9 @@ public class OI {
 		SURAJ_RBUMPER_BACKUP = new JoystickButton(surajBackup, XBOX_RBUMPER_PORT);
 
 		
+		SURAJ_RTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_RTRIGGER_PORT, 0.2);
+
+		
 
 		// SURAJ_START_BUTTON_BACKUP = new JoystickButton(surajBackup, XBOX_START_BUTTON);
 		// SURAJ_LTRIGGER_BUTTON_BACKUP = new TriggerButton(surajBackup, XBOX_LTRIGGER_PORT, 0.2);
@@ -205,12 +214,11 @@ public class OI {
 		// SURAJ_LYJOYSTICK_BACKUP.whenPressed(new CancelCommand(Robot.auto));
 		// SURAJ_RBUMPER.whenPressed(new Hook(false));
 		// SURAJ_START_BUTTON.whenPressed(new Pushers(false));
-		SURAJ_RBUMPER.whenPressed(new LoadingStationIntake());
 		// SURAJ_RBUMPER_BACKUP.whenPressed(new LoadingStationIntake());
 		// SURAJ_RBUMPER.whenPressed(new CancelCommand(Robot.auto));
 		// SURAJ_RBUMPER.whenPressed(new CancelCommand()
 
-		JACKET_RBUMPER.whenPressed(new Hook(false));
+		JACKET_RBUMPER.whenPressed(new SetHatchRollersPWM(0));
 		// JACKET_RBUMPER_BACKUP.whenPressed(new Hook(false));
 		// JACKET_RBUMPER.whenPressed(new 
 		// CancelCommand(Robot.auto));
@@ -287,6 +295,14 @@ public class OI {
 		//temporary
 	
 		//SURAJ_BACK_BUTTON.whenPressed(new Lift(false));
+
+		SURAJ_RBUMPER.whenPressed(new PrepareToIntake());
+		
+
+		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
+
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new HatchRollersIntake(0.8));
+		// SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0));
 
 	}
 

@@ -1,7 +1,9 @@
 package org.usfirst.frc.team2485.robot.commands;
 
+import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
+import org.usfirst.frc.team2485.util.ThresholdHandler;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
@@ -10,6 +12,11 @@ public class SetElevatorPosition extends InstantCommand {
 
     private double elevatorPosition;
     private ElevatorLevel elevatorLevel;
+    private boolean manualMovement = false;
+    private boolean encoderMovement = true;
+    private long startEncoderLossTime = 0;
+    private int fullPowerTime = 100;
+    private boolean finish = false;
 
     public SetElevatorPosition(ElevatorLevel elevatorLevel) {
         requires(RobotMap.elevator);
@@ -27,13 +34,35 @@ public class SetElevatorPosition extends InstantCommand {
 
     @Override
     protected void execute() {
-        RobotMap.elevator.setPosition(elevatorLevel.getPosition());
-        ElevatorWithControllers.power = RobotMap.elevatorEncoderWrapperDistance.pidGet();
+        if(!manualMovement) {
+            RobotMap.elevator.setPosition(elevatorLevel.getPosition());
+            ElevatorWithControllers.power = RobotMap.elevatorEncoderWrapperDistance.pidGet();
+            if(RobotMap.elevator.distanceOutputTN.pidGet() > 5 && RobotMap.elevatorEncoderWrapperDistance.pidGet() == 0 && encoderMovement) {
+                RobotMap.elevator.enablePID(false);
+                encoderMovement = false;
+                startEncoderLossTime = System.currentTimeMillis();
+                manualMovement = true;
+                ElevatorWithControllers.manualMovement = true;
+            } if(!encoderMovement) {
+                if(RobotMap.elevatorEncoderWrapperDistance.pidGet() != 0) {
+                    encoderMovement = true;
+                } 
+                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime) {
+                    manualMovement = true;
+                }
+            }
+        } else {
+            RobotMap.elevator.enablePID(false);
+            RobotMap.elevator.setPosition(0);
+            RobotMap.elevatorCurrent.set(0);
+            RobotMap.elevatorPercentOutput.set(0);
+            finish = true;
+        }
     }
 
     @Override
     protected boolean isFinished() {
-        return Math.abs(elevatorLevel.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet()) < 1;
+        return Math.abs(elevatorLevel.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet()) < 1 || finish;
     }
 
     @Override

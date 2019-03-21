@@ -2,42 +2,31 @@ package org.usfirst.frc.team2485.robot.commands;
 
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
-import org.usfirst.frc.team2485.util.ThresholdHandler;
+import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public class DriveWithControllers extends Command {
-    public DriveWithControllers() {
-        setInterruptible(true);
-        requires(RobotMap.driveTrain);
-    }
+public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command {
+  public DriveWithControllers() {
+    setInterruptible(true);
+    requires(RobotMap.driveTrain);
+  }
+  
+  protected void initialize() {
+    RobotMap.driveTrain.enableTeleopPID(true);
+  }
+  
+  protected void execute() {
+    double throttle = OI.getDriveThrottle();
+    double steering = OI.getDriveSteering();
+    boolean quickTurn = OI.getQuickTurn();
     
-    @Override
-    protected void initialize() {
-        RobotMap.driveTrain.enableTeleopPID(true);
+    if (!quickTurn) {
+      steering = org.usfirst.frc.team2485.util.ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(0), 0.2, 0.0, 1.0);
     }
 
-    @Override
-    protected void execute() {
-        double throttle = OI.getDriveThrottle();
-        double steering = OI.getDriveSteering(); //do we keep this squared? //no
-        boolean quickTurn = OI.getQuickTurn();
-
-        // if(throttle == 0 && steering == 0) {
-        //     throttle = ThresholdHandler.deadbandAndScale(OI.jacketBackup.getRawAxis(3) - OI.jacketBackup.getRawAxis(2), 0.1, 0, 1);
-        //     steering = ThresholdHandler.deadbandAndScale(OI.jacketBackup.getRawAxis(0), 0.2, 0, 1);
-        //     quickTurn = OI.jacketBackup.getRawButton(OI.XBOX_X_PORT);
-        // }
-
-        // if (quickTurn) {
-        //     steering *= 0.7;
-        // }
-
-        RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn);
-    }
-
-    @Override
-    protected boolean isFinished() {
-        return false;
-    }
+    RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn);
+  }
+  
+  protected boolean isFinished() {
+    return false;
+  }
 }

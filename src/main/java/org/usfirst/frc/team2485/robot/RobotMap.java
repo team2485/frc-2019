@@ -17,6 +17,7 @@ import org.usfirst.frc.team2485.robot.subsystems.CargoRollers;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator;
 import org.usfirst.frc.team2485.robot.subsystems.HatchIntake;
+import org.usfirst.frc.team2485.robot.subsystems.HatchRollers;
 import org.usfirst.frc.team2485.robot.subsystems.WarlordsCompressor;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
@@ -82,10 +83,11 @@ public class RobotMap {
 
 	public static int cargoRollersTalonPort = 8;
 
+	public static int hatchRollersTalonPort = 10; //change
+
 	public static int liftSolenoidPortIn = 0, liftSolenoidPortOut = 4;
 	public static int slideSolenoidPortIn = 1, slideSolenoidPortOut = 5;
-	public static int pushersSolenoidPortIn = 2, pushersSolenoidPortOut = 6;
-	public static int hookSolenoidPortIn = 3, hookSolenoidPortOut = 7;
+	
 
 	//Sensors
 	public static int driveLeftEncoderPort1 = 0, driveLeftEncoderPort2 = 1;
@@ -165,6 +167,7 @@ public class RobotMap {
 	public static Encoder elevatorEncoder;
 	
 	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperDistance;
+	public static EncoderWrapperRateAndDistance elevatorEncoderWrapperRate;
 
 
 	//CARGO INTAKE ARM
@@ -199,6 +202,17 @@ public class RobotMap {
 	public static Solenoid pushersSolenoidIn, pushersSolenoidOut;
 	public static Solenoid slideSolenoidIn, slideSolenoidOut;
 	public static Solenoid hookSolenoidIn, hookSolenoidOut;
+	
+
+	//HATCH INTAKE ROLLERS
+	public static TalonSRX hatchRollersTalon;
+
+	public static TalonSRXWrapper hatchRollersWrapperCurrent;
+	public static TalonSRXWrapper hatchRollersWrapperPercentOutput;
+
+	public static SpeedControllerWrapper hatchRollersCurrent;
+	public static SpeedControllerWrapper hatchRollersPercentOutput;
+
 
 
 	//COMPRESSOR
@@ -210,6 +224,7 @@ public class RobotMap {
 	public static Elevator elevator;
 	public static CargoArm cargoArm;
 	public static CargoRollers cargoRollers;
+	public static HatchRollers hatchRollers;
 	public static HatchIntake hatchIntake;
 	public static WarlordsCompressor warlordsCompressor;
 
@@ -292,7 +307,7 @@ public class RobotMap {
 		driveRightCurrent = new SpeedControllerWrapper(driveRightTalonsCurrent);
 		driveRightPercentOutput = new SpeedControllerWrapper(driveRightTalonsPercentOutput);
 
-		driveLeftCurrent.setRampRate(ConstantsIO.driveTrainUpRamp, ConstantsIO.driveTrainDownRamp);
+		// driveLeftCurrent.setRampRate(ConstantsIO.driveTrainUpRamp, ConstantsIO.driveTrainDownRamp);
 
 		driveLeftCurrent.setInverted(true);
 		driveLeftPercentOutput.setInverted(true);
@@ -326,6 +341,9 @@ public class RobotMap {
 		elevatorTalon1 = new TalonSRX(elevatorTalonPort1);
 		elevatorTalon2 = new TalonSRX(elevatorTalonPort2);
 
+		elevatorTalon1.setInverted(true);
+		elevatorTalon2.setInverted(true);
+
 		elevatorTalonWrapperCurrent1 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon1);
 		elevatorTalonWrapperCurrent2 = new TalonSRXWrapper(ControlMode.Current, elevatorTalon2);
 		
@@ -341,10 +359,12 @@ public class RobotMap {
 		elevatorEncoder = new Encoder(elevatorEncoderPort1, elevatorEncoderPort2);
 
 		elevatorEncoderWrapperDistance = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kDisplacement);
+		elevatorEncoderWrapperRate = new EncoderWrapperRateAndDistance(elevatorEncoder, PIDSourceType.kRate);
 		
 		elevatorEncoder.setDistancePerPulse((DRUM_RADIUS*Math.PI*2/250));
 		elevatorEncoderWrapperDistance.setGearRatio(2);
 		elevatorEncoder.setSamplesToAverage(10);
+		elevatorEncoder.setReverseDirection(true);
 
 
 
@@ -383,17 +403,30 @@ public class RobotMap {
 
 
 		//HATCH INTAKE
+		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
+
 		liftSolenoidIn = new Solenoid(liftSolenoidPortIn);
 		liftSolenoidOut = new Solenoid(liftSolenoidPortOut);
-		
-		pushersSolenoidIn = new Solenoid(pushersSolenoidPortIn);
-		pushersSolenoidOut = new Solenoid(pushersSolenoidPortOut);
 		
 		slideSolenoidIn = new Solenoid(slideSolenoidPortIn);
 		slideSolenoidOut = new Solenoid(slideSolenoidPortOut);
 		
-		hookSolenoidIn = new Solenoid(hookSolenoidPortIn);
-		hookSolenoidOut = new Solenoid(hookSolenoidPortOut);
+		//HATCH INTAKE ROLLERS
+		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
+		hatchRollersTalon.setInverted(true);
+
+		hatchRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, hatchRollersTalon);
+		hatchRollersWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, hatchRollersTalon);
+
+		hatchRollersCurrent = new SpeedControllerWrapper(hatchRollersWrapperCurrent);
+		hatchRollersPercentOutput = new SpeedControllerWrapper(hatchRollersWrapperPercentOutput);
+
+		// hatchRollersCurrent.setInverted(true);
+		// hatchRollersPercentOutput.setInverted(true);
+
+
+
+		
 
 
 		//COMPRESSOR
@@ -407,6 +440,7 @@ public class RobotMap {
 		cargoRollers = new CargoRollers();
 		hatchIntake = new HatchIntake();
 		warlordsCompressor = new WarlordsCompressor();
+		hatchRollers = new HatchRollers();
 
 		//I2C things
 		lidar = new LidarWrapper(I2C.Port.kOnboard);

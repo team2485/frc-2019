@@ -19,16 +19,6 @@ public class HatchIntake extends Subsystem {
         RobotMap.liftSolenoidOut.set(false);
     }
 
-    public void extendPushers() {
-        RobotMap.pushersSolenoidIn.set(false);
-        RobotMap.pushersSolenoidOut.set(true);
-    }
-
-    public void retractPushers() {
-        RobotMap.pushersSolenoidIn.set(true);
-        RobotMap.pushersSolenoidOut.set(false);
-    }
-
     public void slideOut() {
         RobotMap.slideSolenoidIn.set(false);
         RobotMap.slideSolenoidOut.set(true);
@@ -39,15 +29,7 @@ public class HatchIntake extends Subsystem {
         RobotMap.slideSolenoidOut.set(false);
     }
 
-    public void hookOut() {
-        RobotMap.hookSolenoidIn.set(false);
-        RobotMap.hookSolenoidOut.set(true);
-    }
-
-    public void hookIn() {
-        RobotMap.hookSolenoidIn.set(true);
-        RobotMap.hookSolenoidOut.set(false);
-    }
+   
 
     public void initDefaultCommand() {
 

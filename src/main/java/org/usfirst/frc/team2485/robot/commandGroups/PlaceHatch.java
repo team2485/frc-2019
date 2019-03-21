@@ -8,6 +8,7 @@ import org.usfirst.frc.team2485.robot.commands.Lift;
 import org.usfirst.frc.team2485.robot.commands.Pushers;
 import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
+import org.usfirst.frc.team2485.robot.commands.SetHatchRollersPWM;
 import org.usfirst.frc.team2485.robot.commands.Slide;
 import org.usfirst.frc.team2485.robot.commands.Wait;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
@@ -22,17 +23,10 @@ public class PlaceHatch extends CommandGroup {
         addSequential(new SetArmPosition(0));
         addSequential(new Lift(true));
         addSequential(new Slide(true));
-        addSequential(new Pushers(true));
-        addSequential(new WaitCommand(.25));
-        addSequential(new Hook(true));
+        addSequential(new SetHatchRollersPWM(-0.6));
         addSequential(new WaitCommand(0.25));
-        addSequential(new Pushers(false));
-        addSequential(new AdjustElevatorPosition(-3));
-        addSequential(new WaitCommand(0.5));
-        addSequential(new Hook(false));
         addSequential(new Slide(false));
-        addSequential(new WaitCommand(0.25));
-        addSequential(new AdjustElevatorPosition(-3));
+        addSequential(new SetHatchRollersPWM(0));
         RobotMap.compressor.setClosedLoopControl(true);
     }
 

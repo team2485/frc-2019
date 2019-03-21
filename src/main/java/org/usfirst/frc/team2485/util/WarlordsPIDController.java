@@ -27,6 +27,8 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 	private double decoupleInput;
 	
 	private double minOutput = -1, maxOutput = 1;
+
+	private double output = 0;
 	
 	private double percentTolerance = 0.0, absoluteTolerance = 0.0;
 	private boolean usesPercentTolerance = false;
@@ -99,6 +101,18 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 		this.kV = kV;
 		this.vMax = vMax;
 		frictionTerm = true;
+	}
+
+	public double getIntegralTerm() {
+		return integralTerm;
+	}
+
+	public double getOutput() {
+		return output;
+	}
+
+	public void setIntegralTerm(double integrator) {
+		integralTerm = integrator;
 	}
 
 	public void resetIntegrator() {
@@ -193,6 +207,8 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 	public double getBufferLength() {
 		return bufferLength;
 	}
+
+	
 	
 	/**
 	 * @return average of the last bufferlength errors, or fewer if not enough are available
@@ -350,6 +366,8 @@ public class WarlordsPIDController extends WarlordsControlSystem {
 				errorBuffer.remove();
 			}
 		}
+
+		output = result;
 		
 		for (PIDOutput out : super.outputs) {
 			out.pidWrite(result);

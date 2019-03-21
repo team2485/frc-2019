@@ -17,12 +17,14 @@ public class SetArmPosition extends InstantCommand {
 
     @Override
     protected void initialize() {
-        time = System.currentTimeMillis();
-        super.initialize();
-        RobotMap.cargoArm.enablePID(true);
-        RobotMap.cargoArm.distanceSetpointTN.setOutput(position);
-        RobotMap.cargoArm.distancePID.setAbsoluteTolerance(0.05);
-        CargoArmWithControllers.power = position;
+        if(!CargoArmWithControllers.manualMovement) {
+            time = System.currentTimeMillis();
+            super.initialize();
+            RobotMap.cargoArm.enablePID(true);
+            RobotMap.cargoArm.distanceSetpointTN.setOutput(position);
+            RobotMap.cargoArm.distancePID.setAbsoluteTolerance(0.05);
+            CargoArmWithControllers.power = position;
+        }
     }
 
    
