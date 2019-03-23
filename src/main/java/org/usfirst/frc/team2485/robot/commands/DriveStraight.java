@@ -38,7 +38,7 @@ public class DriveStraight extends Command {
         RobotMap.driveTrain.angleSetpointTN.setOutput(0);
     }
     protected void execute(){
-        System.out.println("Driving straight");
+        // System.out.println("Driving straight");
         if(moving){
             if((RobotMap.driveLeftTalon1.getOutputCurrent() >= driveTrainStallingCurrent) && (RobotMap.driveRightTalon1.getOutputCurrent() >= driveTrainStallingCurrent)) { //we should check both sides just because...                if(!spiking) {
                     startSpikeTime = System.currentTimeMillis();
@@ -61,7 +61,7 @@ public class DriveStraight extends Command {
     @Override
     protected boolean isFinished() {
         // return (System.currentTimeMillis() - startTime) > timeout;
-        System.out.println("Running");
+        // System.out.println("Running");
         if(finished || (spiking && !moving)){
             RobotMap.driveLeftEncoder.reset();
             RobotMap.driveRightEncoder.reset();
@@ -75,7 +75,7 @@ public class DriveStraight extends Command {
 
     @Override
 	protected void end() {
-        System.out.println("Ended");
+        // System.out.println("Ended");
     //    RobotMap.driveTrain.enablePID(false);
         super.end();
     }

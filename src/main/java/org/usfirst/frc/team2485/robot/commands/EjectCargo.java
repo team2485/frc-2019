@@ -25,7 +25,7 @@ public class EjectCargo extends Command {
 
     @Override
     protected boolean isFinished() {
-        System.out.println(System.currentTimeMillis() - startTime);
+        // System.out.println(System.currentTimeMillis() - startTime);
         return System.currentTimeMillis() - startTime > timeout;
     }
 

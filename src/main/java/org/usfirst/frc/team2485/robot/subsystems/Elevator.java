@@ -18,8 +18,7 @@ import org.usfirst.frc.team2485.util.WarlordsPIDController;
 import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
 import org.usfirst.frc.team2485.util.WarlordsPIDSource;
 
-public class Elevator
-extends Subsystem {
+public class Elevator extends Subsystem {
     public static boolean enableFailsafe = false;
     public ElevatorLevel lastLevel;
     public TransferNode distanceSetpointTN = new TransferNode(0.0);
@@ -42,25 +41,33 @@ extends Subsystem {
     public PIDSourceWrapper distanceOutputPIDSource = new PIDSourceWrapper();
 
     public Elevator() {
+        //wtf
         this.distanceSetpointRampRate.setSetpointSource(this.distanceSetpointTN);
         this.distanceSetpointRampRate.setOutputs(this.distanceSetpointRampedTN);
+
         this.elevatorEncoderFilter.setSetpointSource(RobotMap.elevatorEncoderWrapperDistance);
         this.elevatorEncoderFilter.setOutputs(this.elevatorEncoderTN);
+
         this.elevatorEncoderPIDSource.setPidSource(() -> this.elevatorEncoderTN.pidGet());
+
         this.downVelocityPID.setSetpoint(ConstantsIO.elevatorMinVelocity);
         this.downVelocityPID.setSources(RobotMap.elevatorEncoderWrapperRate);
         this.downVelocityPID.setOutputs(this.elevatorMinOutputTN);
         this.downVelocityPID.setOutputRange(0.0, ConstantsIO.elevatorIMax);
+
         this.upVelocityPID.setSetpoint(ConstantsIO.elevatorMaxVelocity);
         this.upVelocityPID.setSources(RobotMap.elevatorEncoderWrapperRate);
         this.upVelocityPID.setOutputs(this.elevatorMaxOutputTN);
         this.upVelocityPID.setOutputRange(0.0, ConstantsIO.elevatorIMax);
+
         this.distancePID.setSetpointSource(this.distanceSetpointRampedTN);
         this.distancePID.setOutputs(this.distanceOutputTN);
         this.distancePID.setSources(this.elevatorEncoderPIDSource);
         this.distancePID.setOutputSources(this.elevatorMaxOutputTN, this.elevatorMinOutputTN);
+
         this.distanceOutputFilter.setSetpointSource(this.distanceOutputTN);
         this.distanceOutputFilter.setOutputs(this.distanceOutputFilteredTN);
+        
         this.distanceOutputPIDSource.setPidSource(() -> {
             double output = this.distanceOutputFilteredTN.getOutput() * ConstantsIO.kF_elevatorDistance;
             if (enableFailsafe) {

@@ -191,6 +191,22 @@ public class OI {
 
 		
 
+
+		JACKET_RBUMPER.whenPressed(new SetHatchRollersPWM(0));
+		// JACKET_RBUMPER_BACKUP.whenPressed(new Hook(false));
+		// JACKET_RBUMPER.whenPressed(new 
+		// CancelCommand(Robot.auto));
+
+		JACKET_A.whenPressed(new CargoIntake(0.4));
+		JACKET_A.whenPressed(new SetRollersCurrent()); //ummmm
+		// JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
+		// JACKET_A.whenPressed(new CancelCommand(Robot.auto));
+
+		// JACKET_LTRIGGER_BUTTON.whenPressed(new CancelCommand(Robot.auto));
+		// JACKET_RTRIGGER_BUTTON.whenPressed(new CancelCommand(Robot.auto));
+		//temporary
+
+
 		// SURAJ_START_BUTTON_BACKUP = new JoystickButton(surajBackup, XBOX_START_BUTTON);
 		// SURAJ_LTRIGGER_BUTTON_BACKUP = new TriggerButton(surajBackup, XBOX_LTRIGGER_PORT, 0.2);
 
@@ -206,9 +222,6 @@ public class OI {
 		//SURAJ_LBUMPER.whenPressed(new CancelCommand(Robot.auto));
 		// SURAJ_LBUMPER_BACKUP.whenPressed(placeHatch);
 		// SURAJ_LBUMPER_BACKUP.whenPressed(new CancelCommand(Robot.auto));
-
-
-
 		
 		// SURAJ_LYJOYSTICK_BACKUP.whenPressed(new CancelCommand(placeHatch));
 		// SURAJ_LYJOYSTICK_BACKUP.whenPressed(new CancelCommand(Robot.auto));
@@ -217,11 +230,6 @@ public class OI {
 		// SURAJ_RBUMPER_BACKUP.whenPressed(new LoadingStationIntake());
 		// SURAJ_RBUMPER.whenPressed(new CancelCommand(Robot.auto));
 		// SURAJ_RBUMPER.whenPressed(new CancelCommand()
-
-		JACKET_RBUMPER.whenPressed(new SetHatchRollersPWM(0));
-		// JACKET_RBUMPER_BACKUP.whenPressed(new Hook(false));
-		// JACKET_RBUMPER.whenPressed(new 
-		// CancelCommand(Robot.auto));
 
 		Command floor = new SetElevatorPosition(ElevatorLevel.FLOOR);
 		SURAJ_A.whenPressed(floor);
@@ -269,8 +277,7 @@ public class OI {
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
 		// SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
 		// SURAJ_START_BUTTON.whenPressed(new CancelCommand(Robot.auto));
-		SURAJ_LTRIGGER_BUTTON.whenPressed(
-			new SetRollers(-0.4));
+		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
 		// SURAJ_LTRIGGER_BUTTON.whenPressed(new C/\@
 		// ancelCommand(Robot.auto));
 		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));
@@ -283,17 +290,6 @@ public class OI {
 		// JACKET_Y.whenPressed(new SetRollers(-0.4));
 		// JACKET_RBUMPER.whenPressed(new CargoRollersIntake(0.4));
 	
-		
-		JACKET_A.whenPressed(new CargoIntake(0.4));
-		JACKET_A.whenPressed(new SetRollersCurrent());
-		SURAJ_BACK_BUTTON.whenPressed(new Hook(true));
-		// JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
-		// JACKET_A.whenPressed(new CancelCommand(Robot.auto));
-
-		// JACKET_LTRIGGER_BUTTON.whenPressed(new CancelCommand(Robot.auto));
-		// JACKET_RTRIGGER_BUTTON.whenPressed(new CancelCommand(Robot.auto));
-		//temporary
-	
 		//SURAJ_BACK_BUTTON.whenPressed(new Lift(false));
 
 		SURAJ_RBUMPER.whenPressed(new PrepareToIntake());
@@ -302,12 +298,16 @@ public class OI {
 		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
 
 		SURAJ_RTRIGGER_BUTTON.whenPressed(new HatchRollersIntake(0.8));
-		// SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0));
+		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.1));
 
 	}
 
 	public static boolean getQuickTurn() {
 		return OI.jacket.getRawButton(OI.XBOX_X_PORT);
+	}
+
+	public static boolean getSlowTurn() {
+		return OI.jacket.getRawButton(OI.XBOX_B_PORT);
 	}
 
 	public static double getDriveThrottle() {

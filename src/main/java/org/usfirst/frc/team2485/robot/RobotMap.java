@@ -94,6 +94,7 @@ public class RobotMap {
 	public static int driveRightEncoderPort1 = 2, driveRightEncoderPort2 = 3;
 
 	public static int elevatorEncoderPort1 = 4, elevatorEncoderPort2 = 5;
+	
 
 	public static int cargoArmEncoderPort1 = 6, cargoArmEncoderPort2 = 7;
 
@@ -260,6 +261,26 @@ public class RobotMap {
 		driveRightTalon3.enableCurrentLimit(false);
 		driveRightTalon4.enableCurrentLimit(false);
 
+		// driveLeftTalon1.configContinuousCurrentLimit(10);
+		// driveLeftTalon2.configContinuousCurrentLimit(10);
+		// driveLeftTalon3.configContinuousCurrentLimit(10);
+		// driveLeftTalon4.configContinuousCurrentLimit(10);
+
+		// driveRightTalon1.configContinuousCurrentLimit(10);
+		// driveRightTalon2.configContinuousCurrentLimit(10);
+		// driveRightTalon3.configContinuousCurrentLimit(10);
+		// driveRightTalon4.configContinuousCurrentLimit(10);
+
+		// driveLeftTalon1.configPeakCurrentLimit(10);
+		// driveLeftTalon2.configPeakCurrentLimit(10);
+		// driveLeftTalon3.configPeakCurrentLimit(10);
+		// driveLeftTalon4.configPeakCurrentLimit(10);
+
+		// driveRightTalon1.configPeakCurrentLimit(10);
+		// driveRightTalon2.configPeakCurrentLimit(10);
+		// driveRightTalon3.configPeakCurrentLimit(10);
+		// driveRightTalon4.configPeakCurrentLimit(10);
+
 
 		driveLeftTalon1.configClosedloopRamp(0);
 		driveLeftTalon2.configClosedloopRamp(0);
@@ -371,7 +392,7 @@ public class RobotMap {
 		//CARGO INTAKE ARM
 		cargoArmTalon = new TalonSRX(cargoArmTalonPort);
 
-		cargoArmTalon.setInverted(false);
+		cargoArmTalon.setInverted(true);
 
 		cargoArmTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoArmTalon);
 		cargoArmTalonWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoArmTalon);
@@ -403,8 +424,6 @@ public class RobotMap {
 
 
 		//HATCH INTAKE
-		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
-
 		liftSolenoidIn = new Solenoid(liftSolenoidPortIn);
 		liftSolenoidOut = new Solenoid(liftSolenoidPortOut);
 		
@@ -412,6 +431,8 @@ public class RobotMap {
 		slideSolenoidOut = new Solenoid(slideSolenoidPortOut);
 		
 		//HATCH INTAKE ROLLERS
+		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
+
 		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
 		hatchRollersTalon.setInverted(true);
 

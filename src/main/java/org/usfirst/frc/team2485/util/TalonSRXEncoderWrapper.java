@@ -45,7 +45,7 @@ public class TalonSRXEncoderWrapper implements PIDSource{
 
 	public void setPosition(double d) {
 		this.offset = d * 4096 / distancePerRevolution - talonsrx.getSensorCollection().getQuadraturePosition();
-		System.out.println(offset);
+		// System.out.println(offset);
 	}
 	
 	

@@ -22,7 +22,7 @@ public class HatchRollersIntake extends Command {
     protected void initialize() {
         RobotMap.hatchRollers.hatchRollersManual(power);
        // holdingCurrent = CargoRollers.HOLDING_CURRENT;
-        hatchIntakenCurrent = 5;
+        hatchIntakenCurrent = 35; //spikes at 60 amps????
         spikeTime = 1000;
         intakingMode = true;
         spiking = false;

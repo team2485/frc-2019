@@ -39,6 +39,8 @@ public class ConstantsIO {
     public static double kV_DriveAngVel;
     public static double teleopUpRamp;
     public static double teleopDownRamp;
+    public static double teleopUpRampElevatorUp;
+    public static double teleopDownRampElevatorUp;
     public static double kUpRamp_Velocity;
     public static double kDownRamp_Velocity;
     public static double kUpRamp_AngVelocity;
@@ -115,6 +117,8 @@ public class ConstantsIO {
         kV_DriveAngVel = Double.parseDouble(data.get("kV_DriveAngVel"));
         teleopUpRamp = Double.parseDouble(data.get("teleopUpRamp"));
         teleopDownRamp = Double.parseDouble(data.get("teleopDownRamp"));
+        teleopUpRampElevatorUp = Double.parseDouble(data.get("teleopUpRampElevatorUp"));
+        teleopDownRampElevatorUp = Double.parseDouble(data.get("teleopDownRampElevatorUp"));
         kUpRamp_Velocity = Double.parseDouble(data.get("kUpRamp_Velocity"));
         kDownRamp_Velocity = Double.parseDouble(data.get("kDownRamp_Velocity"));
         kUpRamp_AngVelocity = Double.parseDouble(data.get("kUpRamp_AngVelocity"));

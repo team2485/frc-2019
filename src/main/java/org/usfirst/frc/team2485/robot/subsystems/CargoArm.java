@@ -87,7 +87,7 @@ public class CargoArm extends Subsystem {
 
         distanceOutputPIDSource.setPidSource(() -> {
             double output = (ConstantsIO.kF_cargoArmDistance * distanceOutputFilteredTN.getOutput()) - ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - Math.PI/2); 
-            System.out.println("levitate: "+ -(ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet())));
+            // System.out.println("levitate: "+ -(ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet())));
             if(failsafeTN.getOutput() != 0) {
                 return failsafeTN.getOutput();
             } else if(distanceSetpointTN.getOutput() < RobotMap.cargoArmEncoderWrapperDistance.pidGet()){

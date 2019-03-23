@@ -29,7 +29,7 @@ public class SetAngle extends Command {
         RobotMap.driveTrain.angleSetpointTN.setOutput(angle);
     }
     protected void execute(){
-        System.out.println("Angling");
+        // System.out.println("Angling");
         finished = RobotMap.driveTrain.anglePID.isOnTarget();
     }
 

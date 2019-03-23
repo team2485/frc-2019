@@ -118,11 +118,11 @@ extends TimedRobot {
         RobotMap.cargoArmEncoder.reset();
         RobotMap.elevatorEncoder.reset();
         RobotMap.updateConstants();
-        RobotMap.hatchIntake.slideIn();
-        
-        RobotMap.hatchIntake.stow();
+        RobotMap.gyroAngleWrapper.reset();
+       
         RobotMap.driveTrain.enablePID(false);
         RobotMap.elevator.enablePID(true);
+
     }
 
     @Override
@@ -223,6 +223,7 @@ extends TimedRobot {
         SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
         SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
         SmartDashboard.putNumber("Suraj RYStick output: ", OI.getArmManual());
+        SmartDashboard.putNumber("Hatch Intake Rollers Current", RobotMap.hatchRollersTalon.getOutputCurrent());
     }
 
     static {
