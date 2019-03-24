@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.commandGroups.SandstormAuto;
+import org.usfirst.frc.team2485.robot.commands.DriveTo;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 import org.usfirst.frc.team2485.robot.subsystems.CargoRollers;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
@@ -35,6 +36,7 @@ import org.usfirst.frc.team2485.util.RampRate;
 import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
 import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
+import org.usfirst.frc.team2485.util.AutoPath.Pair;
 
 public class Robot
 extends TimedRobot {
@@ -45,7 +47,7 @@ extends TimedRobot {
     public static ArrayList<Double> samples;
     public static boolean doneCollecting;
     public static AutoPath.Pair[] controlPoints;
-    public AutoPath.Pair endpoint;
+    //public AutoPath.Pair endpoint;
     private static AutoPath path;
     private final Object imgLock = new Object();
     Command m_autonomousCommand;
@@ -62,8 +64,10 @@ extends TimedRobot {
         ConstantsIO.init();
         RobotMap.init();
         OI.init();
-        SandstormAuto.init(false);
-		auto = new SandstormAuto();
+
+       
+        // SandstormAuto.init(false);
+		// auto = new SandstormAuto();
 		
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
@@ -102,7 +106,14 @@ extends TimedRobot {
         RobotMap.driveRightTalon4.clearStickyFaults();
         RobotMap.driveTrain.enablePID(true);
         RobotMap.cargoArm.enablePID(true);
-        SandstormAuto.init(true);
+        //SandstormAuto.init(true);
+        RobotMap.driveTrain.enableTeleopPID(false);
+       // RobotMap.driveTrain.distanceOutputTN.setOutput(5);
+        //RobotMap.driveTrain.angleSetpointTN.setOutput(Math.PI/2);
+        // Scheduler.getInstance().add(new SandstormAuto());
+        path = new AutoPath(AutoPath.getPointsForBezier(1000, new AutoPath.Pair(0, 0), RobotMap.driveTrain.generateControlPoints(100, 80, 120)[0], RobotMap.driveTrain.generateControlPoints(100, 80, 120)[1], RobotMap.driveTrain.getAutoAlignEndpoint(100, 80, 120)));
+        
+        Scheduler.getInstance().add(new DriveTo(path, 50, false, 10000, false, false));
     }
 
     @Override
@@ -146,6 +157,12 @@ extends TimedRobot {
     }
 
     public void updateSmartDashboard() {
+        SmartDashboard.putNumber("c1 x: ", RobotMap.driveTrain.generateControlPoints(100, 80, 120)[0].getX());
+        SmartDashboard.putNumber("c1 y: ", RobotMap.driveTrain.generateControlPoints(100, 80, 120)[0].getY());
+        SmartDashboard.putNumber("c2 x: ", RobotMap.driveTrain.generateControlPoints(100, 80, 120)[1].getX());
+        SmartDashboard.putNumber("c2 y: ", RobotMap.driveTrain.generateControlPoints(100, 80, 120)[1].getY());
+        SmartDashboard.putNumber("endpoint x: ", RobotMap.driveTrain.getAutoAlignEndpoint(100, 80, 120).getX());
+        SmartDashboard.putNumber("endpoint y: ", RobotMap.driveTrain.getAutoAlignEndpoint(100, 80, 120).getY());
         SmartDashboard.putString("ConstantsIO Last Modified: ", ConstantsIO.lastModified);
         SmartDashboard.putNumber("Elevator Distance PID Setpoint: ", RobotMap.elevator.distancePID.getSetpoint());
         SmartDashboard.putNumber("Elevator Distance PID Error: ", RobotMap.elevator.distancePID.getError());
@@ -168,7 +185,7 @@ extends TimedRobot {
         SmartDashboard.putNumber("Cargo Arm Setpoint TN: ", RobotMap.cargoArm.distanceSetpointTN.getOutput());
         SmartDashboard.putBoolean("Cargo Arm Distance PID Enabled: ", RobotMap.cargoArm.distancePID.isEnabled());
         SmartDashboard.putNumber("Cargo Arm Position: ", RobotMap.cargoArmEncoderWrapperDistance.pidGet());
-        SmartDashboard.putNumber("Cargo Arm PID Source Output: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
+        
         SmartDashboard.putBoolean("Cargo Arm on position:", RobotMap.cargoArm.distancePID.isOnTarget());
         SmartDashboard.putBoolean("Cargo Arm Up Limit Switch: ", RobotMap.cargoArmLimitSwitchUp.get());
         SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());

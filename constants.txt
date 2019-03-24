@@ -1,6 +1,6 @@
 accelerationMax = 25
 kDrift = 0
-kPath = 0
+kPath = 0.45007
 
 driveTrainUpRamp = 10
 driveTrainDownRamp = 10
@@ -12,7 +12,7 @@ kI_DriveVelocity = 0.0007
 kD_DriveVelocity = 0.1
 kF_DriveVelocity = 0.005
 
-kP_DriveAngle = 1.5
+kP_DriveAngle = 4
 kI_DriveAngle = 0.0005
 kD_DriveAngle = 0
 kV_DriveAngle = 0

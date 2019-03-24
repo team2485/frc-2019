@@ -86,7 +86,7 @@ public class DriveTrain extends Subsystem {
 		// });
 
         distancePIDSource.setPidSource(() -> {
-            return (-RobotMap.driveLeftEncoderWrapperDistance.pidGet() + RobotMap.driveRightEncoderWrapperDistance.pidGet())/2;
+            return (RobotMap.driveLeftEncoderWrapperDistance.pidGet() + RobotMap.driveRightEncoderWrapperDistance.pidGet())/2;
         });
 
         distancePID.setSetpointSource(distanceSetpointTN);
@@ -96,7 +96,7 @@ public class DriveTrain extends Subsystem {
 		// distancePID.setConstantsSources(kPDistancePIDSource, null, null, null);
 
         velocityPIDSource.setPidSource(() -> {
-            return (-RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet())/2;
+            return (RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet())/2;
         });
 
         velocityPID.setSetpointSource(distanceOutputTN);
@@ -198,7 +198,7 @@ public class DriveTrain extends Subsystem {
     }
 
     public void initDefaultCommand() {
-       setDefaultCommand(new DriveWithControllers());
+       //setDefaultCommand(new DriveWithControllers());
     }
 
     public void updateConstants() {
@@ -310,14 +310,14 @@ public class DriveTrain extends Subsystem {
 
     }
     
-    public static Pair getAutoAlignEndpoint(double lidar, double target1, double target2) {
+    public Pair getAutoAlignEndpoint(double lidar, double target1, double target2) {
 		double thetaSurface = getThetaAlignmentLine(); //this is fine just leave it alone -S
 		double phi = RobotMap.gyroAngleWrapper.pidGet();
 		// double thetaCamera = THETA_CAMERA; //angle of end of field of view to plane parallel to robot
 		// double thetaFieldOfView = Math.PI - thetaCamera*2; //total field of view angle
 		// double fovWidth = FastMath.tan(thetaFieldOfView/2)*lidarDist*2; //width in inches of total field of view (assuming lidar dist as height)
 		double thetaRobotToSurface = thetaSurface - phi; //angle between plane of surface and plane parallel to front of robot
-
+		//lidar += (FastMath.tan(thetaRobotToSurface)*4);  //adjusting for change in positioning of sensors
 		// // System.out.println("Theta R2S: " + thetaRobotToSurface);
 		// double cx = (cx1+cx2)/2; //distance to alignment line in pixels (x-axis)
 		// double dx = cx*fovWidth/CAMERA_PIXEL_WIDTH; //distance to alignment line in inches 
@@ -363,7 +363,7 @@ public class DriveTrain extends Subsystem {
 		double focalLength = Robot.IMG_WIDTH / (2 * FastMath.tan(cameraFieldOfView/2));
 		double centerX = Robot.IMG_WIDTH/2 - 0.5;
 		double thetaCamera1 = FastMath.atan((target1 - centerX)/focalLength);
-		double thetaCamera2 = FastMath.atan((target2-centerX)/focalLength);
+		double thetaCamera2 = FastMath.atan((target2 - centerX)/focalLength);
 		double thetaCamera = (thetaCamera1 + thetaCamera2) / 2;
 
 		double dxTemp = lidar * FastMath.tan(thetaCamera);
@@ -381,7 +381,7 @@ public class DriveTrain extends Subsystem {
  
 	}
 
-	public static Pair[] generateControlPoints(double lidar, double target1, double target2) {
+	public Pair[] generateControlPoints(double lidar, double target1, double target2) {
 		Pair endpoint = getAutoAlignEndpoint(lidar, target1, target2);
 		// System.out.println("Lidar: " + lidar);
 		// System.out.println("Endpoint: " + endpoint.getX() + ", " + endpoint.getY());
@@ -426,6 +426,10 @@ public class DriveTrain extends Subsystem {
 		Pc2y = endpoint.getY() - Pc2y;
 
 		Pc2x = endpoint.getX() - Pc2x;
+
+		//Pc2x -= 2; //adjusting for change in positioning of sensors
+
+
 
 		// double hEndpointControl1 = Math.sqrt(Math.pow((endpoint.getY()-Pc1y), 2)+(Math.pow(endpoint.getX()-Pc1x, 2)));
 		// double thetaEndpointControl1 = FastMath.asin((endpoint.getY()-Pc1y)/hEndpointControl1);
