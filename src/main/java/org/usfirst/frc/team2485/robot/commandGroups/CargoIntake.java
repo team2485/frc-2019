@@ -23,7 +23,7 @@ public class CargoIntake extends CommandGroup {
         addSequential(new Slide(false));
         addSequential(new Lift(false));
         
-        addSequential(new SetArmPosition(-1.7));
+        addSequential(new SetArmPosition(-1.9));
         
         CommandGroup lowerAndSpin = new CommandGroup();
         lowerAndSpin.addParallel(new CargoArmWithControllers());

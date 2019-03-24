@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.commandGroups.SandstormAuto;
+import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 import org.usfirst.frc.team2485.robot.subsystems.CargoRollers;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
@@ -64,7 +65,8 @@ extends TimedRobot {
         RobotMap.init();
         OI.init();
         SandstormAuto.init(false);
-		auto = new SandstormAuto();
+        auto = new SandstormAuto();
+        restart = true;
 		
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
@@ -73,7 +75,7 @@ extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        restart = false;
+        restart = true;
 
     }
 
@@ -116,7 +118,6 @@ extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        if(!restart){
         ConstantsIO.init();
         RobotMap.compressor.setClosedLoopControl(true);
         RobotMap.elevatorEncoder.reset();
@@ -125,16 +126,13 @@ extends TimedRobot {
        
         RobotMap.driveTrain.enablePID(false);
         RobotMap.elevator.enablePID(true);
-        } else {
-            RobotMap.cargoArm.enablePID(false);
-            RobotMap.cargoArmCurrent.set(0);
-        }
+        CargoArmWithControllers.init = true;
 
     }
 
     @Override
     public void teleopPeriodic() {
-        if(!restart){
+        if(restart){
         Scheduler.getInstance().run();
         this.updateSmartDashboard();
         if (RobotMap.cargoArmLimitSwitchUp.get()) {

@@ -406,6 +406,8 @@ public class RobotMap {
 
 		cargoArmEncoder.setDistancePerPulse(2 * Math.PI / 1024);
 
+		cargoArmEncoder.setReverseDirection(false);
+
 		cargoArmLimitSwitchUp = new DigitalInput(9);
 		cargoArmLimitSwitchDown = new DigitalInput(8);
 

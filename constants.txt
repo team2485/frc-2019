@@ -1,6 +1,6 @@
 accelerationMax = 25
 kDrift = 0
-kPath = 0
+kPath = 0.45007
 
 driveTrainUpRamp = 10
 driveTrainDownRamp = 10
@@ -12,7 +12,7 @@ kI_DriveVelocity = 0.0007
 kD_DriveVelocity = 0.1
 kF_DriveVelocity = 0.005
 
-kP_DriveAngle = 1.5
+kP_DriveAngle = 4
 kI_DriveAngle = 0.0005
 kD_DriveAngle = 0
 kV_DriveAngle = 0
@@ -56,10 +56,10 @@ elevatorMinVelocity = -6
 
 elevatorDistanceSetpointDownRamp = 70
 elevatorDistanceSetpointUpRamp = 70
-armDistanceSetpointDownRamp = 10
+armDistanceSetpointDownRamp = 0.02
 armDistanceSetpointUpRamp = 0.02
-armDistanceSetpointDownRampClose = 0.0125
-armDistanceSetpointUpRampClose = 0.02
+armDistanceSetpointDownRampClose = 0.02
+armDistanceSetpointUpRampClose = 0.00625
 
 kP_cargoArmDistance = 20
 kI_cargoArmDistance = 0.002
@@ -71,7 +71,7 @@ kDistanceOutputFilterCoefficient = 0.9
 
 cargoRollersIMax = 5
 elevatorIMax = 30
-cargoArmIMaxUp = 15
+cargoArmIMaxUp = 10
 cargoArmIMaxDown = -10
 driveTrainIMax = 15
 elevatorIMaxUp = 30

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class CargoArm extends Subsystem {
 
-    public static final double STARTING_CURRENT = 10;
+    public static final double STARTING_CURRENT = 6;
     public static  final double HOLDING_CURRENT = 3;
     public double holdPosition;
 
