@@ -44,6 +44,7 @@ extends TimedRobot {
     public static double centerX = 0.0;
     public static ArrayList<Double> samples;
     public static boolean doneCollecting;
+    public static boolean restart;
     public static AutoPath.Pair[] controlPoints;
     public AutoPath.Pair endpoint;
     private static AutoPath path;
@@ -72,6 +73,8 @@ extends TimedRobot {
 
     @Override
     public void disabledInit() {
+        restart = false;
+
     }
 
     @Override
@@ -113,26 +116,32 @@ extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        if(!restart){
         ConstantsIO.init();
         RobotMap.compressor.setClosedLoopControl(true);
-        RobotMap.cargoArmEncoder.reset();
         RobotMap.elevatorEncoder.reset();
         RobotMap.updateConstants();
         RobotMap.gyroAngleWrapper.reset();
        
         RobotMap.driveTrain.enablePID(false);
         RobotMap.elevator.enablePID(true);
+        } else {
+            RobotMap.cargoArm.enablePID(false);
+            RobotMap.cargoArmCurrent.set(0);
+        }
 
     }
 
     @Override
     public void teleopPeriodic() {
+        if(!restart){
         Scheduler.getInstance().run();
         this.updateSmartDashboard();
         if (RobotMap.cargoArmLimitSwitchUp.get()) {
             RobotMap.cargoArmEncoder.reset();
 		}
-		RobotMap.compressor.setClosedLoopControl(true);
+        RobotMap.compressor.setClosedLoopControl(true);
+        } 
     }
 
     @Override
