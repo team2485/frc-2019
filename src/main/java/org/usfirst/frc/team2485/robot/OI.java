@@ -35,6 +35,7 @@ import org.usfirst.frc.team2485.util.TriggerButton;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
@@ -127,7 +128,7 @@ public class OI {
 	public static TriggerButton SURAJ_LTRIGGER_BUTTON;
 	public static TriggerButton SURAJ_RTRIGGER_BUTTON;
 	
-
+	public static TriggerButton SURAJ_RYJOYSTICK_TRIGGERBUTTON;
 
 
 
@@ -189,7 +190,7 @@ public class OI {
 		
 		SURAJ_RTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_RTRIGGER_PORT, 0.2);
 
-		
+		SURAJ_RYJOYSTICK_TRIGGERBUTTON = new TriggerButton(suraj, XBOX_RYJOYSTICK_PORT, 0.2, true);
 
 
 		JACKET_RBUMPER.whenPressed(new SetHatchRollersPWM(0));
@@ -299,6 +300,9 @@ public class OI {
 
 		SURAJ_RTRIGGER_BUTTON.whenPressed(new HatchRollersIntake(0.8));
 		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.1));
+
+		SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Lift(false));
+		SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Slide(false));
 
 	}
 
