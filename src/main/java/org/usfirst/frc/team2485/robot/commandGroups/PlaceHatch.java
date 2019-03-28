@@ -23,7 +23,7 @@ public class PlaceHatch extends CommandGroup {
         addSequential(new SetArmPosition(0));
         addSequential(new Lift(true));
         addSequential(new Slide(true));
-        addSequential(new SetHatchRollersPWM(-0.6));
+        addSequential(new SetHatchRollersPWM(-0.8));
         addSequential(new WaitCommand(0.25));
         addSequential(new Slide(false));
         addSequential(new SetHatchRollersPWM(0));

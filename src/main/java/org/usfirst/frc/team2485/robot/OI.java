@@ -198,8 +198,8 @@ public class OI {
 		// JACKET_RBUMPER.whenPressed(new 
 		// CancelCommand(Robot.auto));
 
-		JACKET_A.whenPressed(new CargoIntake(0.4));
-		JACKET_A.whenReleased(new SetRollersCurrent()); //ummmm
+		JACKET_A.whenPressed(new CargoIntake(0.5));
+		JACKET_A.whenPressed(new SetRollersCurrent()); //ummmm
 		// JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
 		// JACKET_A.whenPressed(new CancelCommand(Robot.auto));
 
@@ -298,11 +298,11 @@ public class OI {
 
 		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
 
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new HatchRollersIntake(0.8));
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new HatchRollersIntake(0.9));
 		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.1));
 
-		SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Lift(false));
-		SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Slide(false));
+		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Lift(false));
+		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Slide(false));
 
 	}
 

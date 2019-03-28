@@ -231,9 +231,8 @@ extends TimedRobot {
         SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
         SmartDashboard.putNumber("Suraj RYStick output: ", OI.getArmManual());
         SmartDashboard.putNumber("Hatch Intake Rollers Current", RobotMap.hatchRollersTalon.getOutputCurrent());
-    }
+        SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
+    
 
-    static {
-        doneCollecting = false;
     }
 }
