@@ -62,6 +62,16 @@ public class CargoArmWithControllers extends Command {
                 } else if (!zero) {
                     power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet(), 1.9);
                 } 
+
+                if(power == 0) {
+                    up = ThresholdHandler.deadbandAndScale(OI.surajBackup.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.25, 0, 1) < 0;
+                    zero = ThresholdHandler.deadbandAndScale(OI.surajBackup.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.25, 0, 1) == 0;
+                    if(up && !zero) {
+                        power = -ThresholdHandler.deadbandAndScale(OI.surajBackup.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0.1, -RobotMap.cargoArmEncoderWrapperDistance.pidGet());
+                    } else if (!zero) {
+                        power = -ThresholdHandler.deadbandAndScale(OI.surajBackup.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet(), 1.9);
+                    } 
+                }
                 // System.out.println("Power: " + power);
 
                 // if(Math.abs(power - RobotMap.cargoArm.armEncoderTN.pidGet()) > 0.25) {
