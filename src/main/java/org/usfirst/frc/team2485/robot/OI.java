@@ -199,7 +199,7 @@ public class OI {
 		// CancelCommand(Robot.auto));
 
 		JACKET_A.whenPressed(new CargoIntake(0.4));
-		JACKET_A.whenPressed(new SetRollersCurrent()); //ummmm
+		JACKET_A.whenReleased(new SetRollersCurrent()); //ummmm
 		// JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
 		// JACKET_A.whenPressed(new CancelCommand(Robot.auto));
 

@@ -105,9 +105,9 @@ extends TimedRobot {
         RobotMap.driveRightTalon2.clearStickyFaults();
         RobotMap.driveRightTalon3.clearStickyFaults();
         RobotMap.driveRightTalon4.clearStickyFaults();
-        RobotMap.driveTrain.enablePID(true);
-        RobotMap.cargoArm.enablePID(true);
-        SandstormAuto.init(true);
+        // RobotMap.driveTrain.enablePID(true);
+        // RobotMap.cargoArm.enablePID(true);
+        // SandstormAuto.init(true);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class TriggerButton extends JoystickButton {
     public TriggerButton(GenericHID joystick, int port, double threshold, boolean bidirectional) {
         super(joystick, port);
         this.threshold = threshold;
-        this.joystick = joystick; // "boisticc" -Aditya 2019
+        this.joystick = joystick; // "boisticc" -Aditya 2019 *best pit programmer to ever exist* + *was on drive team once* + *pushed a cart a couple times AND plugged in ethernet occasionally (when Elle didn't) + *tuned a drive train well once* + *pranked sahana by pretending to forget herman**
         this.port = port;
         this.bidirectional = bidirectional;
     }
