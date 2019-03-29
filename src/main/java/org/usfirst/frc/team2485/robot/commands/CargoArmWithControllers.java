@@ -87,14 +87,14 @@ public class CargoArmWithControllers extends Command {
                 // }
 
                 if(RobotMap.cargoArm.distanceSetpointTN.getOutput() > -.5) {
-                    if(RobotMap.cargoArmEncoderWrapperDistance.pidGet() > -0.25) {
-                        RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRamp);
+                    if(RobotMap.cargoArmEncoderWrapperDistance.pidGet() > -0.2) {
+                        RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRampClose);
                     } else {
                         RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRamp);
                     }
                 } else if (RobotMap.cargoArm.distanceSetpointTN.getOutput() < -1.2) {
-                    if(RobotMap.cargoArmEncoderWrapperDistance.pidGet()  < -1.4) {
-                        RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRampClose);
+                    if(RobotMap.cargoArmEncoderWrapperDistance.pidGet()  < -1.5) {
+                        RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRamp);
                     } else {
                         RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRamp);
                     }
