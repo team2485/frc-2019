@@ -85,6 +85,7 @@ extends TimedRobot {
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
         this.updateSmartDashboard();
+        RobotMap.elevatorEncoder.reset(); //LOOK
     }
 
     @Override

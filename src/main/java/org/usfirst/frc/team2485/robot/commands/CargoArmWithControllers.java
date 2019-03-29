@@ -87,7 +87,7 @@ public class CargoArmWithControllers extends Command {
                 // }
 
                 if(RobotMap.cargoArm.distanceSetpointTN.getOutput() > -.5) {
-                    if(RobotMap.cargoArmEncoderWrapperDistance.pidGet() > -0.2) {
+                    if(RobotMap.cargoArmEncoderWrapperDistance.pidGet() > -0.27) {
                         RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRampClose);
                     } else {
                         RobotMap.cargoArm.distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRamp);
