@@ -39,8 +39,8 @@ import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
 
 public class Robot
 extends TimedRobot {
-    public static final int IMG_WIDTH = 120;
-    public static final int IMG_HEIGHT = 90;
+    public static final int IMG_WIDTH = 75;
+    public static final int IMG_HEIGHT = 56;
     private VisionThread visionThread;
     public static double centerX = 0.0;
     public static ArrayList<Double> samples;
@@ -57,6 +57,7 @@ extends TimedRobot {
     boolean ejecting = false;
     public static Command auto;
     public CvSource output;
+    
 
     @Override
     public void robotInit() {
@@ -70,6 +71,7 @@ extends TimedRobot {
 		
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+        camera.setFPS(20);
 
     }
 

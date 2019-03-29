@@ -10,6 +10,7 @@ import org.usfirst.frc.team2485.robot.commandGroups.CargoIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.IntakeHatch;
 import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.PlaceHatch;
+import org.usfirst.frc.team2485.robot.commandGroups.SandstormHatchClaimer;
 import org.usfirst.frc.team2485.robot.commands.CancelCommand;
 import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
 import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
@@ -300,6 +301,9 @@ public class OI {
 
 		SURAJ_RTRIGGER_BUTTON.whenPressed(new HatchRollersIntake(0.9));
 		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.1));
+
+
+		SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());
 
 		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Lift(false));
 		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Slide(false));
