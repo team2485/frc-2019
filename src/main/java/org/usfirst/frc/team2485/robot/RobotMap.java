@@ -434,8 +434,6 @@ public class RobotMap {
 		
 		//HATCH INTAKE ROLLERS
 		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
-
-		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
 		hatchRollersTalon.setInverted(true);
 
 		hatchRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, hatchRollersTalon);

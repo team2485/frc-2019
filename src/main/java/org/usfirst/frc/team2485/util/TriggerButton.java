@@ -41,7 +41,7 @@ public class TriggerButton extends JoystickButton {
      */
     @Override
     public boolean get() {
-        double joystickVal = ThresholdHandler.deadbandAndScale(this.joystick.getRawAxis(this.port), 0.2, 0, 1);
+        double joystickVal = ThresholdHandler.deadbandAndScale(this.joystick.getRawAxis(this.port), 0.5, 0, 1);
 
         if (threshold < 0) {
             return joystickVal <= threshold;

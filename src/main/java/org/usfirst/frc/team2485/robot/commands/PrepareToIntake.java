@@ -14,7 +14,7 @@ public class PrepareToIntake extends InstantCommand {
     protected void initialize() {
         RobotMap.hatchIntake.lift();
         RobotMap.hatchIntake.slideOut();
-        RobotMap.hatchRollers.hatchRollersManual(0);
+        // RobotMap.hatchRollers.hatchRollersManual(0);
         RobotMap.compressor.setClosedLoopControl(false);
     }
 }

@@ -15,7 +15,7 @@ public class SetElevatorPosition extends InstantCommand {
     private boolean manualMovement = false;
     private boolean encoderMovement = true;
     private long startEncoderLossTime = 0;
-    private int fullPowerTime = 100;
+    private int fullPowerTime = 500;
     private boolean finish = false;
 
     public SetElevatorPosition(ElevatorLevel elevatorLevel) {
@@ -47,7 +47,7 @@ public class SetElevatorPosition extends InstantCommand {
                 if(RobotMap.elevatorEncoderWrapperDistance.pidGet() != 0) {
                     encoderMovement = true;
                 } 
-                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime) {
+                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime && elevatorLevel.getPosition() <= 6) {
                     manualMovement = true;
                 }
             }
