@@ -45,7 +45,7 @@ public class ElevatorWithControllers extends Command {
 
     @Override
     protected void execute() {
-        // System.out.println("EncoderMovement: " + encoderMovement);
+        System.out.println("EncoderMovement: " + encoderMovement);
         System.out.println("Manual Movement: " + manualMovement);
         if(!manualMovement) {
             boolean zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0.0, 1.0) == 0.0;
