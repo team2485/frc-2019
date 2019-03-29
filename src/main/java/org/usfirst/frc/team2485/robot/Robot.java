@@ -71,7 +71,7 @@ extends TimedRobot {
 		
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-        camera.setFPS(20);
+        camera.setFPS(13);
 
     }
 

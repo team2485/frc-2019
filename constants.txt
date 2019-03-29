@@ -25,9 +25,9 @@ kV_DriveAngVel = 0
 
 filterCoefficient = 0
 
-teleopUpRamp = 4
+teleopUpRamp = 7
 teleopDownRamp = 10000
-teleopUpRampElevatorUp = 0.2
+teleopUpRampElevatorUp = 0.4
 teleopDownRampElevatorUp = 10000
 kUpRamp_Velocity = .2
 kDownRamp_Velocity = .2
@@ -35,20 +35,20 @@ kUpRamp_AngVelocity = 10000
 kDownRamp_AngVelocity = 10000
 
 
-kP_elevatorDistance = 0.4
-kI_elevatorDistance = 0.004
+kP_elevatorDistance = 1.5
+kI_elevatorDistance = 0.0012
 kD_elevatorDistance = 0.5
-kF_elevatorDistance = 0.6
+kF_elevatorDistance = 0.8
 levitateElevatorDistance = 0
 kElevatorEncoderFilterCoefficient = 0.9
 kElevatorDistanceOutputFilterCoefficient = 1
 
-kP_elevatorDownVelocity = 2
-kI_elevatorDownVelocity = 0.02
+kP_elevatorDownVelocity = 0.5
+kI_elevatorDownVelocity = 0.05
 kD_elevatorDownVelocity = 0 
 
-kP_elevatorUpVelocity = 10
-kI_elevatorUpVelocity = 0.05
+kP_elevatorUpVelocity = 40
+kI_elevatorUpVelocity = 0.02
 kD_elevatorUpVelocity = 0
 
 elevatorMaxVelocity = 20
@@ -70,11 +70,11 @@ kArmEncoderFilterCoefficient = 0.9
 kDistanceOutputFilterCoefficient = 0.9
 
 cargoRollersIMax = 5
-elevatorIMax = 30
+elevatorIMax = 40
 cargoArmIMaxUp = 10
 cargoArmIMaxDown = -10
 driveTrainIMax = 15
-elevatorIMaxUp = 30
+elevatorIMaxUp = 40
 elevatorIMaxDown = 20
 
   
