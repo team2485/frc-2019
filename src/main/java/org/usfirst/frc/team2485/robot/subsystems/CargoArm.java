@@ -137,7 +137,6 @@ public class CargoArm extends Subsystem {
     }
 
     public void updateConstants() {
-        distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
         distancePID.setPID(ConstantsIO.kP_cargoArmDistance, ConstantsIO.kI_cargoArmDistance, ConstantsIO.kD_cargoArmDistance);
         encoderFilter.setFilterCoefficient(ConstantsIO.kArmEncoderFilterCoefficient);
         distanceOutputFilter.setFilterCoefficient(ConstantsIO.kDistanceOutputFilterCoefficient);

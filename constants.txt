@@ -56,10 +56,10 @@ elevatorMinVelocity = -6
 
 elevatorDistanceSetpointDownRamp = 70
 elevatorDistanceSetpointUpRamp = 70
-armDistanceSetpointDownRamp = 0.015
-armDistanceSetpointUpRamp = 0.015
-armDistanceSetpointDownRampClose = 0.004
-armDistanceSetpointUpRampClose = 0.004
+armDistanceSetpointDownRamp = 0.005
+armDistanceSetpointUpRamp = 0.007
+armDistanceSetpointDownRampClose = 0.0002
+armDistanceSetpointUpRampClose = 0.0002
 
 kP_cargoArmDistance = 4
 kI_cargoArmDistance = 0.02
