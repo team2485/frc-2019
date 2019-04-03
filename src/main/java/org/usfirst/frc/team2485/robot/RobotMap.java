@@ -83,7 +83,7 @@ public class RobotMap {
 
 	public static int cargoRollersTalonPort = 8;
 
-	public static int hatchRollersTalonPort = 10; //change
+	public static int hatchRollersTalonPort = 10; 
 
 	public static int liftSolenoidPortIn = 0, liftSolenoidPortOut = 4;
 	public static int slideSolenoidPortIn = 1, slideSolenoidPortOut = 5;
@@ -392,7 +392,7 @@ public class RobotMap {
 		//CARGO INTAKE ARM
 		cargoArmTalon = new TalonSRX(cargoArmTalonPort);
 
-		cargoArmTalon.setInverted(true);
+		cargoArmTalon.setInverted(false); //DIFFERENT ON PRACTICE
 
 		cargoArmTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoArmTalon);
 		cargoArmTalonWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoArmTalon);
@@ -433,8 +433,6 @@ public class RobotMap {
 		slideSolenoidOut = new Solenoid(slideSolenoidPortOut);
 		
 		//HATCH INTAKE ROLLERS
-		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
-
 		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
 		hatchRollersTalon.setInverted(true);
 

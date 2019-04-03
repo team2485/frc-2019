@@ -31,7 +31,7 @@ public class TriggerButton extends JoystickButton {
     public TriggerButton(GenericHID joystick, int port, double threshold, boolean bidirectional) {
         super(joystick, port);
         this.threshold = threshold;
-        this.joystick = joystick; // "boisticc" -Aditya 2019
+        this.joystick = joystick; // "boisticc" -Aditya 2019 *best pit programmer to ever exist*
         this.port = port;
         this.bidirectional = bidirectional;
     }
@@ -41,7 +41,7 @@ public class TriggerButton extends JoystickButton {
      */
     @Override
     public boolean get() {
-        double joystickVal = ThresholdHandler.deadbandAndScale(this.joystick.getRawAxis(this.port), 0.2, 0, 1);
+        double joystickVal = ThresholdHandler.deadbandAndScale(this.joystick.getRawAxis(this.port), 0.5, 0, 1);
 
         if (threshold < 0) {
             return joystickVal <= threshold;

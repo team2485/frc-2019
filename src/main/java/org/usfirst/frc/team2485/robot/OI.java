@@ -10,6 +10,7 @@ import org.usfirst.frc.team2485.robot.commandGroups.CargoIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.IntakeHatch;
 import org.usfirst.frc.team2485.robot.commandGroups.LoadingStationIntake;
 import org.usfirst.frc.team2485.robot.commandGroups.PlaceHatch;
+import org.usfirst.frc.team2485.robot.commandGroups.SandstormHatchClaimer;
 import org.usfirst.frc.team2485.robot.commands.CancelCommand;
 import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
 import org.usfirst.frc.team2485.robot.commands.CargoRollersIntake;
@@ -210,7 +211,7 @@ public class OI {
 		// JACKET_RBUMPER.whenPressed(new 
 		// CancelCommand(Robot.auto));
 
-		JACKET_A.whenPressed(new CargoIntake(0.4));
+		JACKET_A.whenPressed(new CargoIntake(0.5));
 		JACKET_A.whenPressed(new SetRollersCurrent()); //ummmm
 		JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
 		JACKET_A_BACKUP.whenPressed(new SetRollersCurrent());
@@ -312,12 +313,9 @@ public class OI {
 		// SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
 		// SURAJ_START_BUTTON.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
-		SURAJ_LTRIGGER_BUTTON_BACKUP.whenPressed(new SetRollers(-0.4));
-
+		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));
 		// SURAJ_LTRIGGER_BUTTON.whenPressed(new C/\@
 		// ancelCommand(Robot.auto));
-		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));
-		SURAJ_LTRIGGER_BUTTON_BACKUP.whenReleased(new SetRollers(0));
 
 		// SURAJ_LTRIGGER_BUTTON_BACKUP.whenPressed(new SetRollers(-0.4));
 		// SURAJ_LTRIGGER_BUTTON_BACKUP.whenReleased(new SetRollers(0));
@@ -335,16 +333,14 @@ public class OI {
 
 		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
 		SURAJ_LBUMPER_BACKUP.whenPressed(new PlaceHatch());
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(0.9));
+		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.2));
 
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new HatchRollersIntake(0.8));
-		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.1));
-		SURAJ_RTRIGGER_BUTTON_BACKUP.whenPressed(new HatchRollersIntake(0.8));
-		SURAJ_RTRIGGER_BUTTON_BACKUP.whenReleased(new SetHatchRollersPWM(0.1));
 
-		SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Lift(false));
-		SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Slide(false));
-		SURAJ_RYJOYSTICK_TRIGGERBUTTON_BACKUP.whenPressed(new Lift(false));
-		SURAJ_RYJOYSTICK_TRIGGERBUTTON_BACKUP.whenPressed(new Slide(false));
+		SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());
+
+		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Lift(false));
+		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Slide(false));
 
 	}
 

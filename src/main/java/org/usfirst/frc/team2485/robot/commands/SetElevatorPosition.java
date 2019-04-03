@@ -15,7 +15,7 @@ public class SetElevatorPosition extends InstantCommand {
     private boolean manualMovement = false;
     private boolean encoderMovement = true;
     private long startEncoderLossTime = 0;
-    private int fullPowerTime = 100;
+    private int fullPowerTime = 500;
     private boolean finish = false;
 
     public SetElevatorPosition(ElevatorLevel elevatorLevel) {
@@ -37,17 +37,18 @@ public class SetElevatorPosition extends InstantCommand {
         if(!manualMovement) {
             RobotMap.elevator.setPosition(elevatorLevel.getPosition());
             ElevatorWithControllers.power = RobotMap.elevatorEncoderWrapperDistance.pidGet();
-            if(RobotMap.elevator.distanceOutputTN.pidGet() > 5 && RobotMap.elevatorEncoderWrapperDistance.pidGet() == 0 && encoderMovement) {
+            if(RobotMap.elevator.distanceOutputTN.pidGet() > 5 && RobotMap.elevatorEncoderWrapperDistance.pidGet() == 0 && encoderMovement && elevatorLevel.getPosition() <= 6) {
                 RobotMap.elevator.enablePID(false);
                 encoderMovement = false;
                 startEncoderLossTime = System.currentTimeMillis();
                 manualMovement = true;
                 ElevatorWithControllers.manualMovement = true;
+                System.out.println("Turn on 3");
             } if(!encoderMovement) {
                 if(RobotMap.elevatorEncoderWrapperDistance.pidGet() != 0) {
                     encoderMovement = true;
                 } 
-                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime) {
+                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime && elevatorLevel.getPosition() <= 6) {
                     manualMovement = true;
                 }
             }

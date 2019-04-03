@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator;
+import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
 import org.usfirst.frc.team2485.util.ThresholdHandler;
@@ -22,7 +23,7 @@ public class ElevatorWithControllers extends Command {
     private int spikeTime = 20000;
     public static double power = 0.0;
     private boolean first;
-    private int fullPowerTime = 100;
+    private int fullPowerTime = 500;
     public static boolean encoderMovement = true;
     public static boolean manualMovement = false;
     private long startEncoderLossTime;
@@ -44,7 +45,8 @@ public class ElevatorWithControllers extends Command {
 
     @Override
     protected void execute() {
-        // System.out.println("EncoderMovement: " + encoderMovement);
+        System.out.println("EncoderMovement: " + encoderMovement);
+        System.out.println("Manual Movement: " + manualMovement);
         if(!manualMovement) {
             boolean zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0.0, 1.0) == 0.0;
             if (!zero) {
@@ -86,12 +88,14 @@ public class ElevatorWithControllers extends Command {
                 encoderMovement = false;
                 startEncoderLossTime = System.currentTimeMillis();
                 manualMovement = true;
+                System.out.println("Turning on 1");
             } 
             if(!encoderMovement) {
                 if(RobotMap.elevatorEncoderWrapperDistance.pidGet() != 0) {
                     encoderMovement = true;
                 } 
-                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime) {
+                if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime && RobotMap.elevator.distancePID.getSetpoint() >= ElevatorLevel.ROCKET_LEVEL_ONE.getPosition()) {
+                    System.out.println("Turning on 2");
                     manualMovement = true;
                 }
             }

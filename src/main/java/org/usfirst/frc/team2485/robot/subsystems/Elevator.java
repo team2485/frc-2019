@@ -148,13 +148,13 @@ public class Elevator extends Subsystem {
                     return 0.0;
                 }
                 case ROCKET_LEVEL_ONE: {
-                    return 6.0;
+                    return 5.5;
                 }
                 case ROCKET_LEVEL_TWO: {
-                    return 26.5;
+                    return 28.5;
                 }
                 case ROCKET_LEVEL_THREE: {
-                    return 61.0;
+                    return 59;
                 }
                 case HATCH_LIFTING: {
                     return 12.0;
