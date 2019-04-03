@@ -88,8 +88,8 @@ public class Elevator extends Subsystem {
 
     public void elevatorManual(double power) {
         elevatorControllerSystem.disable();
-        distancePID.disable();
-        distanceOutputTN.setOutput(0);
+        this.distancePID.disable();
+        this.distanceOutputTN.setOutput(0);
         RobotMap.elevatorPercentOutput.set(power);
     }
 
@@ -121,6 +121,7 @@ public class Elevator extends Subsystem {
             this.elevatorControllerSystem.disable();
             RobotMap.elevator.distanceOutputTN.setOutput(0);
         }
+        this.distancePID.enable();
     }
 
     public void updateConstants() {

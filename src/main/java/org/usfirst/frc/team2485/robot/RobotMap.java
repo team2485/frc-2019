@@ -184,6 +184,8 @@ public class RobotMap {
 
 	public static EncoderWrapperRateAndDistance cargoArmEncoderWrapperDistance;
 
+	public static EncoderWrapperRateAndDistance cargoArmEncoderWrapperRate;
+
 	public static DigitalInput cargoArmLimitSwitchDown;
 	public static DigitalInput cargoArmLimitSwitchUp;
 
@@ -403,6 +405,7 @@ public class RobotMap {
 		cargoArmEncoder = new Encoder(cargoArmEncoderPort1, cargoArmEncoderPort2);
 
 		cargoArmEncoderWrapperDistance = new EncoderWrapperRateAndDistance(cargoArmEncoder, PIDSourceType.kDisplacement);
+		cargoArmEncoderWrapperRate = new EncoderWrapperRateAndDistance(cargoArmEncoder, PIDSourceType.kRate);
 
 		cargoArmEncoder.setDistancePerPulse(2 * Math.PI / 1024);
 

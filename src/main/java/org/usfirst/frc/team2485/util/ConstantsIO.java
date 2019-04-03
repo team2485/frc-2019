@@ -70,13 +70,22 @@ public class ConstantsIO {
     public static double kI_cargoArmDistance;
     public static double kD_cargoArmDistance;
     public static double kF_cargoArmDistance;
+    public static double cargoArmMinVelocity;
+    public static double cargoArmMaxVelocity;
+    public static double kP_cargoArmDownVelocity;
+    public static double kI_cargoArmDownVelocity;
+    public static double kD_cargoArmDownVelocity;
+    public static double kP_cargoArmUpVelocity;
+    public static double kI_cargoArmUpVelocity;
+    public static double kD_cargoArmUpVelocity;
     public static double levitateCargo;
     public static double kArmEncoderFilterCoefficient;
-    public static double kDistanceOutputFilterCoefficient;
+    public static double kCargoArmDistanceOutputFilterCoefficient;
     public static double cargoRollersIMax;
     public static double elevatorIMax;
     public static double cargoArmIMaxUp;
     public static double cargoArmIMaxDown;
+    public static double cargoArmIMax;
     public static double driveTrainIMax;
 
     public static void init() {
@@ -147,12 +156,23 @@ public class ConstantsIO {
         kI_cargoArmDistance = Double.parseDouble(data.get("kI_cargoArmDistance"));
         kD_cargoArmDistance = Double.parseDouble(data.get("kD_cargoArmDistance"));
         kF_cargoArmDistance = Double.parseDouble(data.get("kF_cargoArmDistance"));
+
+        kP_cargoArmDownVelocity = Double.parseDouble(data.get("kP_cargoArmDownVelocity"));
+        kI_cargoArmDownVelocity = Double.parseDouble(data.get("kI_cargoArmDownVelocity"));
+        kD_cargoArmDownVelocity = Double.parseDouble(data.get("kD_cargoArmDownVelocity"));
+        kP_cargoArmUpVelocity = Double.parseDouble(data.get("kP_cargoArmUpVelocity"));
+        kI_cargoArmUpVelocity = Double.parseDouble(data.get("kI_cargoArmUpVelocity"));
+        kD_cargoArmUpVelocity = Double.parseDouble(data.get("kD_cargoArmUpVelocity"));
+        cargoArmMaxVelocity = Double.parseDouble(data.get("cargoArmMaxVelocity"));
+        cargoArmMinVelocity = Double.parseDouble(data.get("cargoArmMinVelocity"));
+
         levitateCargo = Double.parseDouble(data.get("levitateCargo"));
         kArmEncoderFilterCoefficient = Double.parseDouble(data.get("kArmEncoderFilterCoefficient"));
-        kDistanceOutputFilterCoefficient = Double.parseDouble(data.get("kDistanceOutputFilterCoefficient"));
+        kCargoArmDistanceOutputFilterCoefficient = Double.parseDouble(data.get("kCargoArmDistanceOutputFilterCoefficient"));
         elevatorIMax = Double.parseDouble(data.get("elevatorIMax"));
         cargoArmIMaxUp = Double.parseDouble(data.get("cargoArmIMaxUp"));
         cargoArmIMaxDown = Double.parseDouble(data.get("cargoArmIMaxDown"));
+        cargoArmIMax = Double.parseDouble(data.get("cargoArmIMax"));
         driveTrainIMax = Double.parseDouble(data.get("driveTrainIMax"));
     }
 
