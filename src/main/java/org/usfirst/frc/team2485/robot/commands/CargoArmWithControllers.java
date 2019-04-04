@@ -95,7 +95,7 @@ public class CargoArmWithControllers extends Command {
 
                 if(zeroAtTop){
                     zeroAtBottom = false;
-                    power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, RobotMap.cargoArmEncoderWrapperDistance.pidGet(), -1.8);
+                    power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, -1.8);
                     if(RobotMap.cargoArmEncoderWrapperDistance.pidGet() <= -1.5){
                     RobotMap.cargoArm.distanceSetpointRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRampClose, ConstantsIO.armDistanceSetpointDownRampClose);
                     } else {
@@ -103,7 +103,7 @@ public class CargoArmWithControllers extends Command {
                     }
                 } else if (zeroAtBottom){
                     zeroAtTop = false;
-                    power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, RobotMap.cargoArmEncoderWrapperDistance.pidGet(), 1.8);
+                    power = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, 0, 1.8);
                     if(power <= 0.1){
                         RobotMap.cargoArm.failsafeTN.setOutput(0.1); //just so it doesn't slam
                     }
