@@ -128,7 +128,7 @@ extends TimedRobot {
         RobotMap.gyroAngleWrapper.reset();
        
         RobotMap.driveTrain.enablePID(false);
-        RobotMap.elevator.enablePID(true);
+        RobotMap.elevator.enablePID(false);
         CargoArmWithControllers.init = true;
 
     }
@@ -151,7 +151,6 @@ extends TimedRobot {
 		
         RobotMap.driveTrain.enablePID(false);
 		RobotMap.elevator.enablePID(false);
-		RobotMap.cargoArm.enablePID(false);
         this.updateSmartDashboard();
     }
 
@@ -167,15 +166,15 @@ extends TimedRobot {
         // SmartDashboard.putNumber("Elevator Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3.0);
         SmartDashboard.putNumber("Elevator Output Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
         // SmartDashboard.putNumber("Elevator Encoder: ", RobotMap.elevatorEncoderWrapperDistance.pidGet());
-        // SmartDashboard.putBoolean("Elevator Down Velocity PID Enabled: ", RobotMap.elevator.downVelocityPID.isEnabled());
-        // SmartDashboard.putNumber("Elevator Down Velocity Error: ", RobotMap.elevator.downVelocityPID.getError());
-        // SmartDashboard.putNumber("Elevator Down Velocity Setpoint: ", RobotMap.elevator.downVelocityPID.getSetpoint());
-        SmartDashboard.putNumber("Elevator Encoder Rate", RobotMap.elevatorEncoderWrapperRate.pidGet());
+        SmartDashboard.putBoolean("arm Down Velocity PID Enabled: ", RobotMap.cargoArm.downVelocityPID.isEnabled());
+        SmartDashboard.putNumber("arm Down Velocity Error: ", RobotMap.cargoArm.downVelocityPID.getError());
+        SmartDashboard.putNumber("arm Down Velocity Setpoint: ", RobotMap.cargoArm.downVelocityPID.getSetpoint());
+        SmartDashboard.putNumber("arm Encoder Rate", RobotMap.cargoArmEncoderWrapperRate.pidGet());
         // SmartDashboard.putNumber("ELevator Distance Output TN: ", RobotMap.elevator.distanceOutputTN.getOutput());
         // SmartDashboard.putBoolean("Elevator Controller System Enabled: ", RobotMap.elevator.elevatorControllerSystem.isEnabled());
         // SmartDashboard.putBoolean("Elevator Motor Setter: ", RobotMap.elevator.motorSetter.isEnabled());
         // SmartDashboard.putNumber("Cargo Arm Distance PID Error: ", RobotMap.cargoArm.distancePID.getError());
-        // SmartDashboard.putNumber("Cargo Arm Setpoint TN: ", RobotMap.cargoArm.distanceSetpointTN.getOutput());
+         SmartDashboard.putNumber("Cargo Arm Setpoint TN: ", RobotMap.cargoArm.distanceSetpointTN.getOutput());
         // SmartDashboard.putBoolean("Cargo Arm Distance PID Enabled: ", RobotMap.cargoArm.distancePID.isEnabled());
             SmartDashboard.putNumber("Cargo Arm Position: ", RobotMap.cargoArmEncoderWrapperDistance.pidGet());
         // SmartDashboard.putNumber("Cargo Arm PID Source Output: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());

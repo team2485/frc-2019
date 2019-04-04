@@ -394,7 +394,7 @@ public class RobotMap {
 		//CARGO INTAKE ARM
 		cargoArmTalon = new TalonSRX(cargoArmTalonPort);
 
-		cargoArmTalon.setInverted(false); //DIFFERENT ON PRACTICE
+		cargoArmTalon.setInverted(true); //same
 
 		cargoArmTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoArmTalon);
 		cargoArmTalonWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoArmTalon);

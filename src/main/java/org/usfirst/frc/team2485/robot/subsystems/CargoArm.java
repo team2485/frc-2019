@@ -53,12 +53,12 @@ public class CargoArm extends Subsystem {
         this.downVelocityPID.setSetpoint(ConstantsIO.cargoArmMinVelocity);
         this.downVelocityPID.setSources(RobotMap.cargoArmEncoderWrapperRate);
         this.downVelocityPID.setOutputs(this.armMinOutputTN);
-        this.downVelocityPID.setOutputRange(0.0, ConstantsIO.cargoArmIMax);
+        this.downVelocityPID.setOutputRange(-1.0, 5);
 
         this.upVelocityPID.setSetpoint(ConstantsIO.cargoArmMaxVelocity);
         this.upVelocityPID.setSources(RobotMap.cargoArmEncoderWrapperRate);
         this.upVelocityPID.setOutputs(this.armMaxOutputTN);
-        this.upVelocityPID.setOutputRange(0.0, ConstantsIO.cargoArmIMax);
+        this.upVelocityPID.setOutputRange(-1.0, ConstantsIO.cargoArmIMax);
 
         this.distancePID.setSetpointSource(this.distanceSetpointRampedTN);
         this.distancePID.setOutputs(this.distanceOutputTN);
@@ -120,12 +120,18 @@ public class CargoArm extends Subsystem {
     public void enablePID(boolean enabled) {
         if (enabled) {
             this.motorSetter.enable();
-            this.cargoArmControllerSystem.enable();
+           // this.cargoArmControllerSystem.enable();
+            this.downVelocityPID.enable();
+            this.upVelocityPID.enable();
+            this.distancePID.enable();
             this.distanceSetpointRampRate.enable();
             this.armEncoderFilter.enable();
             this.distanceOutputFilter.enable();
         } else {
-            this.cargoArmControllerSystem.disable();
+           // this.cargoArmControllerSystem.disable();
+            this.downVelocityPID.disable();
+            this.upVelocityPID.disable();
+            this.distancePID.disable();
             RobotMap.cargoArmCurrent.set(0);
         }
     }

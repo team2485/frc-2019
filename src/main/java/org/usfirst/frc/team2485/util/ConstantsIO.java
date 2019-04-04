@@ -72,6 +72,8 @@ public class ConstantsIO {
     public static double kF_cargoArmDistance;
     public static double cargoArmMinVelocity;
     public static double cargoArmMaxVelocity;
+    public static double cargoArmMinVelocityClose;
+    public static double cargoArmMaxVelocityClose;
     public static double kP_cargoArmDownVelocity;
     public static double kI_cargoArmDownVelocity;
     public static double kD_cargoArmDownVelocity;
@@ -165,6 +167,8 @@ public class ConstantsIO {
         kD_cargoArmUpVelocity = Double.parseDouble(data.get("kD_cargoArmUpVelocity"));
         cargoArmMaxVelocity = Double.parseDouble(data.get("cargoArmMaxVelocity"));
         cargoArmMinVelocity = Double.parseDouble(data.get("cargoArmMinVelocity"));
+        cargoArmMinVelocityClose = Double.parseDouble(data.get("cargoArmMinVelocityClose"));
+        cargoArmMaxVelocityClose = Double.parseDouble(data.get("cargoArmMaxVelocityClose"));
 
         levitateCargo = Double.parseDouble(data.get("levitateCargo"));
         kArmEncoderFilterCoefficient = Double.parseDouble(data.get("kArmEncoderFilterCoefficient"));
