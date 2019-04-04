@@ -180,7 +180,7 @@ extends TimedRobot {
         // SmartDashboard.putNumber("Cargo Arm PID Source Output: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
         // SmartDashboard.putBoolean("Cargo Arm on position:", RobotMap.cargoArm.distancePID.isOnTarget());
          SmartDashboard.putBoolean("Cargo Arm Up Limit Switch: ", RobotMap.cargoArmLimitSwitchUp.get());
-        // SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
+        SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
         // SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
         // SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint Please: ", RobotMap.cargoArm.distancePID.getSetpoint());
           SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
@@ -210,8 +210,8 @@ extends TimedRobot {
         // SmartDashboard.putNumber("Drive Train Distance Error: ", RobotMap.driveTrain.distancePID.getError());
         // SmartDashboard.putNumber("Drive Train Velocity Error: ", RobotMap.driveTrain.velocityPID.getError());
         // SmartDashboard.putNumber("DriveTrain Distance Source: ", RobotMap.driveTrain.distancePIDSource.pidGet());
-        // SmartDashboard.putNumber("Drive Train Left Encoder Wrapper Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
-        // SmartDashboard.putNumber("Drive Train Right Encoder Wrapper Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
+        SmartDashboard.putNumber("Drive Train Left Encoder Wrapper Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
+        SmartDashboard.putNumber("Drive Train Right Encoder Wrapper Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
         // SmartDashboard.putNumber("Drive Train Ang Vel Error: ", RobotMap.driveTrain.angVelPID.getError());
         // SmartDashboard.putNumber("Drive Train Angle Error: ", RobotMap.driveTrain.anglePID.getError());
         // SmartDashboard.putNumber("Cargo Arm Talon Output", RobotMap.cargoArmTalon.getMotorOutputPercent());
