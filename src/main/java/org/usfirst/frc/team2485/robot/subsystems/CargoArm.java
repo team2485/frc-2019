@@ -10,6 +10,7 @@ import org.usfirst.frc.team2485.util.PIDSourceWrapper;
 import org.usfirst.frc.team2485.util.RampRate;
 import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
+import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -20,112 +21,79 @@ public class CargoArm extends Subsystem {
     public static  final double HOLDING_CURRENT = 3;
     public double holdPosition;
 
-    public TransferNode distanceSetpointTN;
-    public TransferNode distanceSetpointRampedTN;
-    public TransferNode distanceOutputTN;
-    public TransferNode armEncoderTN;
-    public TransferNode failsafeTN;
-    public TransferNode distanceOutputFilteredTN;
-
-    public PIDSourceWrapper armEncoderPIDSource;
-    public PIDSourceWrapper distanceOutputPIDSource;
-
-    public WarlordsPIDController distancePID;
-
-    public LowPassFilter encoderFilter;
-    public LowPassFilter distanceOutputFilter;
-
-    public MotorSetter motorSetter;
-
-    public RampRate distanceRampRate;
+    public TransferNode distanceSetpointTN = new TransferNode(0.0);
+    public TransferNode distanceSetpointRampedTN = new TransferNode(0.0);
+    public TransferNode armEncoderTN = new TransferNode(0.0);
+    public TransferNode failsafeTN = new TransferNode(0.0);
+    public TransferNode distanceOutputTN = new TransferNode(0.0);
+    public TransferNode distanceOutputFilteredTN = new TransferNode(0.0);
+    public TransferNode armMaxOutputTN = new TransferNode(0.0);
+    public TransferNode armMinOutputTN = new TransferNode(0.0);
+    public LowPassFilter armEncoderFilter = new LowPassFilter();
+    public LowPassFilter distanceOutputFilter = new LowPassFilter();
+    public RampRate distanceSetpointRampRate = new RampRate();
+    public PIDSourceWrapper armEncoderPIDSource = new PIDSourceWrapper();
+    public WarlordsPIDController distancePID = new WarlordsPIDController();
+    public WarlordsPIDController downVelocityPID = new WarlordsPIDController();
+    public WarlordsPIDController upVelocityPID = new WarlordsPIDController();
+    public WarlordsPIDControllerSystem cargoArmControllerSystem = new WarlordsPIDControllerSystem(this.distancePID, this.upVelocityPID, this.downVelocityPID);
+    public MotorSetter motorSetter = new MotorSetter();
+    public PIDSourceWrapper distanceOutputPIDSource = new PIDSourceWrapper();
 
 
     public CargoArm() {
-        armEncoderTN = new TransferNode(0);
-        distanceSetpointTN = new TransferNode(0);
-        distanceSetpointRampedTN = new TransferNode(0);
-        distanceOutputTN = new TransferNode(0);
-        failsafeTN = new TransferNode(0);
-        distanceOutputFilteredTN = new TransferNode(0);
+        this.distanceSetpointRampRate.setSetpointSource(this.distanceSetpointTN);
+        this.distanceSetpointRampRate.setOutputs(this.distanceSetpointRampedTN);
 
-        armEncoderPIDSource = new PIDSourceWrapper();
-        distanceOutputPIDSource = new PIDSourceWrapper();
+        this.armEncoderFilter.setSetpointSource(RobotMap.cargoArmEncoderWrapperDistance);
+        this.armEncoderFilter.setOutputs(this.armEncoderTN);
 
-        distancePID = new WarlordsPIDController();
+        this.armEncoderPIDSource.setPidSource(() -> this.armEncoderTN.pidGet());
 
-        encoderFilter = new LowPassFilter();
-        distanceOutputFilter = new LowPassFilter();
+        this.downVelocityPID.setSetpoint(ConstantsIO.cargoArmMinVelocity);
+        this.downVelocityPID.setSources(RobotMap.cargoArmEncoderWrapperRate);
+        this.downVelocityPID.setOutputs(this.armMinOutputTN);
+        this.downVelocityPID.setOutputRange(-1.0, 5);
 
-        distanceRampRate = new RampRate();
+        this.upVelocityPID.setSetpoint(ConstantsIO.cargoArmMaxVelocity);
+        this.upVelocityPID.setSources(RobotMap.cargoArmEncoderWrapperRate);
+        this.upVelocityPID.setOutputs(this.armMaxOutputTN);
+        this.upVelocityPID.setOutputRange(-1.0, ConstantsIO.cargoArmIMax);
 
-        motorSetter = new MotorSetter();
+        this.distancePID.setSetpointSource(this.distanceSetpointRampedTN);
+        this.distancePID.setOutputs(this.distanceOutputTN);
+        this.distancePID.setSources(this.armEncoderPIDSource);
+        this.distancePID.setOutputSources(this.armMaxOutputTN, this.armMinOutputTN);
 
-        distanceRampRate.setSetpointSource(distanceSetpointTN);
-        distanceRampRate.setOutputs(distanceSetpointRampedTN);
-
+        this.distanceOutputFilter.setSetpointSource(this.distanceOutputTN);
+        this.distanceOutputFilter.setOutputs(this.distanceOutputFilteredTN);
         
-        encoderFilter.setSetpointSource(RobotMap.cargoArmEncoderWrapperDistance);
-        encoderFilter.setOutputs(armEncoderTN);
-
-        armEncoderPIDSource.setPidSource(() -> {
-            return armEncoderTN.pidGet();
-        });
-
-        distancePID.setSetpointSource(distanceSetpointRampedTN); 
-        distancePID.setOutputs(distanceOutputTN);
-        distancePID.setSources(armEncoderPIDSource);
-        distancePID.setOutputRange(ConstantsIO.cargoArmIMaxDown, ConstantsIO.cargoArmIMaxUp);
-
-       
-        distanceOutputFilter.setSetpointSource(distanceOutputTN);
-        distanceOutputFilter.setOutputs(distanceOutputFilteredTN);
-
-
-
-
-       
-
-        distanceOutputPIDSource.setPidSource(() -> {
-            double output = (ConstantsIO.kF_cargoArmDistance * distanceOutputFilteredTN.getOutput()) - ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet() - Math.PI/2); 
-            // System.out.println("levitate: "+ -(ConstantsIO.levitateCargo * FastMath.cos(RobotMap.cargoArmEncoderWrapperDistance.pidGet())));
-            if(failsafeTN.getOutput() != 0) {
-                return failsafeTN.getOutput();
-            } else if(distanceSetpointTN.getOutput() < RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
-                if(output < ConstantsIO.cargoArmIMaxDown){
-                    return ConstantsIO.cargoArmIMaxDown;
-                } else if (output > -ConstantsIO.cargoArmIMaxDown){
-                    return -ConstantsIO.cargoArmIMaxDown;
-                } else { 
-                    return output;
-                }
-            } else if (distanceSetpointTN.getOutput() > RobotMap.cargoArmEncoderWrapperDistance.pidGet()){
-                if(output > ConstantsIO.cargoArmIMaxUp){
-                    return ConstantsIO.cargoArmIMaxUp;
-                } else if (output < -ConstantsIO.cargoArmIMaxUp){
-                    return -ConstantsIO.cargoArmIMaxUp;
-                } else { 
-                    return output;
-                }
-            } else { 
-                return 0;
+        this.distanceOutputPIDSource.setPidSource(() -> {
+            double output = this.distanceOutputFilteredTN.getOutput() * ConstantsIO.kF_cargoArmDistance;
+            if(failsafeTN.getOutput() != 0){
+                output = failsafeTN.getOutput();
             }
-            
+            if (output > ConstantsIO.cargoArmIMax) {
+                return ConstantsIO.cargoArmIMax;
+            }
+            if (output < -ConstantsIO.cargoArmIMax) {
+                return -ConstantsIO.cargoArmIMax;
+            }
+            return output;
         });
+        this.motorSetter.setSetpointSource(this.distanceOutputPIDSource);
+        this.motorSetter.setOutputs(RobotMap.cargoArmCurrent);
 
-
-
-        
-
-        motorSetter.setSetpointSource(distanceOutputPIDSource);
-        motorSetter.setOutputs(RobotMap.cargoArmCurrent);
-
-        holdPosition = 0; 
+        holdPosition = 0;
        
     }
 
 
     public void cargoArmManual(double power) {
-       RobotMap.cargoArmPercentOutput.set(power);
+        cargoArmControllerSystem.disable();
+        this.distancePID.disable();
+        this.distanceOutputTN.setOutput(0);
+        RobotMap.cargoArmPercentOutput.set(power);
     }
 
     public void initDefaultCommand() {
@@ -133,27 +101,38 @@ public class CargoArm extends Subsystem {
     }
 
     public void setPosition(double position) {
-        distanceSetpointTN.setOutput(position);
+        this.distanceSetpointTN.setOutput(position);
+        this.distancePID.enable();
+        this.distancePID.setAbsoluteTolerance(1.0);
+        this.enablePID(true);
     }
 
     public void updateConstants() {
-        distanceRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp,ConstantsIO.armDistanceSetpointDownRamp);
-        distancePID.setPID(ConstantsIO.kP_cargoArmDistance, ConstantsIO.kI_cargoArmDistance, ConstantsIO.kD_cargoArmDistance);
-        encoderFilter.setFilterCoefficient(ConstantsIO.kArmEncoderFilterCoefficient);
-        distanceOutputFilter.setFilterCoefficient(ConstantsIO.kDistanceOutputFilterCoefficient);
+        this.distanceSetpointRampRate.setRampRates(ConstantsIO.armDistanceSetpointUpRamp, ConstantsIO.armDistanceSetpointDownRamp);
+        this.distancePID.setPID(ConstantsIO.kP_cargoArmDistance, ConstantsIO.kI_cargoArmDistance, ConstantsIO.kD_cargoArmDistance);
+        this.armEncoderFilter.setFilterCoefficient(ConstantsIO.kArmEncoderFilterCoefficient);
+        this.distancePID.setOutputRange(-ConstantsIO.cargoArmIMax, ConstantsIO.cargoArmIMax);
+        this.distanceOutputFilter.setFilterCoefficient(ConstantsIO.kCargoArmDistanceOutputFilterCoefficient);
+        this.downVelocityPID.setPID(ConstantsIO.kP_cargoArmDownVelocity, ConstantsIO.kI_cargoArmDownVelocity, ConstantsIO.kD_cargoArmDownVelocity);
+        this.upVelocityPID.setPID(ConstantsIO.kP_cargoArmUpVelocity, ConstantsIO.kI_cargoArmUpVelocity, ConstantsIO.kD_cargoArmUpVelocity);
     }
 
     public void enablePID(boolean enabled) {
         if (enabled) {
-            distancePID.enable();
-            motorSetter.enable();
-            distanceRampRate.enable();
-            encoderFilter.enable();
-            distanceOutputFilter.enable();
+            this.motorSetter.enable();
+           // this.cargoArmControllerSystem.enable();
+            this.downVelocityPID.enable();
+            this.upVelocityPID.enable();
+            this.distancePID.enable();
+            this.distanceSetpointRampRate.enable();
+            this.armEncoderFilter.enable();
+            this.distanceOutputFilter.enable();
         } else {
-            distanceOutputTN.setOutput(0);
-            distancePID.disable();
-            motorSetter.disable();
+           // this.cargoArmControllerSystem.disable();
+            this.downVelocityPID.disable();
+            this.upVelocityPID.disable();
+            this.distancePID.disable();
+            RobotMap.cargoArmCurrent.set(0);
         }
     }
 

@@ -1,6 +1,6 @@
 accelerationMax = 25
 kDrift = 0
-kPath = 0.45007
+kPath = 0
 
 driveTrainUpRamp = 10
 driveTrainDownRamp = 10
@@ -12,7 +12,7 @@ kI_DriveVelocity = 0.0007
 kD_DriveVelocity = 0.1
 kF_DriveVelocity = 0.005
 
-kP_DriveAngle = 4
+kP_DriveAngle = 1.5
 kI_DriveAngle = 0.0005
 kD_DriveAngle = 0
 kV_DriveAngle = 0
@@ -25,9 +25,9 @@ kV_DriveAngVel = 0
 
 filterCoefficient = 0
 
-teleopUpRamp = 4.3
+teleopUpRamp = 2
 teleopDownRamp = 10000
-teleopUpRampElevatorUp = 0.4
+teleopUpRampElevatorUp = 0.1
 teleopDownRampElevatorUp = 10000
 kUpRamp_Velocity = .2
 kDownRamp_Velocity = .2
@@ -35,20 +35,20 @@ kUpRamp_AngVelocity = 10000
 kDownRamp_AngVelocity = 10000
 
 
-kP_elevatorDistance = 3
-kI_elevatorDistance = 0.0024
+kP_elevatorDistance = 1
+kI_elevatorDistance = 0.004
 kD_elevatorDistance = 0.5
-kF_elevatorDistance = 0.9
+kF_elevatorDistance = 0.8
 levitateElevatorDistance = 0
 kElevatorEncoderFilterCoefficient = 0.9
 kElevatorDistanceOutputFilterCoefficient = 1
 
-kP_elevatorDownVelocity = 0.5
-kI_elevatorDownVelocity = 0.05
+kP_elevatorDownVelocity = 1
+kI_elevatorDownVelocity = 0.04
 kD_elevatorDownVelocity = 0 
 
-kP_elevatorUpVelocity = 20
-kI_elevatorUpVelocity = 0.02
+kP_elevatorUpVelocity = 2
+kI_elevatorUpVelocity = 0.1
 kD_elevatorUpVelocity = 0
 
 elevatorMaxVelocity = 20
@@ -56,25 +56,40 @@ elevatorMinVelocity = -6
 
 elevatorDistanceSetpointDownRamp = 70
 elevatorDistanceSetpointUpRamp = 70
-armDistanceSetpointDownRamp = 0.015
-armDistanceSetpointUpRamp = 0.015
-armDistanceSetpointDownRampClose = 0.004
-armDistanceSetpointUpRampClose = 0.004
+armDistanceSetpointDownRamp = 10000
+armDistanceSetpointUpRamp = 10000
+armDistanceSetpointDownRampClose = 10000
+armDistanceSetpointUpRampClose = 10000
 
-kP_cargoArmDistance = 4
-kI_cargoArmDistance = 0.02
+kP_cargoArmDistance = 20
+kI_cargoArmDistance = 0.002
 kD_cargoArmDistance = 2
-kF_cargoArmDistance = 0.97
-levitateCargo = 6
+kF_cargoArmDistance = 1
+levitateCargo = 0
 kArmEncoderFilterCoefficient = 0.9
-kDistanceOutputFilterCoefficient = 0.9
+kCargoArmDistanceOutputFilterCoefficient = 1
+
+cargoArmMaxVelocity = 2
+cargoArmMaxVelocityClose = 1
+cargoArmMinVelocity = -2
+cargoArmMinVelocityClose = -1
+
+kP_cargoArmDownVelocity = 2
+kI_cargoArmDownVelocity = 0.05
+kD_cargoArmDownVelocity = 0
+
+kP_cargoArmUpVelocity = 2
+kI_cargoArmUpVelocity = 0.2
+kD_cargoArmUpVelocity = 0
+
 
 cargoRollersIMax = 5
-elevatorIMax = 35
-cargoArmIMaxUp = 10
-cargoArmIMaxDown = -10
+elevatorIMax = 30
+cargoArmIMaxUp = 15
+cargoArmIMaxDown = 10
+cargoArmIMax = 10
 driveTrainIMax = 15
-elevatorIMaxUp = 40
+elevatorIMaxUp = 30
 elevatorIMaxDown = 20
 
   
