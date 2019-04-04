@@ -70,7 +70,9 @@ public class CargoArm extends Subsystem {
         
         this.distanceOutputPIDSource.setPidSource(() -> {
             double output = this.distanceOutputFilteredTN.getOutput() * ConstantsIO.kF_cargoArmDistance;
-           //spiking is checked for in default command, which is always enabled
+            if(failsafeTN.getOutput() != 0){
+                output = failsafeTN.getOutput();
+            }
             if (output > ConstantsIO.cargoArmIMax) {
                 return ConstantsIO.cargoArmIMax;
             }
