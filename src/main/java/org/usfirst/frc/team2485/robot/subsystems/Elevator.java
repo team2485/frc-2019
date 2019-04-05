@@ -61,7 +61,7 @@ public class Elevator extends Subsystem {
         this.upVelocityPID.setOutputRange(0.0, ConstantsIO.elevatorIMax);
 
         this.distancePID.setSetpointSource(this.distanceSetpointRampedTN);
-        this.distancePID.setOutputs(this.distanceOutputTN);
+        this.distancePID.setOutputs(this.distanceOutputTN); 
         this.distancePID.setSources(this.elevatorEncoderPIDSource);
         this.distancePID.setOutputSources(this.elevatorMaxOutputTN, this.elevatorMinOutputTN);
 
@@ -112,16 +112,21 @@ public class Elevator extends Subsystem {
 
     public void enablePID(boolean enable) {
         if (enable) {
-            this.elevatorControllerSystem.enable();
+           // this.elevatorControllerSystem.enable();
+           this.downVelocityPID.enable();
+           this.upVelocityPID.enable();
+           this.distancePID.enable();
             this.distanceSetpointRampRate.enable();
             this.motorSetter.enable();
             this.elevatorEncoderFilter.enable();
             this.distanceOutputFilter.enable();
         } else {
-            this.elevatorControllerSystem.disable();
+            //this.elevatorControllerSystem.disable();
+            this.downVelocityPID.disable();
+            this.upVelocityPID.disable();
+            this.distancePID.disable();
             RobotMap.elevator.distanceOutputTN.setOutput(0);
         }
-        this.distancePID.enable();
     }
 
     public void updateConstants() {

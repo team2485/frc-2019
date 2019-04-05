@@ -35,23 +35,23 @@ kUpRamp_AngVelocity = 10000
 kDownRamp_AngVelocity = 10000
 
 
-kP_elevatorDistance = 1
-kI_elevatorDistance = 0.004
-kD_elevatorDistance = 0.5
-kF_elevatorDistance = 0.8
+kP_elevatorDistance = 2
+kI_elevatorDistance = 0.001
+kD_elevatorDistance = 0
+kF_elevatorDistance = 1
 levitateElevatorDistance = 0
 kElevatorEncoderFilterCoefficient = 0.9
 kElevatorDistanceOutputFilterCoefficient = 1
 
-kP_elevatorDownVelocity = 1
-kI_elevatorDownVelocity = 0.04
+kP_elevatorDownVelocity = 0.2
+kI_elevatorDownVelocity = 0.05
 kD_elevatorDownVelocity = 0 
 
-kP_elevatorUpVelocity = 2
+kP_elevatorUpVelocity = 1
 kI_elevatorUpVelocity = 0.1
 kD_elevatorUpVelocity = 0
 
-elevatorMaxVelocity = 20
+elevatorMaxVelocity = 6
 elevatorMinVelocity = -6
 
 elevatorDistanceSetpointDownRamp = 70

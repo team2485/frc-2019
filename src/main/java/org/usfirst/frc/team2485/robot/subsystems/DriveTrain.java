@@ -86,7 +86,7 @@ public class DriveTrain extends Subsystem {
 		// });
 
         distancePIDSource.setPidSource(() -> {
-            return (-RobotMap.driveLeftEncoderWrapperDistance.pidGet() + RobotMap.driveRightEncoderWrapperDistance.pidGet())/2;
+            return (RobotMap.driveLeftEncoderWrapperDistance.pidGet() + RobotMap.driveRightEncoderWrapperDistance.pidGet())/2;
         });
 
         distancePID.setSetpointSource(distanceSetpointTN);
@@ -96,7 +96,7 @@ public class DriveTrain extends Subsystem {
 		// distancePID.setConstantsSources(kPDistancePIDSource, null, null, null);
 
         velocityPIDSource.setPidSource(() -> {
-            return (-RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet())/2;
+            return (RobotMap.driveLeftEncoderWrapperRate.pidGet() + RobotMap.driveRightEncoderWrapperRate.pidGet())/2;
         });
 
         velocityPID.setSetpointSource(distanceOutputTN);
