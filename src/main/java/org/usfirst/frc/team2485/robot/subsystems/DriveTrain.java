@@ -141,8 +141,8 @@ public class DriveTrain extends Subsystem {
 		teleopSetpointRightTN = new TransferNode(0);
 		teleopSetpointRightRampedTN = new TransferNode(0);
 
-		teleopSetpointLeftRamp = new RampRate();
-		teleopSetpointRightRamp = new RampRate();
+		teleopSetpointLeftRamp = new RampRate(false);
+		teleopSetpointRightRamp = new RampRate(false);
 
 		teleopLeftMotorSetter = new MotorSetter();
 		teleopRightMotorSetter = new MotorSetter();
@@ -185,10 +185,15 @@ public class DriveTrain extends Subsystem {
 				right /= Math.abs(right);
 				right *= ConstantsIO.driveTrainIMax;
 				left *= ConstantsIO.driveTrainIMax;
+				
             }
-
+		
+			// System.out.println("left: " + left + ", right" + right);
             teleopSetpointLeftTN.setOutput(left);
-            teleopSetpointRightTN.setOutput(right);
+			teleopSetpointRightTN.setOutput(right);
+			// teleopSetpointLeftTN.setOutput(1);
+			// teleopSetpointRightTN.setOutput(1);
+
         } else {
 			teleopSetpointLeftTN.setOutput(0);
 			teleopSetpointRightTN.setOutput(0);
@@ -207,8 +212,14 @@ public class DriveTrain extends Subsystem {
         anglePID.setPID(ConstantsIO.kP_DriveAngle, ConstantsIO.kI_DriveAngle, ConstantsIO.kD_DriveAngle);
 		angVelPID.setPID(ConstantsIO.kP_DriveAngVel, ConstantsIO.kI_DriveAngVel, ConstantsIO.kD_DriveAngVel, ConstantsIO.kF_DriveAngVel);
 		angVelPID.setFrictionTerm(ConstantsIO.kV_DriveAngVel, 0.5);
-		teleopSetpointLeftRamp.setRampRates(ConstantsIO.teleopUpRamp, ConstantsIO.teleopDownRamp);
-		teleopSetpointRightRamp.setRampRates(ConstantsIO.teleopUpRamp, ConstantsIO.teleopDownRamp);
+
+		if(teleopSetpointLeftRamp.isQuadratic() && teleopSetpointRightRamp.isQuadratic()){
+			teleopSetpointLeftRamp.setRampRates(ConstantsIO.teleopUpRampQ, ConstantsIO.teleopUpRampL, ConstantsIO.teleopDownRampQ, ConstantsIO.teleopDownRampL);
+			teleopSetpointRightRamp.setRampRates(ConstantsIO.teleopUpRampQ,ConstantsIO.teleopUpRampL, ConstantsIO.teleopDownRampQ, ConstantsIO.teleopDownRampL);
+		} else {
+			teleopSetpointLeftRamp.setRampRates(ConstantsIO.teleopUpRamp, ConstantsIO.teleopDownRamp);
+			teleopSetpointRightRamp.setRampRates(ConstantsIO.teleopUpRamp, ConstantsIO.teleopDownRamp);
+		}
     }
 
 

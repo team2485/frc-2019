@@ -38,9 +38,17 @@ public class ConstantsIO {
     public static double kF_DriveAngVel;
     public static double kV_DriveAngVel;
     public static double teleopUpRamp;
+    public static double teleopUpRampL;
+    public static double teleopUpRampQ;
     public static double teleopDownRamp;
+    public static double teleopDownRampL;
+    public static double teleopDownRampQ;
     public static double teleopUpRampElevatorUp;
+    public static double teleopUpRampLElevatorUp;
+    public static double teleopUpRampQElevatorUp;
     public static double teleopDownRampElevatorUp;
+    public static double teleopDownRampLElevatorUp;
+    public static double teleopDownRampQElevatorUp;
     public static double kUpRamp_Velocity;
     public static double kDownRamp_Velocity;
     public static double kUpRamp_AngVelocity;
@@ -90,6 +98,7 @@ public class ConstantsIO {
     public static double cargoArmIMax;
     public static double driveTrainIMax;
 
+
     public static void init() {
         System.out.println("ConstantsIO .class file loc: " + ConstantsIO.class.getResource("").getPath());
         if (Robot.isSimulation()) {
@@ -127,9 +136,17 @@ public class ConstantsIO {
         kF_DriveAngVel = Double.parseDouble(data.get("kF_DriveAngVel"));
         kV_DriveAngVel = Double.parseDouble(data.get("kV_DriveAngVel"));
         teleopUpRamp = Double.parseDouble(data.get("teleopUpRamp"));
+        teleopUpRampQ = Double.parseDouble(data.get("teleopUpRampQ"));
+        teleopUpRampL = Double.parseDouble(data.get("teleopUpRampL"));
         teleopDownRamp = Double.parseDouble(data.get("teleopDownRamp"));
+        teleopDownRampQ = Double.parseDouble(data.get("teleopDownRampQ"));
+        teleopDownRampL = Double.parseDouble(data.get("teleopDownRampL"));
         teleopUpRampElevatorUp = Double.parseDouble(data.get("teleopUpRampElevatorUp"));
+        teleopUpRampQElevatorUp = Double.parseDouble(data.get("teleopUpRampQElevatorUp"));
+        teleopUpRampLElevatorUp = Double.parseDouble(data.get("teleopUpRampLElevatorUp"));
         teleopDownRampElevatorUp = Double.parseDouble(data.get("teleopDownRampElevatorUp"));
+        teleopDownRampQElevatorUp = Double.parseDouble(data.get("teleopDownRampQElevatorUp"));
+        teleopDownRampLElevatorUp = Double.parseDouble(data.get("teleopDownRampLElevatorUp"));
         kUpRamp_Velocity = Double.parseDouble(data.get("kUpRamp_Velocity"));
         kDownRamp_Velocity = Double.parseDouble(data.get("kDownRamp_Velocity"));
         kUpRamp_AngVelocity = Double.parseDouble(data.get("kUpRamp_AngVelocity"));

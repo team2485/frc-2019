@@ -111,6 +111,8 @@ extends TimedRobot {
         // RobotMap.driveTrain.enablePID(true);
         // RobotMap.cargoArm.enablePID(true);
         // SandstormAuto.init(true);
+
+
     }
 
     @Override
@@ -219,21 +221,26 @@ extends TimedRobot {
         // SmartDashboard.putNumber("kP Ang Vel public version", RobotMap.driveTrain.angVelPID.kP);
         // SmartDashboard.putNumber("Gyro Value:", RobotMap.gyroAngleWrapper.pidGet());
         // SmartDashboard.putBoolean("Ang Vel Enabled: ", RobotMap.driveTrain.angVelPID.isEnabled());
-        // SmartDashboard.putNumber("Drive Talon Left 1 Current:", RobotMap.driveLeftTalon1.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Talon Left 2 Current:", RobotMap.driveLeftTalon2.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Talon Left 3 Current:", RobotMap.driveLeftTalon3.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Talon Left 4 Current:", RobotMap.driveLeftTalon4.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Talon Right 1 Current:", RobotMap.driveRightTalon1.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Left 1 Current:", RobotMap.driveLeftTalon1.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Left 2 Current:", RobotMap.driveLeftTalon2.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Left 3 Current:", RobotMap.driveLeftTalon3.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Left 4 Current:", RobotMap.driveLeftTalon4.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Right 1 Current:", RobotMap.driveRightTalon1.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
+        SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
         // SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
         // SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
         // SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
         // SmartDashboard.putNumber("Suraj RYStick output: ", OI.getArmManual());
         // SmartDashboard.putNumber("Hatch Intake Rollers Current", RobotMap.hatchRollersTalon.getOutputCurrent());
         // SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
-    
+        
+        SmartDashboard.putNumber("Drivetrain Left Velocity: ", RobotMap.driveLeftEncoderWrapperRate.pidGet());
 
+        SmartDashboard.putNumber("Drivetrain Velocity Setpoint", RobotMap.driveTrain.teleopSetpointLeftTN.getOutput());
+
+        SmartDashboard.putNumber("Scaled Error: ", RobotMap.driveTrain.teleopSetpointLeftRamp.scaledError);
+      
     }
 }

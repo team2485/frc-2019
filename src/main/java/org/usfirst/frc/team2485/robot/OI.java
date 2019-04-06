@@ -299,8 +299,8 @@ public class OI {
 
 		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
 
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(0.9));
-		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.2));
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9)); //switched to negative
+		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
 
 
 		SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());
