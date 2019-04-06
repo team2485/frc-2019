@@ -78,10 +78,8 @@ public class RampRate extends WarlordsControlSystem {
 			if (Math.abs(desired - lastValue) > downRampRate) {
 				if (lastValue > 0) {
 					lastValue -= downRampRate;
-
 				} else {
 					lastValue += downRampRate;
-
 				}
 			} else {
 				lastValue = desired;
@@ -91,9 +89,9 @@ public class RampRate extends WarlordsControlSystem {
 		return lastValue;
 
 	} else {
-		System.out.println("Scaled Error: " + scaledError);
-		System.out.println("Max Error: " + maxErrorToDesired);
-		System.out.println("Error: " + errorToDesired);
+		// System.out.println("Scaled Error: " + scaledError);
+		// System.out.println("Max Error: " + maxErrorToDesired);
+		// System.out.println("Error: " + errorToDesired);
 
 		if (Math.abs(desired) > Math.abs(lastValue)) {
 			if (Math.abs(desired - lastValue) > upRampRateB + upRampRateA * scaledError) {
@@ -108,11 +106,9 @@ public class RampRate extends WarlordsControlSystem {
 		} else {
 			if (Math.abs(desired - lastValue) > downRampRateB + downRampRateA * scaledError) {
 				if (lastValue > 0) {
-					lastValue -= downRampRateB + downRampRateA * scaledError ;
-
+					lastValue -= downRampRateB + downRampRateA / scaledError ;
 				} else {
-					lastValue += downRampRateB + downRampRateA * scaledError;
-
+					lastValue += downRampRateB + downRampRateA / scaledError;
 				}
 			} else {
 				lastValue = desired;

@@ -30,26 +30,42 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
       steering *= 0.5;
     }
 
-    if (RobotMap.driveTrain.teleopSetpointLeftRamp.isQuadratic() && RobotMap.driveTrain.teleopSetpointRightRamp.isQuadratic()) {
-      double upRampA = ConstantsIO.teleopUpRampLElevatorUp + (ConstantsIO.teleopUpRampL - ConstantsIO.teleopUpRampLElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
-      double downRampA = ConstantsIO.teleopDownRampLElevatorUp + (ConstantsIO.teleopDownRampL - ConstantsIO.teleopDownRampLElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
-  
-      double upRampB = ConstantsIO.teleopUpRampQElevatorUp + (ConstantsIO.teleopUpRampQ - ConstantsIO.teleopUpRampQElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
-      double downRampB = ConstantsIO.teleopDownRampQElevatorUp + (ConstantsIO.teleopDownRampQ - ConstantsIO.teleopDownRampQElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
-
-      RobotMap.driveTrain.teleopSetpointLeftRamp.setRampRates(upRampA, upRampB, downRampA, downRampB);
-      RobotMap.driveTrain.teleopSetpointRightRamp.setRampRates(upRampA, upRampB, downRampA, downRampB);
-
-    } else {
+    if(RobotMap.elevatorEncoderWrapperDistance.pidGet() >= ElevatorLevel.ROCKET_LEVEL_TWO.getPosition()) {
       double upRamp = ConstantsIO.teleopUpRampElevatorUp + (ConstantsIO.teleopUpRamp - ConstantsIO.teleopUpRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
       double downRamp = ConstantsIO.teleopDownRampElevatorUp + (ConstantsIO.teleopDownRamp - ConstantsIO.teleopDownRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
   
       RobotMap.driveTrain.teleopSetpointLeftRamp.setRampRates(upRamp, downRamp);
       RobotMap.driveTrain.teleopSetpointRightRamp.setRampRates(upRamp, downRamp);
-    }
-   
+    } else {
+      double upRampA = ConstantsIO.teleopUpRampQ;
+      double downRampA = ConstantsIO.teleopDownRampQ;
 
-    RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn || slowTurn);
+      double upRampB = ConstantsIO.teleopUpRampL;
+      double downRampB = ConstantsIO.teleopDownRampL;
+
+      RobotMap.driveTrain.teleopSetpointLeftRamp.setRampRates(upRampA, upRampB, downRampA, downRampB);
+      RobotMap.driveTrain.teleopSetpointRightRamp.setRampRates(upRampA, upRampB, downRampA, downRampB);
+    }
+
+    // if (RobotMap.driveTrain.teleopSetpointLeftRamp.isQuadratic() && RobotMap.driveTrain.teleopSetpointRightRamp.isQuadratic()) {
+    //   double upRampA = ConstantsIO.teleopUpRampLElevatorUp + (ConstantsIO.teleopUpRampL - ConstantsIO.teleopUpRampLElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
+    //   double downRampA = ConstantsIO.teleopDownRampLElevatorUp + (ConstantsIO.teleopDownRampL - ConstantsIO.teleopDownRampLElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
+  
+    //   double upRampB = ConstantsIO.teleopUpRampQElevatorUp + (ConstantsIO.teleopUpRampQ - ConstantsIO.teleopUpRampQElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
+    //   double downRampB = ConstantsIO.teleopDownRampQElevatorUp + (ConstantsIO.teleopDownRampQ - ConstantsIO.teleopDownRampQElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
+
+    //   RobotMap.driveTrain.teleopSetpointLeftRamp.setRampRates(upRampA, upRampB, downRampA, downRampB);
+    //   RobotMap.driveTrain.teleopSetpointRightRamp.setRampRates(upRampA, upRampB, downRampA, downRampB);
+
+    // } else {
+    //   double upRamp = ConstantsIO.teleopUpRampElevatorUp + (ConstantsIO.teleopUpRamp - ConstantsIO.teleopUpRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
+    //   double downRamp = ConstantsIO.teleopDownRampElevatorUp + (ConstantsIO.teleopDownRamp - ConstantsIO.teleopDownRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
+  
+    //   RobotMap.driveTrain.teleopSetpointLeftRamp.setRampRates(upRamp, downRamp);
+    //   RobotMap.driveTrain.teleopSetpointRightRamp.setRampRates(upRamp, downRamp);
+    // }
+   
+   RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn || slowTurn);
   }
   
   protected boolean isFinished() {

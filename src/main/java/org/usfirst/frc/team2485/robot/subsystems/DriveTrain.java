@@ -141,8 +141,8 @@ public class DriveTrain extends Subsystem {
 		teleopSetpointRightTN = new TransferNode(0);
 		teleopSetpointRightRampedTN = new TransferNode(0);
 
-		teleopSetpointLeftRamp = new RampRate(false);
-		teleopSetpointRightRamp = new RampRate(false);
+		teleopSetpointLeftRamp = new RampRate(true);
+		teleopSetpointRightRamp = new RampRate(true);
 
 		teleopLeftMotorSetter = new MotorSetter();
 		teleopRightMotorSetter = new MotorSetter();
