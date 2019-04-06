@@ -4,7 +4,7 @@ import org.usfirst.frc.team2485.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class HatchRollers extends Subsystem{
+public class HatchRollers extends Subsystem {
 
     public static final double HOLDING_CURRENT = 1;
     public boolean intaken;

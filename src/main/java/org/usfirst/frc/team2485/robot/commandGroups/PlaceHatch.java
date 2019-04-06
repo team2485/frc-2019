@@ -27,7 +27,7 @@ public class PlaceHatch extends CommandGroup {
         addSequential(new SetHatchRollersPWMInstant(0.8));
         addSequential(new WaitCommand(0.25));
         addSequential(new Slide(false));
-        addSequential(new SetHatchRollersPWM(0));
+        addSequential(new SetHatchRollersPWMInstant(0));
         RobotMap.compressor.setClosedLoopControl(true);
     }
 
