@@ -160,7 +160,7 @@ public class Elevator extends Subsystem {
                     return 28.5;
                 }
                 case ROCKET_LEVEL_THREE: {
-                    return 59;
+                    return 56.1;
                 }
                 case HATCH_LIFTING: {
                     return 12.0;

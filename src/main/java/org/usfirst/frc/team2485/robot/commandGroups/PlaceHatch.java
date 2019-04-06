@@ -9,6 +9,7 @@ import org.usfirst.frc.team2485.robot.commands.Pushers;
 import org.usfirst.frc.team2485.robot.commands.SetArmPosition;
 import org.usfirst.frc.team2485.robot.commands.SetElevatorPosition;
 import org.usfirst.frc.team2485.robot.commands.SetHatchRollersPWM;
+import org.usfirst.frc.team2485.robot.commands.SetHatchRollersPWMInstant;
 import org.usfirst.frc.team2485.robot.commands.Slide;
 import org.usfirst.frc.team2485.robot.commands.Wait;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
@@ -23,7 +24,7 @@ public class PlaceHatch extends CommandGroup {
         addSequential(new SetArmPosition(0));
         addSequential(new Lift(true));
         addSequential(new Slide(true));
-        addSequential(new SetHatchRollersPWM(-0.8));
+        addSequential(new SetHatchRollersPWMInstant(0.8));
         addSequential(new WaitCommand(0.25));
         addSequential(new Slide(false));
         addSequential(new SetHatchRollersPWM(0));

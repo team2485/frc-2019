@@ -51,13 +51,22 @@ public class ElevatorWithControllers extends Command {
             boolean zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0.0, 1.0) == 0.0;
             if (!zero) {
                 power -= ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0.0, 1.0) * 1.2;
+                if(RobotMap.elevator.distanceSetpointTN.getOutput() == ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() && RobotMap.elevatorEncoderWrapperDistance.pidGet() >= 40){
+                    RobotMap.elevator.upVelocityPID.setSetpoint(ConstantsIO.elevatorMaxVelocityClose);
+                } else {
+                    RobotMap.elevator.upVelocityPID.setSetpoint(ConstantsIO.elevatorMaxVelocity);
+                }
                 this.first = true;
             } else if (this.first) {
                 power = RobotMap.elevatorEncoderWrapperDistance.pidGet();
                 this.first = false;
             }
+
+           
+
             RobotMap.elevator.distanceSetpointTN.setOutput(power);
-            if (RobotMap.elevatorEncoder.pidGet() <= 0.0) {
+
+            if (RobotMap.elevatorEncoder.pidGet() <= 0) {
                 RobotMap.elevator.distancePID.resetIntegrator();
             }
             if (RobotMap.elevatorTalon1.getOutputCurrent() >= this.elevatorSpikeCurrent && !RobotMap.elevator.distancePID.isOnTarget()) {

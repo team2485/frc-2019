@@ -417,6 +417,7 @@ public class RobotMap {
 
 		//CARGO INTAKE ROLLERS
 		cargoRollersTalon = new TalonSRX(cargoRollersTalonPort);
+		//cargoRollersTalon.setInverted(true);
 
 		cargoRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoRollersTalon);
 		cargoRollersWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoRollersTalon);

@@ -68,6 +68,7 @@ public class ConstantsIO {
     public static double kD_elevatorUpVelocity;
     public static double elevatorMinVelocity;
     public static double elevatorMaxVelocity;
+    public static double elevatorMaxVelocityClose;
     public static double elevatorDistanceSetpointDownRamp;
     public static double elevatorDistanceSetpointUpRamp;
     public static double armDistanceSetpointDownRamp;
@@ -164,6 +165,7 @@ public class ConstantsIO {
         kI_elevatorUpVelocity = Double.parseDouble(data.get("kI_elevatorUpVelocity"));
         kD_elevatorUpVelocity = Double.parseDouble(data.get("kD_elevatorUpVelocity"));
         elevatorMaxVelocity = Double.parseDouble(data.get("elevatorMaxVelocity"));
+        elevatorMaxVelocityClose = Double.parseDouble(data.get("elevatorMaxVelocityClose"));
         elevatorMinVelocity = Double.parseDouble(data.get("elevatorMinVelocity"));
         elevatorDistanceSetpointDownRamp = Double.parseDouble(data.get("elevatorDistanceSetpointDownRamp"));
         elevatorDistanceSetpointUpRamp = Double.parseDouble(data.get("elevatorDistanceSetpointUpRamp"));

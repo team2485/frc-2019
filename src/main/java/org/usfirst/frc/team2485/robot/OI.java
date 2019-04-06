@@ -219,8 +219,8 @@ public class OI {
 		// SURAJ_X.whenPressed(new Pushers(true));
 		// SURAJ_Y.whenPressed(new Slide(true));
 
-		CommandGroup placeHatch = new PlaceHatch();
-		SURAJ_LBUMPER.whenPressed(placeHatch);
+		// CommandGroup placeHatch = new PlaceHatch();
+		// SURAJ_LBUMPER.whenPressed(placeHatch);
 		//SURAJ_LBUMPER.whenPressed(new CancelCommand(Robot.auto));
 		// SURAJ_LBUMPER_BACKUP.whenPressed(placeHatch);
 		// SURAJ_LBUMPER_BACKUP.whenPressed(new CancelCommand(Robot.auto));
@@ -299,7 +299,7 @@ public class OI {
 
 		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
 
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9)); //switched to negative
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9));
 		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
 
 

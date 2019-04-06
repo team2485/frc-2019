@@ -7,10 +7,10 @@ import org.usfirst.frc.team2485.util.ThresholdHandler;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class SetHatchRollersPWM extends Command {
+public class SetHatchRollersPWMInstant extends InstantCommand {
     private double power;
 
-    public SetHatchRollersPWM(double power) {
+    public SetHatchRollersPWMInstant(double power) {
         requires(RobotMap.hatchRollers);
         setInterruptible(true);
         this.power = power;
@@ -21,8 +21,4 @@ public class SetHatchRollersPWM extends Command {
         RobotMap.hatchRollers.hatchRollersManual(power);
     }
 
-    @Override
-    protected boolean isFinished() {
-        return false;
-    }
 }

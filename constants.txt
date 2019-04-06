@@ -27,6 +27,16 @@ filterCoefficient = 0
 
 teleopUpRamp = 2
 teleopDownRamp = 10000
+teleopUpRampQ = 1
+teleopUpRampL = 1
+teleopDownRampQ = 5000
+teleopDownRampL = 5000
+
+teleopUpRampQElevatorUp = 0.05
+teleopUpRampLElevatorUp = 0.05
+teleopDownRampQElevatorUp = 5000
+teleopDownRampLElevatorUp = 5000
+
 teleopUpRampElevatorUp = 0.1
 teleopDownRampElevatorUp = 10000
 kUpRamp_Velocity = .2
@@ -52,6 +62,7 @@ kI_elevatorUpVelocity = 0.1
 kD_elevatorUpVelocity = 0
 
 elevatorMaxVelocity = 6
+elevatorMaxVelocityClose = 1
 elevatorMinVelocity = -6
 
 elevatorDistanceSetpointDownRamp = 70
@@ -72,7 +83,7 @@ kCargoArmDistanceOutputFilterCoefficient = 1
 cargoArmMaxVelocity = 2
 cargoArmMaxVelocityClose = 1
 cargoArmMinVelocity = -2
-cargoArmMinVelocityClose = -1
+cargoArmMinVelocityClose = -0.75
 
 kP_cargoArmDownVelocity = 2
 kI_cargoArmDownVelocity = 0.05

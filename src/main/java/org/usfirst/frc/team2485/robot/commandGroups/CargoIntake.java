@@ -18,8 +18,8 @@ public class CargoIntake extends CommandGroup {
 
     public CargoIntake(double power) {
 
-        addSequential(new Hook(false));
-        addSequential(new Pushers(false));
+       
+       
         addSequential(new Slide(false));
         addSequential(new Lift(false));
         
