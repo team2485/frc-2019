@@ -296,10 +296,9 @@ public class OI {
 
 		SURAJ_RBUMPER.whenPressed(new PrepareToIntake());
 		
-
 		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
 
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9));
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9)); //hatchrollersintake for spiking detection
 		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
 
 

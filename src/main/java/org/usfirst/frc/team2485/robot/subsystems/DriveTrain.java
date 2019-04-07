@@ -164,8 +164,8 @@ public class DriveTrain extends Subsystem {
 
     public void WarlordsDrive(double throttle, double steering, boolean quickTurn) {
         if(quickTurn) {
-            teleopSetpointLeftTN.setOutput(steering);
-            teleopSetpointRightTN.setOutput(-steering);
+            teleopSetpointLeftTN.setOutput(steering/2);
+            teleopSetpointRightTN.setOutput(-steering/2);
         } else if(throttle != 0 || steering != 0) {
 			double sign = steering >= 0 ? 1 : -1;
 			sign *= throttle < 0 ? 1 : 1;

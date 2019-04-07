@@ -41,7 +41,7 @@ public class Elevator extends Subsystem {
     public PIDSourceWrapper distanceOutputPIDSource = new PIDSourceWrapper();
 
     public Elevator() {
-        //wtf
+
         this.distanceSetpointRampRate.setSetpointSource(this.distanceSetpointTN);
         this.distanceSetpointRampRate.setOutputs(this.distanceSetpointRampedTN);
 

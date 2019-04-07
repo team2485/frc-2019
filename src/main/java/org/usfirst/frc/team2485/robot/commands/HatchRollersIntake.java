@@ -47,7 +47,7 @@ public class HatchRollersIntake extends Command {
             }
         } else {
 
-            RobotMap.hatchRollers.hatchRollersManual(0.1);
+            RobotMap.hatchRollers.hatchRollersManual(-0.1);
         }
     }
 
@@ -59,7 +59,7 @@ public class HatchRollersIntake extends Command {
 
     @Override
     protected void end() {
-        RobotMap.hatchRollers.hatchRollersManual(0.1);
+        RobotMap.hatchRollers.hatchRollersManual(-0.2);
     }
 
    

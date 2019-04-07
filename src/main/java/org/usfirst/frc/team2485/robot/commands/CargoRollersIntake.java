@@ -58,6 +58,6 @@ public class CargoRollersIntake extends Command {
 
     @Override
     protected void end() {
-        //RobotMap.cargoRollersPercentOutput.set(0.2);
+        RobotMap.cargoRollersPercentOutput.set(0.2);
     }
 }

@@ -63,6 +63,7 @@ kD_elevatorUpVelocity = 0
 
 elevatorMaxVelocity = 6
 elevatorMaxVelocityClose = 1
+elevatorMaxVelocityManual = 10
 elevatorMinVelocity = -6
 
 elevatorDistanceSetpointDownRamp = 70
