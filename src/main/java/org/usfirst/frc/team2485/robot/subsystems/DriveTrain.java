@@ -2,6 +2,7 @@ package org.usfirst.frc.team2485.robot.subsystems;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.Robot;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
@@ -55,7 +56,8 @@ public class DriveTrain extends Subsystem {
 	public MotorSetter teleopLeftMotorSetter;
 	public MotorSetter teleopRightMotorSetter;
 
-    public double distBetweenCenterTargets;
+	public double distBetweenCenterTargets;
+	public double lastSteering = 0;
 
     public DriveTrain() {
 		//AUTONOMOUS
@@ -104,7 +106,6 @@ public class DriveTrain extends Subsystem {
         velocityPID.setOutputRange(-ConstantsIO.driveTrainIMax, ConstantsIO.driveTrainIMax);
         velocityPID.setOutputs(velocityOutputTN);
 
-        anglePID.setSetpointSource(angleSetpointTN);
         anglePID.setSources(RobotMap.gyroAngleWrapper);
         anglePID.setOutputRange(-ConstantsIO.driveTrainIMax, ConstantsIO.driveTrainIMax);
 		anglePID.setOutputs(angVelOutputTN);
@@ -163,16 +164,35 @@ public class DriveTrain extends Subsystem {
     }
 
     public void WarlordsDrive(double throttle, double steering, boolean quickTurn) {
+		double left = 0;
+		double right = 0;
+		if(steering != 0) {
+			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+		}
         if(quickTurn) {
             teleopSetpointLeftTN.setOutput(steering/2);
-            teleopSetpointRightTN.setOutput(-steering/2);
-        } else if(throttle != 0 || steering != 0) {
-			double sign = steering >= 0 ? 1 : -1;
-			sign *= throttle < 0 ? 1 : 1;
-			double left;
-			double right;
-			left = throttle + sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
-			right = throttle - sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
+			teleopSetpointRightTN.setOutput(-steering/2);
+			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+		} else if (throttle != 0 || steering != 0){
+			if (steering == 0) {
+				double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
+				double sign = steerCorrection >= 0 ? 1 : -1;
+				// if(Math.abs(throttle) <= 2){
+				// 	throttle = 2;
+				// }
+				left = throttle + sign * Math.abs(steerCorrection);
+				right = throttle - sign * Math.abs(steerCorrection);
+			} else {
+				double sign = steering >= 0 ? 1 : -1;
+				sign *= throttle < 0 ? 1 : 1;
+				left = throttle + sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
+				right = throttle - sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
+				anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+				System.out.println(RobotMap.gyroAngleWrapper.pidGet());
+
+		}
+
+		
 			
 
             if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
@@ -185,21 +205,20 @@ public class DriveTrain extends Subsystem {
 				right /= Math.abs(right);
 				right *= ConstantsIO.driveTrainIMax;
 				left *= ConstantsIO.driveTrainIMax;
-				
-            }
-		
-			// System.out.println("left: " + left + ", right" + right);
-            teleopSetpointLeftTN.setOutput(left);
-			teleopSetpointRightTN.setOutput(right);
-			// teleopSetpointLeftTN.setOutput(1);
-			// teleopSetpointRightTN.setOutput(1);
+			}
 
+			teleopSetpointLeftTN.setOutput(left);
+			teleopSetpointRightTN.setOutput(right);
+			
+		
         } else {
 			teleopSetpointLeftTN.setOutput(0);
 			teleopSetpointRightTN.setOutput(0);
 			teleopSetpointLeftRampedTN.setOutput(0);
 			teleopSetpointRightRampedTN.setOutput(0);
 		}
+
+		lastSteering = steering;
     }
 
     public void initDefaultCommand() {

@@ -172,11 +172,9 @@ extends TimedRobot {
         ConstantsIO.init();
         RobotMap.compressor.setClosedLoopControl(false);
         RobotMap.elevatorEncoder.reset();
-        RobotMap.driveLeftEncoder.reset();
-        RobotMap.driveRightEncoder.reset();
         RobotMap.updateConstants();
         RobotMap.gyroAngleWrapper.reset();
-        //RobotMap.driveTrain.enablePID(false);
+        RobotMap.driveTrain.enablePID(false);
         //RobotMap.driveTrain.distanceSetpointTN.setOutput(200);
         
        
@@ -194,8 +192,8 @@ extends TimedRobot {
             RobotMap.cargoArmEncoder.reset();
 		}
         RobotMap.compressor.setClosedLoopControl(false);
-        } 
-
+        }
+       
         checkJeVois();
     }
 
@@ -286,6 +284,7 @@ extends TimedRobot {
         
         SmartDashboard.putNumber("throttle", OI.getDriveThrottle());
         SmartDashboard.putNumber("steering", OI.getDriveSteering());
+        SmartDashboard.putBoolean("angle is enabled?", RobotMap.driveTrain.anglePID.isEnabled());
 
 
         // SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
