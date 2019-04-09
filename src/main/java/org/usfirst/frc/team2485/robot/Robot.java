@@ -3,12 +3,14 @@ package org.usfirst.frc.team2485.robot;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -20,6 +22,7 @@ import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.commandGroups.SandstormAuto;
 import org.usfirst.frc.team2485.robot.commands.CargoArmWithControllers;
+import org.usfirst.frc.team2485.robot.commands.DriveStraight;
 import org.usfirst.frc.team2485.robot.commands.DriveWithControllers;
 import org.usfirst.frc.team2485.robot.subsystems.CargoArm;
 import org.usfirst.frc.team2485.robot.subsystems.CargoRollers;
@@ -60,6 +63,11 @@ extends TimedRobot {
     public CvSource output;
     
 
+    private SerialPort jevois = null;
+	private int loopCount;
+	private UsbCamera jevoisCam;
+	private MjpegServer jevoisServer;
+
     @Override
     public void robotInit() {
         FastMath.init();
@@ -69,12 +77,49 @@ extends TimedRobot {
         SandstormAuto.init(false);
         auto = new SandstormAuto();
         restart = true;
+
+        int tryCount = 0;
+		do {
+			try {
+				System.out.print("Trying to create jevois SerialPort...");
+				jevois = new SerialPort(9600, SerialPort.Port.kUSB);
+				tryCount = 99;
+				System.out.println("success!");
+			} catch (Exception e) {
+				tryCount += 1;
+				System.out.println("failed!");
+			}
+		} while (tryCount < 3);
+		
+		if (tryCount == 99) {
+			writeJeVois("info\n");
+		}
+		loopCount = 0;
+
+
+
 		
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
         camera.setFPS(10);
 
     }
+
+    public void checkJeVois() {
+		if (jevois == null) return;
+		if (jevois.getBytesReceived() > 0) {
+			System.out.println("Waited: " + loopCount + " loops, Rcv'd: " + jevois.readString());
+			loopCount = 0;
+		} 
+	}
+
+	public void writeJeVois(String cmd) {
+		if (jevois == null) return;
+		int bytes = jevois.writeString(cmd);
+		System.out.println("wrote " +  bytes + "/" + cmd.length() + " bytes");	
+		loopCount = 0;
+	}
+
 
     @Override
     public void disabledInit() {
@@ -125,12 +170,17 @@ extends TimedRobot {
     @Override
     public void teleopInit() {
         ConstantsIO.init();
-        RobotMap.compressor.setClosedLoopControl(true);
+        RobotMap.compressor.setClosedLoopControl(false);
         RobotMap.elevatorEncoder.reset();
+        RobotMap.driveLeftEncoder.reset();
+        RobotMap.driveRightEncoder.reset();
         RobotMap.updateConstants();
         RobotMap.gyroAngleWrapper.reset();
+        //RobotMap.driveTrain.enablePID(false);
+        //RobotMap.driveTrain.distanceSetpointTN.setOutput(200);
+        
        
-        RobotMap.driveTrain.enablePID(false);
+        
         CargoArmWithControllers.init = true;
 
     }
@@ -143,8 +193,10 @@ extends TimedRobot {
         if (RobotMap.cargoArmLimitSwitchUp.get()) {
             RobotMap.cargoArmEncoder.reset();
 		}
-        RobotMap.compressor.setClosedLoopControl(true);
+        RobotMap.compressor.setClosedLoopControl(false);
         } 
+
+        checkJeVois();
     }
 
     @Override
@@ -231,6 +283,11 @@ extends TimedRobot {
         SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
         SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
         SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
+        
+        SmartDashboard.putNumber("throttle", OI.getDriveThrottle());
+        SmartDashboard.putNumber("steering", OI.getDriveSteering());
+
+
         // SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
         // SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
         // SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
