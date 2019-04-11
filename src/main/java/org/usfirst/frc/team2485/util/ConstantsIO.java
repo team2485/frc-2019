@@ -37,6 +37,7 @@ public class ConstantsIO {
     public static double kD_DriveAngVel;
     public static double kF_DriveAngVel;
     public static double kV_DriveAngVel;
+    public static double kP_PixelCorrection;
     public static double teleopUpRamp;
     public static double teleopUpRampL;
     public static double teleopUpRampQ;
@@ -137,6 +138,7 @@ public class ConstantsIO {
         kD_DriveAngVel = Double.parseDouble(data.get("kD_DriveAngVel"));
         kF_DriveAngVel = Double.parseDouble(data.get("kF_DriveAngVel"));
         kV_DriveAngVel = Double.parseDouble(data.get("kV_DriveAngVel"));
+        kP_PixelCorrection = Double.parseDouble(data.get("kP_PixelCorrection"));
         teleopUpRamp = Double.parseDouble(data.get("teleopUpRamp"));
         teleopUpRampQ = Double.parseDouble(data.get("teleopUpRampQ"));
         teleopUpRampL = Double.parseDouble(data.get("teleopUpRampL"));

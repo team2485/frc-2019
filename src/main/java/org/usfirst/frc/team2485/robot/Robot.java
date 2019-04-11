@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.Compressor;
@@ -18,6 +20,9 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.ArrayList;
+
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.commandGroups.SandstormAuto;
@@ -33,6 +38,7 @@ import org.usfirst.frc.team2485.util.AutoPath;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
 import org.usfirst.frc.team2485.util.FastMath;
+import org.usfirst.frc.team2485.util.GripPipeline;
 import org.usfirst.frc.team2485.util.MotorSetter;
 import org.usfirst.frc.team2485.util.PIDSourceWrapper;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
@@ -43,8 +49,8 @@ import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
 
 public class Robot
 extends TimedRobot {
-    public static final int IMG_WIDTH = 80;
-    public static final int IMG_HEIGHT = 60;
+    public static final int IMG_WIDTH = 320;
+    public static final int IMG_HEIGHT = 240;
     private VisionThread visionThread;
     public static double centerX = 0.0;
     public static ArrayList<Double> samples;
@@ -65,7 +71,6 @@ extends TimedRobot {
 
     private SerialPort jevois = null;
 	private int loopCount;
-	private UsbCamera jevoisCam;
 	private MjpegServer jevoisServer;
 
     @Override
@@ -77,38 +82,59 @@ extends TimedRobot {
         SandstormAuto.init(false);
         auto = new SandstormAuto();
         restart = true;
-
         int tryCount = 0;
 		do {
 			try {
-				System.out.print("Trying to create jevois SerialPort...");
-				jevois = new SerialPort(9600, SerialPort.Port.kUSB);
+				jevois = new SerialPort(9600, SerialPort.Port.kUSB1);
 				tryCount = 99;
-				System.out.println("success!");
 			} catch (Exception e) {
 				tryCount += 1;
-				System.out.println("failed!");
 			}
 		} while (tryCount < 3);
 		
 		if (tryCount == 99) {
 			writeJeVois("info\n");
 		}
-		loopCount = 0;
+        loopCount = 0;
+        
+        
 
 
+		VideoMode videoMode = new VideoMode(0, IMG_WIDTH, IMG_HEIGHT, 18);
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
+        UsbCamera jevois = CameraServer.getInstance().startAutomaticCapture(1);
 
-		
-        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-        camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-        camera.setFPS(10);
+        // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+        // camera.setFPS(18);
+        // camera.setWhiteBalanceAuto();
+        camera.setVideoMode(videoMode);
+        camera.setPixelFormat(PixelFormat.kYUYV);
+
+        jevois.setPixelFormat(PixelFormat.kYUYV);
+         camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+	    		
+		 visionThread = new VisionThread(jevois, new GripPipeline(), pipeline -> {
+		        if (!pipeline.filterContoursOutput().isEmpty()) {
+		            Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+		            synchronized (imgLock) {
+		                centerX = r.x + (r.width / 2);
+                        samples.add(centerX);
+                        if(samples.size() > 10) {
+                            samples.remove(0);
+                        }
+		            }
+		        }
+		    });
+		    visionThread.start();
+
 
     }
 
     public void checkJeVois() {
 		if (jevois == null) return;
 		if (jevois.getBytesReceived() > 0) {
-			System.out.println("Waited: " + loopCount + " loops, Rcv'd: " + jevois.readString());
 			loopCount = 0;
 		} 
 	}
@@ -116,7 +142,6 @@ extends TimedRobot {
 	public void writeJeVois(String cmd) {
 		if (jevois == null) return;
 		int bytes = jevois.writeString(cmd);
-		System.out.println("wrote " +  bytes + "/" + cmd.length() + " bytes");	
 		loopCount = 0;
 	}
 
@@ -170,7 +195,7 @@ extends TimedRobot {
     @Override
     public void teleopInit() {
         ConstantsIO.init();
-        RobotMap.compressor.setClosedLoopControl(false);
+        RobotMap.compressor.setClosedLoopControl(true);
         RobotMap.elevatorEncoder.reset();
         RobotMap.updateConstants();
         RobotMap.gyroAngleWrapper.reset();
@@ -191,7 +216,7 @@ extends TimedRobot {
         if (RobotMap.cargoArmLimitSwitchUp.get()) {
             RobotMap.cargoArmEncoder.reset();
 		}
-        RobotMap.compressor.setClosedLoopControl(false);
+        RobotMap.compressor.setClosedLoopControl(true);
         }
        
         checkJeVois();

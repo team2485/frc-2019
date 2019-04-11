@@ -17,6 +17,7 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
   protected void initialize() {
     RobotMap.driveTrain.enableTeleopPID(true);
     RobotMap.driveTrain.anglePID.enable();
+    RobotMap.driveTrain.pixelCorrectionPID.enable();
   }
   
   protected void execute() {
@@ -24,6 +25,7 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
     double steering = OI.getDriveSteering();
     boolean quickTurn = OI.getQuickTurn();
     boolean slowTurn = OI.jacket.getRawButton(OI.XBOX_B_PORT);
+    boolean pixelCorrection = OI.jacket.getRawButton(OI.XBOX_A_PORT);
 
 
 
@@ -80,7 +82,7 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
      
 
    
-   RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn || slowTurn);
+   RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn || slowTurn, pixelCorrection);
   }
   
   protected boolean isFinished() {

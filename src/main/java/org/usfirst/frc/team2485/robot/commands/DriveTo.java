@@ -63,7 +63,6 @@ public class DriveTo extends Command{
 	@Override
 	protected void initialize() {
 		super.initialize();
-		System.out.println("DriveTo");
 		startTime = System.currentTimeMillis();
 //		RobotMap.driveTrain.zeroEncoders();
 		// RobotMap.driveTrain.angRampRate.setRampRates(100, 100);

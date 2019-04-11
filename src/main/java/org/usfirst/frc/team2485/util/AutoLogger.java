@@ -93,7 +93,6 @@ public class AutoLogger {
 			}
 
 		} catch (Exception e) {
-			System.out.println("Error creating csvFileWriter");
 			e.printStackTrace();
 		} finally {
 			try {

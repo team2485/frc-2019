@@ -45,8 +45,6 @@ public class ElevatorWithControllers extends Command {
 
     @Override
     protected void execute() {
-        System.out.println("EncoderMovement: " + encoderMovement);
-        System.out.println("Manual Movement: " + manualMovement);
         if(!manualMovement) {
             boolean zero = ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_LYJOYSTICK_PORT), 0.2, 0.0, 1.0) == 0.0;
             if (!zero) {
@@ -88,14 +86,12 @@ public class ElevatorWithControllers extends Command {
                 encoderMovement = false;
                 startEncoderLossTime = System.currentTimeMillis();
                 manualMovement = true;
-                System.out.println("Turning on 1");
             } 
             if(!encoderMovement) {
                 if(RobotMap.elevatorEncoderWrapperDistance.pidGet() != 0) {
                     encoderMovement = true;
                 } 
                 if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime && RobotMap.elevator.distancePID.getSetpoint() >= ElevatorLevel.ROCKET_LEVEL_ONE.getPosition()) {
-                    System.out.println("Turning on 2");
                     manualMovement = true;
                 }
             }
