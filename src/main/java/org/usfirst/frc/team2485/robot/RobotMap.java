@@ -21,6 +21,7 @@ import org.usfirst.frc.team2485.robot.subsystems.HatchRollers;
 import org.usfirst.frc.team2485.robot.subsystems.WarlordsCompressor;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 import org.usfirst.frc.team2485.util.EncoderWrapperRateAndDistance;
+import org.usfirst.frc.team2485.util.JevoisWrapper;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
 import org.usfirst.frc.team2485.util.SpeedControllerWrapper;
 import org.usfirst.frc.team2485.util.TalonSRXWrapper;
@@ -35,6 +36,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Solenoid;
+
+import edu.wpi.first.wpilibj.SerialPort;
 
 
 
@@ -54,6 +57,8 @@ public class RobotMap {
 	//camera
 	private static final int IMG_WIDTH = 128;
 	private static final int IMG_HEIGHT = 96;
+
+	public static JevoisWrapper jevois;
 
 	//
 	public static byte[] colorSensorOutput;
@@ -472,6 +477,8 @@ public class RobotMap {
 		colorSensor = new I2C(I2C.Port.kOnboard, 0x3C);
 
 		compressor = new Compressor();
+
+		// jevois = new JevoisWrapper(SerialPort.Port.kUSB);
 		
 
 	}

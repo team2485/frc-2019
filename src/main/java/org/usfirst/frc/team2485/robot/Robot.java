@@ -110,24 +110,25 @@ extends TimedRobot {
         camera.setVideoMode(videoMode);
         camera.setPixelFormat(PixelFormat.kYUYV);
 
-        jevois.setPixelFormat(PixelFormat.kYUYV);
-         camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
-	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+        // jevois.setPixelFormat(PixelFormat.kYUYV);
+        // jevois.setVideoMode(videoMode);
+		// camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+	    // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 	    		
-		 visionThread = new VisionThread(jevois, new GripPipeline(), pipeline -> {
-		        if (!pipeline.filterContoursOutput().isEmpty()) {
-		            Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-		            synchronized (imgLock) {
-		                centerX = r.x + (r.width / 2);
-                        samples.add(centerX);
-                        if(samples.size() > 10) {
-                            samples.remove(0);
-                        }
-		            }
-		        }
-		    });
-		    visionThread.start();
+		//  visionThread = new VisionThread(jevois, new GripPipeline(), pipeline -> {
+		//         if (!pipeline.filterContoursOutput().isEmpty()) {
+		//             Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+		//             synchronized (imgLock) {
+        //                 centerX = r.x + (r.width / 2);
+        //                 System.out.println("centerX:" + centerX);
+        //                 samples.add(centerX);
+        //                 if(samples.size() > 10) {
+        //                     samples.remove(0);
+        //                 }
+		//             }
+		//         }
+		//     });
+		//     visionThread.start();
 
 
     }
