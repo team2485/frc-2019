@@ -8,6 +8,8 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,10 +19,17 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+//import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.ArrayList;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.networktables.NetworkTable;
+//import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team2485.robot.OI;
@@ -46,13 +55,14 @@ import org.usfirst.frc.team2485.util.RampRate;
 import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
 import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
+import edu.wpi.first.networktables.NetworkTable;
 
 public class Robot
 extends TimedRobot {
     public static final int IMG_WIDTH = 320;
     public static final int IMG_HEIGHT = 240;
     private VisionThread visionThread;
-    public static double centerX = 0.0;
+    public static double centerX = 7;
     public static ArrayList<Double> samples;
     public static boolean doneCollecting;
     public static boolean restart;
@@ -67,11 +77,14 @@ extends TimedRobot {
     boolean ejecting = false;
     public static Command auto;
     public CvSource output;
-    
-
+  
     private SerialPort jevois = null;
-	private int loopCount;
-	private MjpegServer jevoisServer;
+    private int loopCount;
+    private UsbCamera jevoisCam;
+    private MjpegServer jevoisServer;
+    public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+
+  
 
     @Override
     public void robotInit() {
@@ -82,68 +95,115 @@ extends TimedRobot {
         SandstormAuto.init(false);
         auto = new SandstormAuto();
         restart = true;
-        int tryCount = 0;
-		do {
-			try {
-				jevois = new SerialPort(9600, SerialPort.Port.kUSB1);
-				tryCount = 99;
-			} catch (Exception e) {
-				tryCount += 1;
-			}
-		} while (tryCount < 3);
-		
-		if (tryCount == 99) {
-			writeJeVois("info\n");
-		}
-        loopCount = 0;
+       
+
+        // int tryCount = 0;
+        // do {
+        //     try {
+        //         System.out.print("Trying to create jevois SerialPort...");
+        //         jevois = new SerialPort(9600, SerialPort.Port.kUSB);
+        //         tryCount = 99;
+        //         System.out.println("success!");
+        //     } catch (Exception e) {
+        //         tryCount += 1;
+        //         System.out.println("failed!");
+        //     }
+        // } while (tryCount < 3);
         
-        
+        // if (tryCount == 99) {
+        //     writeJeVois("info\n");
+        // }
+        // loopCount = 0;
+
+        // System.out.println("Starting CameraServer");
+        // if (jevoisCam == null) {
+        //       jevoisCam = CameraServer.getInstance().startAutomaticCapture(1);
+              
+        //             jevoisCam.setVideoMode(PixelFormat.kYUYV,320,240,15);
+        //             //jevoisCam.setPixelFormat(PixelFormat.kYUYV);
+        //             VideoMode vm = jevoisCam.getVideoMode();
+        //             System.out.println("jevoisCam pixel: " + vm.pixelFormat);
+        //             System.out.println("jevoisCam res: " + vm.width + "x" + vm.height);
+        //             System.out.println("jevoisCam fps: " + vm.fps);
+        //         }
+        //         // if (jevoisServer == null) {
+        //         //     jevoisServer = new MjpegServer("JeVoisServer", 1181);
+        //         //     jevoisServer.setSource(jevoisCam);
+        //         // }
 
 
-		VideoMode videoMode = new VideoMode(0, IMG_WIDTH, IMG_HEIGHT, 18);
+		// // VideoMode videoMode = new VideoMode(0, IMG_WIDTH, IMG_HEIGHT, 18);
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
-        UsbCamera jevois = CameraServer.getInstance().startAutomaticCapture(1);
+        // // UsbCamera jevois = CameraServer.getInstance().startAutomaticCapture(1);
 
-        // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-        // camera.setFPS(18);
+        camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+        camera.setFPS(18);
         // camera.setWhiteBalanceAuto();
-        camera.setVideoMode(videoMode);
-        camera.setPixelFormat(PixelFormat.kYUYV);
+        // UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+        // UsbCamera jevois = CameraServer.getInstance().startAutomaticCapture();
+        // camera.setVideoMode(videoMode);
+        // camera.setPixelFormat(PixelFormat.kYUYV);
 
-        jevois.setPixelFormat(PixelFormat.kYUYV);
-         camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
-	    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+        // jevois.setPixelFormat(PixelFormat.kYUYV);
+        // jevois.setExposureManual(20);
+        
+		// camera.setVideoMode(PixelFormat.kYUYV, 160, 120, 30);
+	    // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 	    		
-		 visionThread = new VisionThread(jevois, new GripPipeline(), pipeline -> {
-		        if (!pipeline.filterContoursOutput().isEmpty()) {
-		            Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-		            synchronized (imgLock) {
-		                centerX = r.x + (r.width / 2);
-                        samples.add(centerX);
-                        if(samples.size() > 10) {
-                            samples.remove(0);
-                        }
-		            }
-		        }
-		    });
-		    visionThread.start();
+		//  visionThread = new VisionThread(jevois, new GripPipeline(), pipeline -> {
+        //     // System.out.println("boolean vision ting" + pipeline.filterContoursOutput().isEmpty());
+        //     // System.out.println("contours size:" + pipeline.filterContoursOutput().size());
+		//         if (!pipeline.filterContoursOutput().isEmpty()) {
+        //             for(MatOfPoint centerXVal : pipeline.filterContoursOutput()){
+		//             Rect r = Imgproc.boundingRect(centerXVal);
+		//             synchronized (imgLock) {
+        //                 centerX = r.x + (r.width / 2);
+        //                 samples.add(centerX);
+        //                 System.out.println("centerX" + centerX);
+        //                 if(samples.size() > 10) {
+        //                     samples.remove(0);
+        //                 }
+        //             }
+        //         }
+        //         }
+
+                
+               
+        //         for(MatOfPoint centerXVal : pipeline.filterContoursOutput()){
+        //             Rect r = Imgproc.boundingRect(centerXVal);
+        //             centerX = r.x + (r.width / 2);
+        //             System.out.println("centerX" + centerX);
+        //             System.out.println("Num cont.:" + pipeline.filterContoursOutput().size() );
+        //             System.out.println("centerx: " + centerX);
+        //         }
+              
+        //             System.out.println("size:" + 0);
+                
+                
+		//     });
+        //     visionThread.start();
+           
 
 
     }
 
-    public void checkJeVois() {
-		if (jevois == null) return;
-		if (jevois.getBytesReceived() > 0) {
-			loopCount = 0;
-		} 
-	}
+    // public void checkJeVois() {
+    //     if (jevois == null) {
+    //         System.out.println("No Jevois");
+    //         return;
+    //     }
+    //     if (jevois.getBytesReceived() > 0) {
+    //         System.out.println("Waited: " + loopCount + " loops, Rcv'd: " + jevois.readString());
+    //         loopCount = 0;
+    //     } 
+    // }
 
-	public void writeJeVois(String cmd) {
-		if (jevois == null) return;
-		int bytes = jevois.writeString(cmd);
-		loopCount = 0;
-	}
+    // public void writeJeVois(String cmd) {
+    //     if (jevois == null) return;
+    //     int bytes = jevois.writeString(cmd);
+    //     System.out.println("wrote " +  bytes + "/" + cmd.length() + " bytes");    
+    //     loopCount = 0;
+    // }
 
 
     @Override
@@ -154,9 +214,12 @@ extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+        
+        //checkJeVois();
         Scheduler.getInstance().run();
         this.updateSmartDashboard();
         //RobotMap.elevatorEncoder.reset(); //LOOK
+
     }
 
     @Override
@@ -200,7 +263,10 @@ extends TimedRobot {
         RobotMap.updateConstants();
         RobotMap.gyroAngleWrapper.reset();
         RobotMap.driveTrain.enablePID(false);
-        //RobotMap.driveTrain.distanceSetpointTN.setOutput(200);
+        // RobotMap.driveTrain.teleopLeftMotorSetter.enable();
+        // RobotMap.driveTrain.teleopRightMotorSetter.enable();
+        //RobotMap.driveTrain.anglePID.setSetpoint(Math.PI/2);
+        
         
        
         
@@ -218,8 +284,26 @@ extends TimedRobot {
 		}
         RobotMap.compressor.setClosedLoopControl(true);
         }
+      
        
-        checkJeVois();
+        NetworkTableEntry tx = table.getEntry("tx");
+        NetworkTableEntry ty = table.getEntry("ty");
+        NetworkTableEntry ta = table.getEntry("ta");
+        NetworkTableEntry tv = table.getEntry("tv");
+    //read values periodically
+        double x = tx.getDouble(99);
+        double y = ty.getDouble(0.0);
+        double area = ta.getDouble(0.0);
+//post to smart dashboard periodically
+        SmartDashboard.putNumber("LimelightX: ", x);
+        SmartDashboard.putBoolean("Dock", x != 99);
+
+
+
+
+       // System.out.println(NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").setNumber(<value>));
+       
+        //checkJeVois();
     }
 
     @Override
@@ -247,6 +331,7 @@ extends TimedRobot {
         SmartDashboard.putNumber("arm Down Velocity Error: ", RobotMap.cargoArm.downVelocityPID.getError());
         SmartDashboard.putNumber("arm Down Velocity Setpoint: ", RobotMap.cargoArm.downVelocityPID.getSetpoint());
         SmartDashboard.putNumber("arm Encoder Rate", RobotMap.cargoArmEncoderWrapperRate.pidGet());
+        SmartDashboard.putNumber("angVelOutputTN", RobotMap.driveTrain.angVelOutputTN.getOutput());
         // SmartDashboard.putNumber("ELevator Distance Output TN: ", RobotMap.elevator.distanceOutputTN.getOutput());
          SmartDashboard.putBoolean("Elevator Controller System Enabled: ", RobotMap.elevator.elevatorControllerSystem.isEnabled());
          SmartDashboard.putBoolean("Elevator Motor Setter: ", RobotMap.elevator.motorSetter.isEnabled());
@@ -291,7 +376,11 @@ extends TimedRobot {
         SmartDashboard.putNumber("Drive Train Left Encoder Wrapper Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
         SmartDashboard.putNumber("Drive Train Right Encoder Wrapper Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
         // SmartDashboard.putNumber("Drive Train Ang Vel Error: ", RobotMap.driveTrain.angVelPID.getError());
-        // SmartDashboard.putNumber("Drive Train Angle Error: ", RobotMap.driveTrain.anglePID.getError());
+         SmartDashboard.putNumber("Drive Train Angle Error: ", RobotMap.driveTrain.anglePID.getError());
+         SmartDashboard.putBoolean("left setter enabled",  RobotMap.driveTrain.teleopLeftMotorSetter.isEnabled());
+         SmartDashboard.putBoolean("right setter enabled",  RobotMap.driveTrain.teleopRightMotorSetter.isEnabled());
+         SmartDashboard.putNumber("Gyro Angle: ", RobotMap.gyroAngleWrapper.pidGet());
+
         // SmartDashboard.putNumber("Cargo Arm Talon Output", RobotMap.cargoArmTalon.getMotorOutputPercent());
         // SmartDashboard.putNumber("Drive Train Ang Vel Output", RobotMap.driveTrain.angVelOutputTN.getOutput());
         // SmartDashboard.putNumber("kP Ang Vel", ConstantsIO.kP_DriveAngVel);

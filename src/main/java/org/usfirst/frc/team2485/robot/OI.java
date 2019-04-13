@@ -312,6 +312,9 @@ public class OI {
 	public static boolean getQuickTurn() {
 		return OI.jacket.getRawButton(OI.XBOX_X_PORT);
 	}
+	public static boolean getDocking(){
+		return OI.jacket.getRawButton(OI.XBOX_Y_PORT);
+	}
 
 	public static boolean getSlowTurn() {
 		return OI.jacket.getRawButton(OI.XBOX_B_PORT);

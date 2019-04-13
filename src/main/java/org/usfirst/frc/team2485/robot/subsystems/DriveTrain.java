@@ -15,6 +15,7 @@ import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
 import org.usfirst.frc.team2485.util.AutoPath.Pair;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -23,7 +24,9 @@ public class DriveTrain extends Subsystem {
 	private static final double CAMERA_PIXEL_WIDTH = 320;
 	private static final double cameraFieldOfView = Math.toRadians(65);
 
-    public static final double MAX_VELOCITY = 70;
+	public static final double MAX_VELOCITY = 70;
+	public double normalSteerSetpoint;
+	public double limelightSteerSetpoint;
 
     public WarlordsPIDController distancePID;
     public WarlordsPIDController velocityPID;
@@ -43,6 +46,7 @@ public class DriveTrain extends Subsystem {
 	public TransferNode teleopSetpointRightRampedTN;
 	public TransferNode pixelCorrectionSourceTN;
 	public TransferNode pixelPIDOutputTN;
+	public TransferNode teleopInvertboi;
 
 	public PIDSourceWrapper kPDistancePIDSource;
     public PIDSourceWrapper distancePIDSource;
@@ -50,6 +54,8 @@ public class DriveTrain extends Subsystem {
     public PIDSourceWrapper leftCurrentPIDSource;
 	public PIDSourceWrapper rightCurrentPIDSource;
 	public PIDSourceWrapper targetLocationPIDSource;
+	public PIDSourceWrapper limelightPIDSource;
+	public PIDSourceWrapper teleopSourceboi;
 	
 	public RampRate teleopSetpointLeftRamp;
 	public RampRate teleopSetpointRightRamp;
@@ -86,6 +92,8 @@ public class DriveTrain extends Subsystem {
         leftCurrentPIDSource = new PIDSourceWrapper();
 		rightCurrentPIDSource = new PIDSourceWrapper();
 		targetLocationPIDSource = new PIDSourceWrapper();
+		limelightPIDSource = new PIDSourceWrapper();
+		teleopSourceboi = new PIDSourceWrapper();
 
         leftMotorSetter = new MotorSetter();
         rightMotorSetter = new MotorSetter();
@@ -112,13 +120,17 @@ public class DriveTrain extends Subsystem {
         velocityPID.setSetpointSource(distanceOutputTN);
         velocityPID.setSources(velocityPIDSource);
         velocityPID.setOutputRange(-ConstantsIO.driveTrainIMax, ConstantsIO.driveTrainIMax);
-        velocityPID.setOutputs(velocityOutputTN);
+		velocityPID.setOutputs(velocityOutputTN);
+		
+		limelightPIDSource.setPidSource(() -> {
+			return -DriveWithControllers.x;
+		});
 
         anglePID.setSources(RobotMap.gyroAngleWrapper);
         anglePID.setOutputRange(-ConstantsIO.driveTrainIMax, ConstantsIO.driveTrainIMax);
 		anglePID.setOutputs(angVelOutputTN);
 		anglePID.setContinuous(true);
-		anglePID.setInputRange(0, 2 * Math.PI);
+		anglePID.setInputRange(0, 2*Math.PI);
 		
 		angVelPID.setSetpointSource(null);
 		angVelPID.setSources(RobotMap.gyroRateWrapper);
@@ -127,7 +139,7 @@ public class DriveTrain extends Subsystem {
 
 
 		targetLocationPIDSource.setPidSource(() -> {
-			double[] samples = collectSamples();
+			//double[] samples = collectSamples();
 			// return (samples[0] + samples[1]) / 2;
 			return 0;
 		});
@@ -176,6 +188,8 @@ public class DriveTrain extends Subsystem {
 		teleopSetpointRightRamp.setSetpointSource(teleopSetpointRightTN);
 		teleopSetpointRightRamp.setOutputs(teleopSetpointRightRampedTN);
 
+		
+
 		teleopLeftMotorSetter.setSetpointSource(teleopSetpointLeftRampedTN);
 		teleopLeftMotorSetter.setOutputs(RobotMap.driveLeftCurrent);
 		teleopRightMotorSetter.setSetpointSource(teleopSetpointRightRampedTN);
@@ -184,22 +198,92 @@ public class DriveTrain extends Subsystem {
 
     }
 
-    public void WarlordsDrive(double throttle, double steering, boolean quickTurn, boolean pixelCorrection) {
+    public void WarlordsDrive(double throttle, double steering, boolean quickTurn) {
 		double left = 0;
 		double right = 0;
-		if(steering != 0) {
-			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+
+		boolean pixelCorrection = OI.getDocking();
+		
+		
+		if(steering != 0 && !pixelCorrection) {
+			anglePID.setSources(RobotMap.gyroAngleWrapper);
+			normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
+			anglePID.setSetpoint(normalSteerSetpoint);
 		}
         if(quickTurn) {
+			limelightSteerSetpoint = normalSteerSetpoint;
+			//System.out.println("Source 1");
             teleopSetpointLeftTN.setOutput(steering/2);
 			teleopSetpointRightTN.setOutput(-steering/2);
-			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+			anglePID.setSources(RobotMap.gyroAngleWrapper);
+			normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
+		} else if(pixelCorrection && Robot.table.getEntry("tv").getDouble(0.0) == 1) {
+			// System.out.println("Source 2");
+			// System.out.println("Limelighting");
+			RobotMap.gyroAngleWrapper.reset();
+			anglePID.setSources(RobotMap.gyroAngleWrapper);
+			limelightSteerSetpoint = limelightPIDSource.pidGet();
+			normalSteerSetpoint = limelightSteerSetpoint;
+			anglePID.setSetpoint(limelightPIDSource.pidGet());
+			double pixelSteerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
+			//System.out.println("pixelSteerCorrection" + pixelSteerCorrection);
+			double sign = pixelSteerCorrection >= 0 ? 1 : -1;
+			left = throttle + pixelSteerCorrection * ConstantsIO.kP_PixelCorrection;
+			right = throttle - pixelSteerCorrection * ConstantsIO.kP_PixelCorrection; 
+			//System.out.println("Left: " + left);
+			//System.out.println("Right: " + right);
+			
+
+			if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
+                right /= Math.abs(left);
+				left /= Math.abs(left);
+				right *= ConstantsIO.driveTrainIMax;
+				left *= ConstantsIO.driveTrainIMax;
+            } else if (Math.abs(right) > ConstantsIO.driveTrainIMax) {
+                left /= Math.abs(right);
+				right /= Math.abs(right);
+				right *= ConstantsIO.driveTrainIMax;
+				left *= ConstantsIO.driveTrainIMax;
+			}
+
+			teleopSetpointLeftTN.setOutput(left);
+			teleopSetpointRightTN.setOutput(right);
 		} else if(pixelCorrection) {
-			double pixelSteerCorrection = RobotMap.driveTrain.pixelPIDOutputTN.pidGet();
-			left = throttle + pixelSteerCorrection;
-			right = throttle - pixelSteerCorrection;
+			//System.out.println("Source 3");
+
+			anglePID.setSources(RobotMap.gyroAngleWrapper);
+
+			anglePID.setSetpoint(limelightSteerSetpoint);
+			normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
+			double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
+			double sign = steerCorrection >= 0 ? 1 : -1;
+			// if(Math.abs(throttle) <= 2){
+			// 	throttle = 2;
+			// }
+			left = throttle + sign * Math.abs(steerCorrection);
+			right = throttle - sign * Math.abs(steerCorrection);
+			//System.out.println("Left: " + left);
+			//System.out.println("Right: " + right);
+			if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
+                right /= Math.abs(left);
+				left /= Math.abs(left);
+				right *= ConstantsIO.driveTrainIMax;
+				left *= ConstantsIO.driveTrainIMax;
+            } else if (Math.abs(right) > ConstantsIO.driveTrainIMax) {
+                left /= Math.abs(right);
+				right /= Math.abs(right);
+				right *= ConstantsIO.driveTrainIMax;
+				left *= ConstantsIO.driveTrainIMax;
+			}
+
+			teleopSetpointLeftTN.setOutput(left);
+			teleopSetpointRightTN.setOutput(right);
 		} else if (throttle != 0 || steering != 0){
+			//System.out.println("Source 4");
+			limelightSteerSetpoint = normalSteerSetpoint;
 			if (steering == 0) {
+				anglePID.setSetpoint(normalSteerSetpoint);
+				anglePID.setSources(RobotMap.gyroAngleWrapper);
 				double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
 				double sign = steerCorrection >= 0 ? 1 : -1;
 				// if(Math.abs(throttle) <= 2){
@@ -212,12 +296,10 @@ public class DriveTrain extends Subsystem {
 				sign *= throttle < 0 ? 1 : 1;
 				left = throttle + sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
 				right = throttle - sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
-				anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+				anglePID.setSetpoint(normalSteerSetpoint);
+				normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
 
-		}
-
-		
-			
+			}
 
             if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
                 right /= Math.abs(left);
@@ -233,7 +315,6 @@ public class DriveTrain extends Subsystem {
 
 			teleopSetpointLeftTN.setOutput(left);
 			teleopSetpointRightTN.setOutput(right);
-			
 		
         } else {
 			teleopSetpointLeftTN.setOutput(0);
@@ -637,13 +718,13 @@ public class DriveTrain extends Subsystem {
 
     public void enablePID(boolean enabled) {
         if (enabled) {
-            distancePID.enable();
+            distancePID.enable(); 
             velocityPID.enable();
             anglePID.enable();
             // angVelPID.enable();
-            leftMotorSetter.enable();
-			rightMotorSetter.enable();
-			pixelCorrectionPID.enable();
+			 leftMotorSetter.enable();
+			 rightMotorSetter.enable();
+			//pixelCorrectionPID.enable();
         } else {
             distancePID.disable();
             velocityPID.disable();
