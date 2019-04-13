@@ -1,14 +1,18 @@
 package org.usfirst.frc.team2485.robot.commands;
 
 import org.usfirst.frc.team2485.robot.OI;
+import org.usfirst.frc.team2485.robot.Robot;
 import org.usfirst.frc.team2485.robot.RobotMap;
 import org.usfirst.frc.team2485.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2485.robot.subsystems.Elevator.ElevatorLevel;
 import org.usfirst.frc.team2485.util.ConstantsIO;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+
 public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command {
   public double initAngle = 0;
   public boolean init = false;
+  public static double x;
   public DriveWithControllers() {
     setInterruptible(true);
     requires(RobotMap.driveTrain);
@@ -17,7 +21,7 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
   protected void initialize() {
     RobotMap.driveTrain.enableTeleopPID(true);
     RobotMap.driveTrain.anglePID.enable();
-    RobotMap.driveTrain.pixelCorrectionPID.enable();
+    //RobotMap.driveTrain.pixelCorrectionPID.enable();
   }
   
   protected void execute() {
@@ -25,7 +29,10 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
     double steering = OI.getDriveSteering();
     boolean quickTurn = OI.getQuickTurn();
     boolean slowTurn = OI.jacket.getRawButton(OI.XBOX_B_PORT);
-    boolean pixelCorrection = OI.jacket.getRawButton(OI.XBOX_A_PORT);
+    boolean pixelCorrection = OI.getDocking();
+    NetworkTableEntry tx = Robot.table.getEntry("tx");
+    x = tx.getDouble(99);
+    
 
 
 
@@ -82,7 +89,7 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
      
 
    
-   RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn || slowTurn, pixelCorrection);
+   RobotMap.driveTrain.WarlordsDrive(throttle, steering, quickTurn || slowTurn);
   }
   
   protected boolean isFinished() {
