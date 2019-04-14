@@ -199,8 +199,8 @@ public class OI {
 		// JACKET_RBUMPER.whenPressed(new 
 		// CancelCommand(Robot.auto));
 
-		JACKET_A.whenPressed(new CargoIntake(0.5));
-		JACKET_A.whenPressed(new SetRollersCurrent()); //ummmm
+		JACKET_Y.whenPressed(new CargoIntake(0.5));
+		JACKET_Y.whenPressed(new SetRollersCurrent()); //ummmm
 		// JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
 		// JACKET_A.whenPressed(new CancelCommand(Robot.auto));
 
@@ -313,7 +313,7 @@ public class OI {
 		return OI.jacket.getRawButton(OI.XBOX_X_PORT);
 	}
 	public static boolean getDocking(){
-		return OI.jacket.getRawButton(OI.XBOX_Y_PORT);
+		return OI.jacket.getRawButton(OI.XBOX_A_PORT);
 	}
 
 	public static boolean getSlowTurn() {

@@ -258,7 +258,7 @@ extends TimedRobot {
     @Override
     public void teleopInit() {
         ConstantsIO.init();
-        RobotMap.compressor.setClosedLoopControl(true);
+        RobotMap.compressor.setClosedLoopControl(false);
         RobotMap.elevatorEncoder.reset();
         RobotMap.updateConstants();
         RobotMap.gyroAngleWrapper.reset();
@@ -282,7 +282,7 @@ extends TimedRobot {
         if (RobotMap.cargoArmLimitSwitchUp.get()) {
             RobotMap.cargoArmEncoder.reset();
 		}
-        RobotMap.compressor.setClosedLoopControl(true);
+        RobotMap.compressor.setClosedLoopControl(false);
         }
       
        
@@ -380,6 +380,7 @@ extends TimedRobot {
          SmartDashboard.putBoolean("left setter enabled",  RobotMap.driveTrain.teleopLeftMotorSetter.isEnabled());
          SmartDashboard.putBoolean("right setter enabled",  RobotMap.driveTrain.teleopRightMotorSetter.isEnabled());
          SmartDashboard.putNumber("Gyro Angle: ", RobotMap.gyroAngleWrapper.pidGet());
+         SmartDashboard.putNumber("table.getEntry(tv).getDouble(0.0)", table.getEntry("tv").getDouble(0.0));
 
         // SmartDashboard.putNumber("Cargo Arm Talon Output", RobotMap.cargoArmTalon.getMotorOutputPercent());
         // SmartDashboard.putNumber("Drive Train Ang Vel Output", RobotMap.driveTrain.angVelOutputTN.getOutput());
@@ -395,10 +396,20 @@ extends TimedRobot {
         SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
         SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
         SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
+
+        SmartDashboard.putBoolean("Limelight PID Enabled: ", RobotMap.driveTrain.limelightPID.isEnabled());
+        SmartDashboard.putNumber("Limelight Output TN: ", RobotMap.driveTrain.limelightLeftRampedTN.getOutput());
+        SmartDashboard.putNumber("Ang Vel TN: ", RobotMap.driveTrain.angVelOutputTN.getOutput());
+        SmartDashboard.putNumber("Motor Setter Setter Source Left:", RobotMap.driveTrain.motorSetterSetterSourceLeft.pidGet());
+        SmartDashboard.putNumber("Limelight PID Error: ", RobotMap.driveTrain.limelightPID.getError());
         
         SmartDashboard.putNumber("throttle", OI.getDriveThrottle());
         SmartDashboard.putNumber("steering", OI.getDriveSteering());
         SmartDashboard.putBoolean("angle is enabled?", RobotMap.driveTrain.anglePID.isEnabled());
+        SmartDashboard.putNumber("dt angle+ setpt", RobotMap.driveTrain.anglePID.getSetpoint());
+        SmartDashboard.putNumber("dt angle+ setpt limelight", RobotMap.driveTrain.limelightPID.getSetpoint());
+        SmartDashboard.putNumber("dt angle error", RobotMap.driveTrain.anglePID.getError());
+        //SmartDashboard.putNumber("dt angle setpt", RobotMap.driveTrain.anglePID.getSetpoint());
 
 
         // SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());

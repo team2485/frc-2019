@@ -38,6 +38,16 @@ public class ConstantsIO {
     public static double kF_DriveAngVel;
     public static double kV_DriveAngVel;
     public static double kP_PixelCorrection;
+    public static double kP_LimelightAngle;
+    public static double kI_LimelightAngle;
+    public static double kD_LimelightAngle;
+    public static double kP_LimelightStationaryAngle;
+    public static double kI_LimelightStationaryAngle;
+    public static double kD_LimelightStationaryAngle;
+    public static double limelightUpRampQ;
+    public static double limelightUpRampL;
+    public static double limelightDownRampQ;
+    public static double limelightDownRampL;
     public static double teleopUpRamp;
     public static double teleopUpRampL;
     public static double teleopUpRampQ;
@@ -100,6 +110,7 @@ public class ConstantsIO {
     public static double cargoArmIMaxDown;
     public static double cargoArmIMax;
     public static double driveTrainIMax;
+    
 
 
     public static void init() {
@@ -139,6 +150,12 @@ public class ConstantsIO {
         kF_DriveAngVel = Double.parseDouble(data.get("kF_DriveAngVel"));
         kV_DriveAngVel = Double.parseDouble(data.get("kV_DriveAngVel"));
         kP_PixelCorrection = Double.parseDouble(data.get("kP_PixelCorrection"));
+        kP_LimelightAngle = Double.parseDouble(data.get("kP_LimelightAngle"));
+        kI_LimelightAngle = Double.parseDouble(data.get("kI_LimelightAngle"));
+        kD_LimelightAngle = Double.parseDouble(data.get("kD_LimelightAngle"));
+        kP_LimelightStationaryAngle = Double.parseDouble(data.get("kP_LimelightStationaryAngle"));
+        kI_LimelightStationaryAngle = Double.parseDouble(data.get("kI_LimelightStationaryAngle"));
+        kD_LimelightStationaryAngle = Double.parseDouble(data.get("kD_LimelightStationaryAngle"));
         teleopUpRamp = Double.parseDouble(data.get("teleopUpRamp"));
         teleopUpRampQ = Double.parseDouble(data.get("teleopUpRampQ"));
         teleopUpRampL = Double.parseDouble(data.get("teleopUpRampL"));
@@ -155,6 +172,10 @@ public class ConstantsIO {
         kDownRamp_Velocity = Double.parseDouble(data.get("kDownRamp_Velocity"));
         kUpRamp_AngVelocity = Double.parseDouble(data.get("kUpRamp_AngVelocity"));
         kDownRamp_AngVelocity = Double.parseDouble(data.get("kDownRamp_AngVelocity"));
+        limelightUpRampQ = Double.parseDouble(data.get("limelightUpRampQ"));
+        limelightUpRampL = Double.parseDouble(data.get("limelightUpRampL"));
+        limelightDownRampQ = Double.parseDouble(data.get("limelightDownRampQ"));
+        limelightDownRampL = Double.parseDouble(data.get("limelightDownRampL"));
         kP_elevatorDistance = Double.parseDouble(data.get("kP_elevatorDistance"));
         kI_elevatorDistance = Double.parseDouble(data.get("kI_elevatorDistance"));
         kD_elevatorDistance = Double.parseDouble(data.get("kD_elevatorDistance"));
