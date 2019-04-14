@@ -31,7 +31,7 @@ public class CargoArmWithControllers extends Command {
     }
 
     protected void initialize() {
-       
+       RobotMap.cargoArm.enablePID(true);
     }
 
     @Override
