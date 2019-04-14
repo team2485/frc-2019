@@ -52,6 +52,7 @@ import org.usfirst.frc.team2485.util.MotorSetter;
 import org.usfirst.frc.team2485.util.PIDSourceWrapper;
 import org.usfirst.frc.team2485.util.PigeonWrapperRateAndAngle;
 import org.usfirst.frc.team2485.util.RampRate;
+import org.usfirst.frc.team2485.util.SurajPipeline;
 import org.usfirst.frc.team2485.util.TransferNode;
 import org.usfirst.frc.team2485.util.WarlordsPIDController;
 import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
@@ -184,6 +185,15 @@ extends TimedRobot {
         //     visionThread.start();
            
 
+
+        output = CameraServer.getInstance().putVideo("Processed: ", 640, 480);
+
+		
+		VisionThread visionThread = new VisionThread(camera, new SurajPipeline(), pipeline -> {
+			output.putFrame(pipeline.cvRectangleOutput());
+
+		});
+		visionThread.start();
 
     }
 
