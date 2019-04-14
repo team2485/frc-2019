@@ -12,16 +12,28 @@ kI_DriveVelocity = 0.0007
 kD_DriveVelocity = 0.1
 kF_DriveVelocity = 0.005
 
-kP_DriveAngle = 1.5
-kI_DriveAngle = 0.0005
+kP_DriveAngle = 0.5
+kI_DriveAngle = 0
 kD_DriveAngle = 0
 kV_DriveAngle = 0
+
+
+kP_LimelightAngle = 4
+kI_LimelightAngle = 0.015
+kD_LimelightAngle = 0
+
+kP_LimelightStationaryAngle = 2
+kI_LimelightStationaryAngle = 0.01
+kD_LimelightStationaryAngle = 1
 
 kP_DriveAngVel = 0
 kI_DriveAngVel = 0
 kD_DriveAngVel = 0
 kF_DriveAngVel = 0
 kV_DriveAngVel = 0
+
+
+kP_PixelCorrection = 1.7
 
 filterCoefficient = 0
 
@@ -31,6 +43,12 @@ teleopUpRampQ = 1
 teleopUpRampL = 1
 teleopDownRampQ = 5000
 teleopDownRampL = 5000
+
+
+limelightUpRampQ = 1
+limelightUpRampL = 1
+limelightDownRampQ = 5000
+limelightDownRampL = 5000
 
 teleopUpRampQElevatorUp = 0.05
 teleopUpRampLElevatorUp = 0.05
