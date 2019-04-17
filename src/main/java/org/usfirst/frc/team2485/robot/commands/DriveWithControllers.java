@@ -44,15 +44,14 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
     if (!quickTurn && !slowTurn) {
       //steering = org.usfirst.frc.team2485.util.ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(0), 0.2, 0.0, 1.0);
       
-      steering /= 35;
+      steering /= 27;
     }
 
     if (slowTurn) {
-      steering *= 0.4;
-      //steering *= 0.5;
+      steering *= 0.35;
+     
     }
 
-<<<<<<< HEAD
     if(RobotMap.elevatorEncoderWrapperDistance.pidGet() >= ElevatorLevel.ROCKET_LEVEL_TWO.getPosition() && RobotMap.driveTrain.teleopSetpointRightRamp.isQuadratic()) {
       double upRamp = ConstantsIO.teleopUpRampElevatorUp + (ConstantsIO.teleopUpRamp - ConstantsIO.teleopUpRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
       double downRamp = ConstantsIO.teleopDownRampElevatorUp + (ConstantsIO.teleopDownRamp - ConstantsIO.teleopDownRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
@@ -89,23 +88,6 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
     // }
 
 
-=======
-    if(throttle == 0 && steering == 0) {
-      throttle = ThresholdHandler.deadbandAndScale(OI.jacketBackup.getRawAxis(OI.XBOX_RTRIGGER_PORT) - OI.jacketBackup.getRawAxis( OI.XBOX_LTRIGGER_PORT), 0.2, 0, 1);
-      steering = ThresholdHandler.deadbandAndScale(OI.jacketBackup.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, 1);
-      quickTurn = OI.jacketBackup.getRawButton(OI.XBOX_X_PORT);
-      slowTurn = OI.jacketBackup.getRawButton(OI.XBOX_A_PORT);
-      if (!(quickTurn || slowTurn)) {
-        steering = ThresholdHandler.deadbandAndScale(OI.jacketBackup.getRawAxis(0), 0.2, 0.0, 1.0);
-      } 
-      if(slowTurn) {
-        steering *= 0.5;
-      }
-    }
-
-    double upRamp = ConstantsIO.teleopUpRampElevatorUp + (ConstantsIO.teleopUpRamp - ConstantsIO.teleopUpRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
-    double downRamp = ConstantsIO.teleopDownRampElevatorUp + (ConstantsIO.teleopDownRamp - ConstantsIO.teleopDownRampElevatorUp) * (ElevatorLevel.ROCKET_LEVEL_THREE.getPosition() - RobotMap.elevatorEncoderWrapperDistance.pidGet())/ElevatorLevel.ROCKET_LEVEL_THREE.getPosition();
->>>>>>> b072cf2a12633bc651614111a05eaaf746c4925b
 
      
 

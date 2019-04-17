@@ -46,8 +46,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class OI {
 	public static Joystick jacket;
 	public static Joystick suraj;
-	public static Joystick jacketBackup;
-	public static Joystick surajBackup;
+	// public static Joystick jacketBackup;
+	// public static Joystick surajBackup;
 
 	//Ports
 	public static final int XBOX_A_PORT = 1;
@@ -116,13 +116,13 @@ public class OI {
 	public static JoystickButton SURAJ_START_BUTTON;
 	public static JoystickButton SURAJ_BACK_BUTTON;
 
-	public static JoystickButton SURAJ_A_BACKUP;
-	public static JoystickButton SURAJ_B_BACKUP;
-	public static JoystickButton SURAJ_X_BACKUP;
-	public static JoystickButton SURAJ_Y_BACKUP;
-	public static JoystickButton SURAJ_START_BUTTON_BACKUP;
-	public static JoystickButton SURAJ_LBUMPER_BACKUP;
-	public static JoystickButton SURAJ_RBUMPER_BACKUP;
+	// public static JoystickButton SURAJ_A_BACKUP;
+	// public static JoystickButton SURAJ_B_BACKUP;
+	// public static JoystickButton SURAJ_X_BACKUP;
+	// public static JoystickButton SURAJ_Y_BACKUP;
+	// public static JoystickButton SURAJ_START_BUTTON_BACKUP;
+	// public static JoystickButton SURAJ_LBUMPER_BACKUP;
+	// public static JoystickButton SURAJ_RBUMPER_BACKUP;
 	
 
 
@@ -131,9 +131,9 @@ public class OI {
 	
 	public static TriggerButton SURAJ_RYJOYSTICK_TRIGGERBUTTON;
 
-	public static TriggerButton SURAJ_LTRIGGER_BUTTON_BACKUP;
-	public static TriggerButton SURAJ_RTRIGGER_BUTTON_BACKUP;
-	public static TriggerButton SURAJ_RYJOYSTICK_TRIGGERBUTTON_BACKUP;
+	// public static TriggerButton SURAJ_LTRIGGER_BUTTON_BACKUP;
+	// public static TriggerButton SURAJ_RTRIGGER_BUTTON_BACKUP;
+	// public static TriggerButton SURAJ_RYJOYSTICK_TRIGGERBUTTON_BACKUP;
 
 
 
@@ -142,8 +142,8 @@ public class OI {
 		
 		jacket = new Joystick(0);
 		suraj = new Joystick(1);
-		jacketBackup = new Joystick(2);
-		surajBackup = new Joystick(3);
+		// jacketBackup = new Joystick(2);
+		// surajBackup = new Joystick(3);
 				
 		JACKET_UP = new JoystickButton(jacket, XBOX_UP_PORT);
 		JACKET_DOWN = new JoystickButton(jacket, XBOX_DOWN_PORT);
@@ -161,8 +161,8 @@ public class OI {
 		JACKET_RSTICK_BUTTON = new JoystickButton(jacket, XBOX_RSTICK_BUTTON_PORT);
 		JACKET_LSTICK_BUTTON = new JoystickButton(jacket, XBOX_LSTICK_BUTTON_PORT);
 
-		JACKET_A_BACKUP = new JoystickButton(jacketBackup, XBOX_A_PORT);
-		JACKET_RBUMPER_BACKUP = new JoystickButton(jacketBackup, XBOX_RBUMPER_PORT);
+		// JACKET_A_BACKUP = new JoystickButton(jacketBackup, XBOX_A_PORT);
+		// JACKET_RBUMPER_BACKUP = new JoystickButton(jacketBackup, XBOX_RBUMPER_PORT);
 
 
 		
@@ -185,41 +185,33 @@ public class OI {
 		SURAJ_LTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_LTRIGGER_PORT, 0.2);
 		
 
-		SURAJ_A_BACKUP = new JoystickButton(surajBackup, XBOX_A_PORT);
-		SURAJ_B_BACKUP = new JoystickButton(surajBackup, XBOX_B_PORT);
-		SURAJ_X_BACKUP = new JoystickButton(surajBackup, XBOX_X_PORT);
-		SURAJ_Y_BACKUP = new JoystickButton(surajBackup, XBOX_Y_PORT);
+		// SURAJ_A_BACKUP = new JoystickButton(surajBackup, XBOX_A_PORT);
+		// SURAJ_B_BACKUP = new JoystickButton(surajBackup, XBOX_B_PORT);
+		// SURAJ_X_BACKUP = new JoystickButton(surajBackup, XBOX_X_PORT);
+		// SURAJ_Y_BACKUP = new JoystickButton(surajBackup, XBOX_Y_PORT);
 
-		SURAJ_LBUMPER_BACKUP = new JoystickButton(surajBackup, XBOX_LBUMPER_PORT);
-		SURAJ_RBUMPER_BACKUP = new JoystickButton(surajBackup, XBOX_RBUMPER_PORT);
+		// SURAJ_LBUMPER_BACKUP = new JoystickButton(surajBackup, XBOX_LBUMPER_PORT);
+		// SURAJ_RBUMPER_BACKUP = new JoystickButton(surajBackup, XBOX_RBUMPER_PORT);
 
 		
 		SURAJ_RTRIGGER_BUTTON = new TriggerButton(suraj, XBOX_RTRIGGER_PORT, 0.2);
 
 		SURAJ_RYJOYSTICK_TRIGGERBUTTON = new TriggerButton(suraj, XBOX_RYJOYSTICK_PORT, 0.2, true);
 
-		SURAJ_LTRIGGER_BUTTON_BACKUP = new TriggerButton(suraj, XBOX_LTRIGGER_PORT, 0.2);
-		SURAJ_RTRIGGER_BUTTON_BACKUP = new TriggerButton(suraj, XBOX_RTRIGGER_PORT, 0.2);
+		// SURAJ_LTRIGGER_BUTTON_BACKUP = new TriggerButton(suraj, XBOX_LTRIGGER_PORT, 0.2);
+		// SURAJ_RTRIGGER_BUTTON_BACKUP = new TriggerButton(suraj, XBOX_RTRIGGER_PORT, 0.2);
 
-		SURAJ_RYJOYSTICK_TRIGGERBUTTON_BACKUP = new TriggerButton(suraj, XBOX_RYJOYSTICK_PORT, 0.2);
+		// SURAJ_RYJOYSTICK_TRIGGERBUTTON_BACKUP = new TriggerButton(suraj, XBOX_RYJOYSTICK_PORT, 0.2);
 		
 
 
 		JACKET_RBUMPER.whenPressed(new SetHatchRollersPWM(0));
-		JACKET_RBUMPER_BACKUP.whenPressed(new SetHatchRollersPWM(0));
 		// JACKET_RBUMPER_BACKUP.whenPressed(new Hook(false));
 		// JACKET_RBUMPER.whenPressed(new 
 		// CancelCommand(Robot.auto));
 
-<<<<<<< HEAD
 		JACKET_Y.whenPressed(new CargoIntake(0.5));
 		JACKET_Y.whenPressed(new SetRollersCurrent()); //ummmm
-=======
-		JACKET_A.whenPressed(new CargoIntake(0.5));
-		JACKET_A.whenPressed(new SetRollersCurrent()); //ummmm
-		JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
-		JACKET_A_BACKUP.whenPressed(new SetRollersCurrent());
->>>>>>> b072cf2a12633bc651614111a05eaaf746c4925b
 		// JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
 		// JACKET_A.whenPressed(new CancelCommand(Robot.auto));
 
@@ -238,15 +230,8 @@ public class OI {
 		// SURAJ_X.whenPressed(new Pushers(true));
 		// SURAJ_Y.whenPressed(new Slide(true));
 
-<<<<<<< HEAD
 		// CommandGroup placeHatch = new PlaceHatch();
 		// SURAJ_LBUMPER.whenPressed(placeHatch);
-=======
-		CommandGroup placeHatch = new PlaceHatch();
-		SURAJ_LBUMPER.whenPressed(placeHatch);
-		SURAJ_LBUMPER_BACKUP.whenPressed(placeHatch);
-
->>>>>>> b072cf2a12633bc651614111a05eaaf746c4925b
 		//SURAJ_LBUMPER.whenPressed(new CancelCommand(Robot.auto));
 		// SURAJ_LBUMPER_BACKUP.whenPressed(placeHatch);
 		// SURAJ_LBUMPER_BACKUP.whenPressed(new CancelCommand(Robot.auto));
@@ -261,33 +246,33 @@ public class OI {
 
 		Command floor = new SetElevatorPosition(ElevatorLevel.FLOOR);
 		SURAJ_A.whenPressed(floor);
-		SURAJ_A_BACKUP.whenPressed(floor);
+		// SURAJ_A_BACKUP.whenPressed(floor);
 
 		// SURAJ_A.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_A.whenReleased(new CancelCommand(floor));
-		SURAJ_A_BACKUP.whenReleased(new CancelCommand(floor));
+		// SURAJ_A_BACKUP.whenReleased(new CancelCommand(floor));
 
 		// SURAJ_A_BACKUP.whenPressed(floor);
 		// SURAJ_A_BACKUP.whenReleased(new CancelCommand(floor));
 		
 		Command rocketLevelOne = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE); 
 		SURAJ_X.whenPressed(rocketLevelOne);
-		SURAJ_X_BACKUP.whenPressed(rocketLevelOne);
+		// SURAJ_X_BACKUP.whenPressed(rocketLevelOne);
 
 		// SURAJ_X.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_X.whenReleased(new CancelCommand(rocketLevelOne));
-		SURAJ_X_BACKUP.whenReleased(new CancelCommand(rocketLevelOne));
+		// SURAJ_X_BACKUP.whenReleased(new CancelCommand(rocketLevelOne));
 
 		// SURAJ_X_BACKUP.whenPressed(rocketLevelOne);
 		// SURAJ_X_BACKUP.whenReleased(new CancelCommand(rocketLevelOne));
 
 		Command rocketLevelTwo = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO); 
 		SURAJ_B.whenPressed(rocketLevelTwo);
-		SURAJ_B_BACKUP.whenPressed(rocketLevelTwo);
+		// SURAJ_B_BACKUP.whenPressed(rocketLevelTwo);
 
 		// SURAJ_B.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_B.whenReleased(new CancelCommand(rocketLevelTwo));
-		SURAJ_B_BACKUP.whenReleased(new CancelCommand(rocketLevelTwo));
+		// SURAJ_B_BACKUP.whenReleased(new CancelCommand(rocketLevelTwo));
 
 		// SURAJ_B_BACKUP.whenPressed(rocketLevelTwo);
 		// SURAJ_B_BACKUP.whenReleased(new CancelCommand(rocketLevelTwo));
@@ -295,11 +280,11 @@ public class OI {
 		
 		Command rocketLevelThree = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE); 
 		SURAJ_Y.whenPressed(rocketLevelThree);
-		SURAJ_Y_BACKUP.whenPressed(rocketLevelThree);
+		// SURAJ_Y_BACKUP.whenPressed(rocketLevelThree);
 
 		// SURAJ_Y.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_Y.whenReleased(new CancelCommand(rocketLevelThree));
-		SURAJ_Y_BACKUP.whenReleased(new CancelCommand(rocketLevelThree));
+		// SURAJ_Y_BACKUP.whenReleased(new CancelCommand(rocketLevelThree));
 		// SURAJ_Y_BACKUP.whenPressed(rocketLevelThree);
 		// SURAJ_Y_BACKUP.whenReleased(new CancelCommand(rocketLevelThree));
 
@@ -318,7 +303,7 @@ public class OI {
 
 		
 		SURAJ_START_BUTTON.whenPressed(new Lift(true));
-		SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
+		// SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
 
 		// SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
 		// SURAJ_START_BUTTON.whenPressed(new CancelCommand(Robot.auto));
@@ -338,18 +323,12 @@ public class OI {
 		//SURAJ_BACK_BUTTON.whenPressed(new Lift(false));
 
 		SURAJ_RBUMPER.whenPressed(new PrepareToIntake());
-		SURAJ_RBUMPER_BACKUP.whenPressed(new PrepareToIntake());
+		// SURAJ_RBUMPER_BACKUP.whenPressed(new PrepareToIntake());
 		
 		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
-<<<<<<< HEAD
 
 		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9)); //hatchrollersintake for spiking detection
 		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
-=======
-		SURAJ_LBUMPER_BACKUP.whenPressed(new PlaceHatch());
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(0.9));
-		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(0.2));
->>>>>>> b072cf2a12633bc651614111a05eaaf746c4925b
 
 
 		SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());

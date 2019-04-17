@@ -63,6 +63,7 @@ public class DriveTrain extends Subsystem {
 	public PIDSourceWrapper limelightSourceboiRight;
 	public PIDSourceWrapper motorSetterSetterSourceLeft;
 	public PIDSourceWrapper motorSetterSetterSourceRight;
+	public PIDSourceWrapper rightAngleTestingSource;
 	
 	public RampRate teleopSetpointLeftRamp;
 	public RampRate teleopSetpointRightRamp;
@@ -114,6 +115,7 @@ public class DriveTrain extends Subsystem {
 		limelightSourceboiRight = new PIDSourceWrapper();
 		motorSetterSetterSourceLeft = new PIDSourceWrapper();
 		motorSetterSetterSourceRight = new PIDSourceWrapper();
+		rightAngleTestingSource = new PIDSourceWrapper();
 
         leftMotorSetter = new MotorSetter();
 		rightMotorSetter = new MotorSetter();
@@ -250,6 +252,10 @@ public class DriveTrain extends Subsystem {
 			}
 		});
 
+		// rightAngleTestingSource.setPidSource(() -> {
+		// 	return -angVelOutputTN.pidGet();
+		// });
+
 		
 
 		teleopLeftMotorSetter.setSetpointSource(teleopSetpointLeftRampedTN);
@@ -257,6 +263,8 @@ public class DriveTrain extends Subsystem {
 		teleopRightMotorSetter.setSetpointSource(teleopSetpointRightRampedTN);
 		teleopRightMotorSetter.setOutputs(RobotMap.driveRightCurrent);
 
+		// teleopLeftMotorSetter.setSetpointSource(angVelOutputTN);
+		// teleopRightMotorSetter.setSetpointSource(rightAngleTestingSource);
 
     }
 
@@ -278,8 +286,8 @@ public class DriveTrain extends Subsystem {
         if(quickTurn) {
 			docking = false;
 			//System.out.println("Source 1");
-            teleopSetpointLeftTN.setOutput(steering/2);
-			teleopSetpointRightTN.setOutput(-steering/2);
+            teleopSetpointLeftTN.setOutput(steering/1.2);
+			teleopSetpointRightTN.setOutput(-steering/1.2);
 			
 			normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
 			firstTargetDetection = false; // it's gucci - ag :)
@@ -345,8 +353,8 @@ public class DriveTrain extends Subsystem {
 			// if(Math.abs(throttle) <= 2){
 			// 	throttle = 2;
 			// }
-			left = throttle + sign * Math.abs(steerCorrection);
-			right = throttle - sign * Math.abs(steerCorrection);
+			left = throttle - sign * Math.abs(steerCorrection);
+			right = throttle + sign * Math.abs(steerCorrection);
 			// System.out.println("Left: " + left);
 			// System.out.println("Right: " + right);
 			if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
@@ -414,7 +422,7 @@ public class DriveTrain extends Subsystem {
     }
 
     public void initDefaultCommand() {
-       //setDefaultCommand(new DriveWithControllers());
+       setDefaultCommand(new DriveWithControllers());
     }
 
     public void updateConstants() {

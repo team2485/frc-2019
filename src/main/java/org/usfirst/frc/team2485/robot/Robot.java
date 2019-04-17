@@ -273,9 +273,10 @@ extends TimedRobot {
         RobotMap.updateConstants();
         RobotMap.gyroAngleWrapper.reset();
         RobotMap.driveTrain.enablePID(false);
+        // RobotMap.driveTrain.leftMotorSetter.setSetpointSource(RobotMap.driveTrain.angVelOutputTN);
+        // RobotMap.driveTrain.rightMotorSetter.setSetpointSource(RobotMap.driveTrain.angV)
         // RobotMap.driveTrain.teleopLeftMotorSetter.enable();
         // RobotMap.driveTrain.teleopRightMotorSetter.enable();
-        //RobotMap.driveTrain.anglePID.setSetpoint(Math.PI/2);
         
         
        

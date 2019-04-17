@@ -399,7 +399,7 @@ public class RobotMap {
 		//CARGO INTAKE ARM
 		cargoArmTalon = new TalonSRX(cargoArmTalonPort);
 
-		cargoArmTalon.setInverted(true); //same
+		cargoArmTalon.setInverted(false); //same
 
 		cargoArmTalonWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, cargoArmTalon);
 		cargoArmTalonWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, cargoArmTalon);
@@ -443,7 +443,7 @@ public class RobotMap {
 		
 		//HATCH INTAKE ROLLERS
 		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
-		hatchRollersTalon.setInverted(true);
+		hatchRollersTalon.setInverted(false); //true on prac
 
 		hatchRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, hatchRollersTalon);
 		hatchRollersWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, hatchRollersTalon);
