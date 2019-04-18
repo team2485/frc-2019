@@ -32,7 +32,7 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
     if (!quickTurn && !slowTurn) {
       //steering = org.usfirst.frc.team2485.util.ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(0), 0.2, 0.0, 1.0);
       
-      steering /= 35;
+      steering /= 40;
     }
 
     if (slowTurn) {

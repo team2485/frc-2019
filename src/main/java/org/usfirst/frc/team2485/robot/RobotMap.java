@@ -64,10 +64,10 @@ public class RobotMap {
 
 	//PORTS
 	//Speed Controllers
-	public static int driveLeftTalonPort1 = 11;
-	public static int driveLeftTalonPort2 = 12;
-	public static int driveLeftTalonPort3 = 13;
-	public static int driveLeftTalonPort4 = 14;
+	public static int driveLeftTalonPort1 = 12;
+	public static int driveLeftTalonPort2 = 13;
+	public static int driveLeftTalonPort3 = 14;
+	public static int driveLeftTalonPort4 = 15;
 
 	public static int driveRightTalonPort1 = 4;
 	public static int driveRightTalonPort2 = 5;
@@ -438,7 +438,7 @@ public class RobotMap {
 		
 		//HATCH INTAKE ROLLERS
 		hatchRollersTalon = new TalonSRX(hatchRollersTalonPort);
-		hatchRollersTalon.setInverted(true);
+		hatchRollersTalon.setInverted(false);
 
 		hatchRollersWrapperCurrent = new TalonSRXWrapper(ControlMode.Current, hatchRollersTalon);
 		hatchRollersWrapperPercentOutput = new TalonSRXWrapper(ControlMode.PercentOutput, hatchRollersTalon);

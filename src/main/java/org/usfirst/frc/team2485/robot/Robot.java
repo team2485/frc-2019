@@ -43,8 +43,8 @@ import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
 
 public class Robot
 extends TimedRobot {
-    public static final int IMG_WIDTH = 80;
-    public static final int IMG_HEIGHT = 60;
+    public static final int IMG_WIDTH = 64;
+    public static final int IMG_HEIGHT = 48;
     private VisionThread visionThread;
     public static double centerX = 0.0;
     public static ArrayList<Double> samples;
@@ -61,12 +61,6 @@ extends TimedRobot {
     boolean ejecting = false;
     public static Command auto;
     public CvSource output;
-    
-
-    private SerialPort jevois = null;
-	private int loopCount;
-	private UsbCamera jevoisCam;
-	private MjpegServer jevoisServer;
 
     @Override
     public void robotInit() {
@@ -78,24 +72,6 @@ extends TimedRobot {
         auto = new SandstormAuto();
         restart = true;
 
-        int tryCount = 0;
-		do {
-			try {
-				System.out.print("Trying to create jevois SerialPort...");
-				jevois = new SerialPort(9600, SerialPort.Port.kUSB);
-				tryCount = 99;
-				System.out.println("success!");
-			} catch (Exception e) {
-				tryCount += 1;
-				System.out.println("failed!");
-			}
-		} while (tryCount < 3);
-		
-		if (tryCount == 99) {
-			writeJeVois("info\n");
-		}
-		loopCount = 0;
-
 
 
 		
@@ -104,22 +80,6 @@ extends TimedRobot {
         camera.setFPS(10);
 
     }
-
-    public void checkJeVois() {
-		if (jevois == null) return;
-		if (jevois.getBytesReceived() > 0) {
-			System.out.println("Waited: " + loopCount + " loops, Rcv'd: " + jevois.readString());
-			loopCount = 0;
-		} 
-	}
-
-	public void writeJeVois(String cmd) {
-		if (jevois == null) return;
-		int bytes = jevois.writeString(cmd);
-		System.out.println("wrote " +  bytes + "/" + cmd.length() + " bytes");	
-		loopCount = 0;
-	}
-
 
     @Override
     public void disabledInit() {
@@ -181,10 +141,26 @@ extends TimedRobot {
         
         CargoArmWithControllers.init = true;
 
+        // RobotMap.driveLeftTalonWrapperPercentOutput1.set(0.5);
+        // RobotMap.driveLeftTalonWrapperPercentOutput2.set(0.5);
+        // RobotMap.driveLeftTalonWrapperPercentOutput3.set(0.5);
+        // RobotMap.driveLeftTalonWrapperPercentOutput4.set(0.5);
+
+        // RobotMap.driveRightTalonWrapperPercentOutput1.set(0.5);
+        // RobotMap.driveRightTalonWrapperPercentOutput2.set(0.5);
+        // RobotMap.driveRightTalonWrapperPercentOutput3.set(0.5);
+        // RobotMap.driveRightTalonWrapperPercentOutput4.set(0.5);
+
+
+
+
     }
 
     @Override
     public void teleopPeriodic() {
+        // RobotMap.driveLeftTalonWrapperCurrent1.set(2);
+        // RobotMap.driveLeftTalonWrapperCurrent2.set(2);
+
         if(restart){
         Scheduler.getInstance().run();
         this.updateSmartDashboard();
@@ -193,8 +169,6 @@ extends TimedRobot {
 		}
         RobotMap.compressor.setClosedLoopControl(false);
         }
-       
-        checkJeVois();
     }
 
     @Override
@@ -208,97 +182,97 @@ extends TimedRobot {
 
     public void updateSmartDashboard() {
         // SmartDashboard.putString("ConstantsIO Last Modified: ", ConstantsIO.lastModified);
-         SmartDashboard.putNumber("Elevator Distance PID Setpoint: ", RobotMap.elevator.distancePID.getSetpoint());
-        // SmartDashboard.putNumber("Elevator Distance PID Error: ", RobotMap.elevator.distancePID.getError());
-         SmartDashboard.putNumber("Elevator Setpoint TN: ", RobotMap.elevator.distanceSetpointTN.getOutput());
-        SmartDashboard.putNumber("Elevator Setpoint Ramped TN: ", RobotMap.elevator.distanceSetpointRampedTN.getOutput());
-        // SmartDashboard.putBoolean("Elevator Setpoint Ramp Rate Enabled: ", RobotMap.elevator.distanceSetpointRampRate.isEnabled());
-         SmartDashboard.putBoolean("Elevator Distance PID Enabled: ", RobotMap.elevator.distancePID.isEnabled());
-        SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
-        // SmartDashboard.putNumber("Elevator Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3.0);
-        SmartDashboard.putNumber("Elevator Output Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
-         SmartDashboard.putNumber("Elevator Encoder Rate: ", RobotMap.elevatorEncoderWrapperRate.pidGet());
-        SmartDashboard.putBoolean("arm Down Velocity PID Enabled: ", RobotMap.cargoArm.downVelocityPID.isEnabled());
-        SmartDashboard.putNumber("arm Down Velocity Error: ", RobotMap.cargoArm.downVelocityPID.getError());
-        SmartDashboard.putNumber("arm Down Velocity Setpoint: ", RobotMap.cargoArm.downVelocityPID.getSetpoint());
-        SmartDashboard.putNumber("arm Encoder Rate", RobotMap.cargoArmEncoderWrapperRate.pidGet());
-        // SmartDashboard.putNumber("ELevator Distance Output TN: ", RobotMap.elevator.distanceOutputTN.getOutput());
-         SmartDashboard.putBoolean("Elevator Controller System Enabled: ", RobotMap.elevator.elevatorControllerSystem.isEnabled());
-         SmartDashboard.putBoolean("Elevator Motor Setter: ", RobotMap.elevator.motorSetter.isEnabled());
-        // SmartDashboard.putNumber("Cargo Arm Distance PID Error: ", RobotMap.cargoArm.distancePID.getError());
-         SmartDashboard.putNumber("Cargo Arm Setpoint TN: ", RobotMap.cargoArm.distanceSetpointTN.getOutput());
-        // SmartDashboard.putBoolean("Cargo Arm Distance PID Enabled: ", RobotMap.cargoArm.distancePID.isEnabled());
-            SmartDashboard.putNumber("Cargo Arm Position: ", RobotMap.cargoArmEncoderWrapperDistance.pidGet());
-        // SmartDashboard.putNumber("Cargo Arm PID Source Output: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
-        // SmartDashboard.putBoolean("Cargo Arm on position:", RobotMap.cargoArm.distancePID.isOnTarget());
-         SmartDashboard.putBoolean("Cargo Arm Up Limit Switch: ", RobotMap.cargoArmLimitSwitchUp.get());
-        SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
-        // SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
-        // SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint Please: ", RobotMap.cargoArm.distancePID.getSetpoint());
-          SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
-        // SmartDashboard.putNumber("Cargo Arm Error: ", RobotMap.cargoArm.distancePID.getError());
-        // SmartDashboard.putNumber("Arm Ramped Setpoint:", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
-        // SmartDashboard.putNumber("up ramp arm:", ConstantsIO.armDistanceSetpointUpRamp);
-             SmartDashboard.putNumber("Cargo Arm output current", RobotMap.cargoArmTalon.getOutputCurrent());
-            // SmartDashboard.putNumber("drive steering", DriveWithControllers.
-        // SmartDashboard.putNumber("Cargo Arm Distance Output TN ", RobotMap.cargoArm.distanceOutputTN.getOutput());
-        // SmartDashboard.putNumber("Cargo Arm Ramped Distance Setpoint TN: ", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
-        // SmartDashboard.putNumber("Cargo Arm Ramped TN: ", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
-        // SmartDashboard.putNumber("Cargo Roller Current", RobotMap.cargoRollersTalon.getOutputCurrent());
-        // SmartDashboard.putBoolean("Cargo Intaken: ", RobotMap.cargoRollers.intaken);
-        // SmartDashboard.putNumber("Drive Train Distance Setpoint: ", RobotMap.driveTrain.distanceSetpointTN.pidGet());
-        // SmartDashboard.putNumber("Drive Train Angle Setpoint: ", RobotMap.driveTrain.angleSetpointTN.pidGet());
-        // SmartDashboard.putNumber("DT Control Point X: ", DriveTrain.generateSandstormControlPoints(true)[0].getX());
-        // SmartDashboard.putNumber("DT Control Point Y: ", DriveTrain.generateSandstormControlPoints(true)[0].getY());
-        // SmartDashboard.putNumber("DT Endpoint X: ", DriveTrain.getSandstormEndpoint(true).getX());
-        // SmartDashboard.putNumber("DT Endpoint Y: ", DriveTrain.getSandstormEndpoint(true).getY());
-        // SmartDashboard.putBoolean("Drive Train Distance PID Enabled: ", RobotMap.driveTrain.distancePID.isEnabled());
-        // SmartDashboard.putBoolean("Drive Train Angle PID Enabled: ", RobotMap.driveTrain.anglePID.isEnabled());
-        // SmartDashboard.putNumber("Drive Train Talon Current: ", RobotMap.driveLeftTalon1.getOutputCurrent());
-        // SmartDashboard.putNumber("Drive Train Distance Output: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
-        // SmartDashboard.putNumber("Drive Train Velocity Output: ", RobotMap.driveTrain.velocityOutputTN.getOutput());
-        // SmartDashboard.putNumber("Drive Train Velocity PID Setpoint: ", RobotMap.driveTrain.velocityPID.getSetpoint());
-        // SmartDashboard.putNumber("Drive Train Velocity PID Source: ", RobotMap.driveTrain.velocityPIDSource.pidGet());
-        // SmartDashboard.putNumber("Drive Train Distance Output TN: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
-        // SmartDashboard.putNumber("Drive Train Distance Error: ", RobotMap.driveTrain.distancePID.getError());
-        // SmartDashboard.putNumber("Drive Train Velocity Error: ", RobotMap.driveTrain.velocityPID.getError());
-        // SmartDashboard.putNumber("DriveTrain Distance Source: ", RobotMap.driveTrain.distancePIDSource.pidGet());
-        SmartDashboard.putNumber("Drive Train Left Encoder Wrapper Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
-        SmartDashboard.putNumber("Drive Train Right Encoder Wrapper Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
-        // SmartDashboard.putNumber("Drive Train Ang Vel Error: ", RobotMap.driveTrain.angVelPID.getError());
-        // SmartDashboard.putNumber("Drive Train Angle Error: ", RobotMap.driveTrain.anglePID.getError());
-        // SmartDashboard.putNumber("Cargo Arm Talon Output", RobotMap.cargoArmTalon.getMotorOutputPercent());
-        // SmartDashboard.putNumber("Drive Train Ang Vel Output", RobotMap.driveTrain.angVelOutputTN.getOutput());
-        // SmartDashboard.putNumber("kP Ang Vel", ConstantsIO.kP_DriveAngVel);
-        // SmartDashboard.putNumber("kP Ang Vel public version", RobotMap.driveTrain.angVelPID.kP);
-        // SmartDashboard.putNumber("Gyro Value:", RobotMap.gyroAngleWrapper.pidGet());
-        // SmartDashboard.putBoolean("Ang Vel Enabled: ", RobotMap.driveTrain.angVelPID.isEnabled());
-        SmartDashboard.putNumber("Drive Talon Left 1 Current:", RobotMap.driveLeftTalon1.getOutputCurrent());
-        SmartDashboard.putNumber("Drive Talon Left 2 Current:", RobotMap.driveLeftTalon2.getOutputCurrent());
-        SmartDashboard.putNumber("Drive Talon Left 3 Current:", RobotMap.driveLeftTalon3.getOutputCurrent());
-        SmartDashboard.putNumber("Drive Talon Left 4 Current:", RobotMap.driveLeftTalon4.getOutputCurrent());
-        SmartDashboard.putNumber("Drive Talon Right 1 Current:", RobotMap.driveRightTalon1.getOutputCurrent());
-        SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
-        SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
-        SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
+        //  SmartDashboard.putNumber("Elevator Distance PID Setpoint: ", RobotMap.elevator.distancePID.getSetpoint());
+        // // SmartDashboard.putNumber("Elevator Distance PID Error: ", RobotMap.elevator.distancePID.getError());
+        //  SmartDashboard.putNumber("Elevator Setpoint TN: ", RobotMap.elevator.distanceSetpointTN.getOutput());
+        // SmartDashboard.putNumber("Elevator Setpoint Ramped TN: ", RobotMap.elevator.distanceSetpointRampedTN.getOutput());
+        // // SmartDashboard.putBoolean("Elevator Setpoint Ramp Rate Enabled: ", RobotMap.elevator.distanceSetpointRampRate.isEnabled());
+        //  SmartDashboard.putBoolean("Elevator Distance PID Enabled: ", RobotMap.elevator.distancePID.isEnabled());
+        // SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
+        // // SmartDashboard.putNumber("Elevator Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3.0);
+        // SmartDashboard.putNumber("Elevator Output Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
+        //  SmartDashboard.putNumber("Elevator Encoder Rate: ", RobotMap.elevatorEncoderWrapperRate.pidGet());
+        // SmartDashboard.putBoolean("arm Down Velocity PID Enabled: ", RobotMap.cargoArm.downVelocityPID.isEnabled());
+        // SmartDashboard.putNumber("arm Down Velocity Error: ", RobotMap.cargoArm.downVelocityPID.getError());
+        // SmartDashboard.putNumber("arm Down Velocity Setpoint: ", RobotMap.cargoArm.downVelocityPID.getSetpoint());
+        // SmartDashboard.putNumber("arm Encoder Rate", RobotMap.cargoArmEncoderWrapperRate.pidGet());
+        // // SmartDashboard.putNumber("ELevator Distance Output TN: ", RobotMap.elevator.distanceOutputTN.getOutput());
+        //  SmartDashboard.putBoolean("Elevator Controller System Enabled: ", RobotMap.elevator.elevatorControllerSystem.isEnabled());
+        //  SmartDashboard.putBoolean("Elevator Motor Setter: ", RobotMap.elevator.motorSetter.isEnabled());
+        // // SmartDashboard.putNumber("Cargo Arm Distance PID Error: ", RobotMap.cargoArm.distancePID.getError());
+        //  SmartDashboard.putNumber("Cargo Arm Setpoint TN: ", RobotMap.cargoArm.distanceSetpointTN.getOutput());
+        // // SmartDashboard.putBoolean("Cargo Arm Distance PID Enabled: ", RobotMap.cargoArm.distancePID.isEnabled());
+        //     SmartDashboard.putNumber("Cargo Arm Position: ", RobotMap.cargoArmEncoderWrapperDistance.pidGet());
+        // // SmartDashboard.putNumber("Cargo Arm PID Source Output: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
+        // // SmartDashboard.putBoolean("Cargo Arm on position:", RobotMap.cargoArm.distancePID.isOnTarget());
+        //  SmartDashboard.putBoolean("Cargo Arm Up Limit Switch: ", RobotMap.cargoArmLimitSwitchUp.get());
+        // SmartDashboard.putBoolean("Cargo Arm Down Limit Switch: ", RobotMap.cargoArmLimitSwitchDown.get());
+        // // SmartDashboard.putNumber("Cargo Arm Output Current: ", RobotMap.cargoArmTalon.getOutputCurrent());
+        // // SmartDashboard.putNumber("Cargo Arm Distance PID Setpoint Please: ", RobotMap.cargoArm.distancePID.getSetpoint());
+        //   SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
+        // // SmartDashboard.putNumber("Cargo Arm Error: ", RobotMap.cargoArm.distancePID.getError());
+        // // SmartDashboard.putNumber("Arm Ramped Setpoint:", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
+        // // SmartDashboard.putNumber("up ramp arm:", ConstantsIO.armDistanceSetpointUpRamp);
+        //      SmartDashboard.putNumber("Cargo Arm output current", RobotMap.cargoArmTalon.getOutputCurrent());
+        //     // SmartDashboard.putNumber("drive steering", DriveWithControllers.
+        // // SmartDashboard.putNumber("Cargo Arm Distance Output TN ", RobotMap.cargoArm.distanceOutputTN.getOutput());
+        // // SmartDashboard.putNumber("Cargo Arm Ramped Distance Setpoint TN: ", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
+        // // SmartDashboard.putNumber("Cargo Arm Ramped TN: ", RobotMap.cargoArm.distanceSetpointRampedTN.getOutput());
+        // // SmartDashboard.putNumber("Cargo Roller Current", RobotMap.cargoRollersTalon.getOutputCurrent());
+        // // SmartDashboard.putBoolean("Cargo Intaken: ", RobotMap.cargoRollers.intaken);
+        // // SmartDashboard.putNumber("Drive Train Distance Setpoint: ", RobotMap.driveTrain.distanceSetpointTN.pidGet());
+        // // SmartDashboard.putNumber("Drive Train Angle Setpoint: ", RobotMap.driveTrain.angleSetpointTN.pidGet());
+        // // SmartDashboard.putNumber("DT Control Point X: ", DriveTrain.generateSandstormControlPoints(true)[0].getX());
+        // // SmartDashboard.putNumber("DT Control Point Y: ", DriveTrain.generateSandstormControlPoints(true)[0].getY());
+        // // SmartDashboard.putNumber("DT Endpoint X: ", DriveTrain.getSandstormEndpoint(true).getX());
+        // // SmartDashboard.putNumber("DT Endpoint Y: ", DriveTrain.getSandstormEndpoint(true).getY());
+        // // SmartDashboard.putBoolean("Drive Train Distance PID Enabled: ", RobotMap.driveTrain.distancePID.isEnabled());
+        // // SmartDashboard.putBoolean("Drive Train Angle PID Enabled: ", RobotMap.driveTrain.anglePID.isEnabled());
+        // // SmartDashboard.putNumber("Drive Train Talon Current: ", RobotMap.driveLeftTalon1.getOutputCurrent());
+        // // SmartDashboard.putNumber("Drive Train Distance Output: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
+        // // SmartDashboard.putNumber("Drive Train Velocity Output: ", RobotMap.driveTrain.velocityOutputTN.getOutput());
+        // // SmartDashboard.putNumber("Drive Train Velocity PID Setpoint: ", RobotMap.driveTrain.velocityPID.getSetpoint());
+        // // SmartDashboard.putNumber("Drive Train Velocity PID Source: ", RobotMap.driveTrain.velocityPIDSource.pidGet());
+        // // SmartDashboard.putNumber("Drive Train Distance Output TN: ", RobotMap.driveTrain.distanceOutputTN.getOutput());
+        // // SmartDashboard.putNumber("Drive Train Distance Error: ", RobotMap.driveTrain.distancePID.getError());
+        // // SmartDashboard.putNumber("Drive Train Velocity Error: ", RobotMap.driveTrain.velocityPID.getError());
+        // // SmartDashboard.putNumber("DriveTrain Distance Source: ", RobotMap.driveTrain.distancePIDSource.pidGet());
+        // SmartDashboard.putNumber("Drive Train Left Encoder Wrapper Dist: ", RobotMap.driveLeftEncoderWrapperDistance.pidGet());
+        // SmartDashboard.putNumber("Drive Train Right Encoder Wrapper Dist: ", RobotMap.driveRightEncoderWrapperDistance.pidGet());
+        // // SmartDashboard.putNumber("Drive Train Ang Vel Error: ", RobotMap.driveTrain.angVelPID.getError());
+        // // SmartDashboard.putNumber("Drive Train Angle Error: ", RobotMap.driveTrain.anglePID.getError());
+        // // SmartDashboard.putNumber("Cargo Arm Talon Output", RobotMap.cargoArmTalon.getMotorOutputPercent());
+        // // SmartDashboard.putNumber("Drive Train Ang Vel Output", RobotMap.driveTrain.angVelOutputTN.getOutput());
+        // // SmartDashboard.putNumber("kP Ang Vel", ConstantsIO.kP_DriveAngVel);
+        // // SmartDashboard.putNumber("kP Ang Vel public version", RobotMap.driveTrain.angVelPID.kP);
+        // // SmartDashboard.putNumber("Gyro Value:", RobotMap.gyroAngleWrapper.pidGet());
+        // // SmartDashboard.putBoolean("Ang Vel Enabled: ", RobotMap.driveTrain.angVelPID.isEnabled());
+        // SmartDashboard.putNumber("Drive Talon Left 1 Current:", RobotMap.driveLeftTalon1.getOutputCurrent());
+        // SmartDashboard.putNumber("Drive Talon Left 2 Current:", RobotMap.driveLeftTalon2.getOutputCurrent());
+        // SmartDashboard.putNumber("Drive Talon Left 3 Current:", RobotMap.driveLeftTalon3.getOutputCurrent());
+        // SmartDashboard.putNumber("Drive Talon Left 4 Current:", RobotMap.driveLeftTalon4.getOutputCurrent());
+        // SmartDashboard.putNumber("Drive Talon Right 1 Current:", RobotMap.driveRightTalon1.getOutputCurrent());
+        // SmartDashboard.putNumber("Drive Talon Right 2 Current:", RobotMap.driveRightTalon2.getOutputCurrent());
+        // SmartDashboard.putNumber("Drive Talon Right 3 Current:", RobotMap.driveRightTalon3.getOutputCurrent());
+        // SmartDashboard.putNumber("Drive Talon Right 4 Current:", RobotMap.driveRightTalon4.getOutputCurrent());
         
-        SmartDashboard.putNumber("throttle", OI.getDriveThrottle());
-        SmartDashboard.putNumber("steering", OI.getDriveSteering());
-        SmartDashboard.putBoolean("angle is enabled?", RobotMap.driveTrain.anglePID.isEnabled());
+        // SmartDashboard.putNumber("throttle", OI.getDriveThrottle());
+        // SmartDashboard.putNumber("steering", OI.getDriveSteering());
+        // SmartDashboard.putBoolean("angle is enabled?", RobotMap.driveTrain.anglePID.isEnabled());
 
 
-        // SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
-        // SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
-        // SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
-        // SmartDashboard.putNumber("Suraj RYStick output: ", OI.getArmManual());
-        // SmartDashboard.putNumber("Hatch Intake Rollers Current", RobotMap.hatchRollersTalon.getOutputCurrent());
-        // SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
+        // // SmartDashboard.putBoolean("Drive Train Velocity Enabled: ", RobotMap.driveTrain.velocityPID.isEnabled());
+        // // SmartDashboard.putNumber("Distance Output PID Source: ", RobotMap.cargoArm.distanceOutputPIDSource.pidGet());
+        // // SmartDashboard.putBoolean("Lift Up: ", RobotMap.liftSolenoidOut.get());
+        // // SmartDashboard.putNumber("Suraj RYStick output: ", OI.getArmManual());
+        // // SmartDashboard.putNumber("Hatch Intake Rollers Current", RobotMap.hatchRollersTalon.getOutputCurrent());
+        // // SmartDashboard.putNumber("Cargo Arm Failsafe TN: ", RobotMap.cargoArm.failsafeTN.getOutput());
         
-        SmartDashboard.putNumber("Drivetrain Left Velocity: ", RobotMap.driveLeftEncoderWrapperRate.pidGet());
+        // SmartDashboard.putNumber("Drivetrain Left Velocity: ", RobotMap.driveLeftEncoderWrapperRate.pidGet());
 
-        SmartDashboard.putNumber("Drivetrain Velocity Setpoint", RobotMap.driveTrain.teleopSetpointLeftTN.getOutput());
+        // SmartDashboard.putNumber("Drivetrain Velocity Setpoint", RobotMap.driveTrain.teleopSetpointLeftTN.getOutput());
 
-        SmartDashboard.putNumber("Scaled Error: ", RobotMap.driveTrain.teleopSetpointLeftRamp.scaledError);
+        // SmartDashboard.putNumber("Scaled Error: ", RobotMap.driveTrain.teleopSetpointLeftRamp.scaledError);
       
     }
 }

@@ -168,11 +168,13 @@ public class DriveTrain extends Subsystem {
 		double right = 0;
 		if(steering != 0) {
 			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+			anglePID.resetIntegrator();
 		}
         if(quickTurn) {
             teleopSetpointLeftTN.setOutput(steering/2);
 			teleopSetpointRightTN.setOutput(-steering/2);
 			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+			anglePID.resetIntegrator();
 		} else if (throttle != 0 || steering != 0){
 			if (steering == 0) {
 				double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
@@ -189,6 +191,7 @@ public class DriveTrain extends Subsystem {
 				right = throttle - sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
 				anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
 				System.out.println(RobotMap.gyroAngleWrapper.pidGet());
+				anglePID.resetIntegrator();
 
 		}
 
