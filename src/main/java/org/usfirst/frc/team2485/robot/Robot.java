@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.Compressor;
@@ -43,8 +45,8 @@ import org.usfirst.frc.team2485.util.WarlordsPIDControllerSystem;
 
 public class Robot
 extends TimedRobot {
-    public static final int IMG_WIDTH = 64;
-    public static final int IMG_HEIGHT = 48;
+    public static final int IMG_WIDTH = 320;
+    public static final int IMG_HEIGHT = 240;
     private VisionThread visionThread;
     public static double centerX = 0.0;
     public static ArrayList<Double> samples;
@@ -76,8 +78,10 @@ extends TimedRobot {
 
 		
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-        camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-        camera.setFPS(10);
+        VideoMode videoMode = new VideoMode(PixelFormat.kYUYV, IMG_WIDTH, IMG_HEIGHT, 15);
+        camera.setVideoMode(videoMode);
+        // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+        // camera.setFPS(10);
 
     }
 
@@ -188,7 +192,7 @@ extends TimedRobot {
         // SmartDashboard.putNumber("Elevator Setpoint Ramped TN: ", RobotMap.elevator.distanceSetpointRampedTN.getOutput());
         // // SmartDashboard.putBoolean("Elevator Setpoint Ramp Rate Enabled: ", RobotMap.elevator.distanceSetpointRampRate.isEnabled());
         //  SmartDashboard.putBoolean("Elevator Distance PID Enabled: ", RobotMap.elevator.distancePID.isEnabled());
-        // SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
+         SmartDashboard.putNumber("Elevator Position:", RobotMap.elevatorEncoderWrapperDistance.pidGet());
         // // SmartDashboard.putNumber("Elevator Placement: ", RobotMap.elevatorEncoderWrapperDistance.pidGet() - 3.0);
         // SmartDashboard.putNumber("Elevator Output Current: ", RobotMap.elevatorTalon1.getOutputCurrent());
         //  SmartDashboard.putNumber("Elevator Encoder Rate: ", RobotMap.elevatorEncoderWrapperRate.pidGet());
