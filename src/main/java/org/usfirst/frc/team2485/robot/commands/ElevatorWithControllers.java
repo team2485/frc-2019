@@ -83,11 +83,11 @@ public class ElevatorWithControllers extends Command {
                 Elevator.enableFailsafe = true;
             }
             
-            if(RobotMap.elevator.distanceOutputTN.pidGet() > 5 && RobotMap.elevatorEncoderWrapperDistance.pidGet() == 0 && encoderMovement) {
+            if(RobotMap.elevator.distanceOutputTN.pidGet() > 5 && RobotMap.elevatorEncoderWrapperDistance.pidGet() == 0 && encoderMovement && !(holdPosition <= 10)) {
                 RobotMap.elevator.enablePID(false);
                 encoderMovement = false;
                 startEncoderLossTime = System.currentTimeMillis();
-                manualMovement = true;
+                //manualMovement = true;
                 System.out.println("Turning on 1");
             } 
             if(!encoderMovement) {
@@ -96,7 +96,7 @@ public class ElevatorWithControllers extends Command {
                 } 
                 if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime && RobotMap.elevator.distancePID.getSetpoint() >= ElevatorLevel.ROCKET_LEVEL_ONE.getPosition()) {
                     System.out.println("Turning on 2");
-                    manualMovement = true;
+                    // manualMovement = true;
                 }
             }
         } else {

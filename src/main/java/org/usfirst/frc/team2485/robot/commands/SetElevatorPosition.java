@@ -41,15 +41,15 @@ public class SetElevatorPosition extends InstantCommand {
                 RobotMap.elevator.enablePID(false);
                 encoderMovement = false;
                 startEncoderLossTime = System.currentTimeMillis();
-                manualMovement = true;
-                ElevatorWithControllers.manualMovement = true;
+                // manualMovement = true;
+                //ElevatorWithControllers.manualMovement = true;
                 System.out.println("Turn on 3");
             } if(!encoderMovement) {
                 if(RobotMap.elevatorEncoderWrapperDistance.pidGet() != 0) {
                     encoderMovement = true;
                 } 
                 if(System.currentTimeMillis() - startEncoderLossTime >= fullPowerTime && elevatorLevel.getPosition() <= 6) {
-                    manualMovement = true;
+                    // manualMovement = true;
                 }
             }
         } else {
