@@ -177,7 +177,8 @@ public class DriveTrain extends Subsystem {
 			anglePID.resetIntegrator();
 		} else if (throttle != 0 || steering != 0){
 			if (steering == 0) {
-				double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
+				double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet(); //Omnis
+				// double steerCorrection = 0; //Kolson
 				double sign = steerCorrection >= 0 ? 1 : -1;
 				// if(Math.abs(throttle) <= 2){
 				// 	throttle = 2;
