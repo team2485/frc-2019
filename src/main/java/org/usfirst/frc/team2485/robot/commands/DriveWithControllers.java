@@ -33,8 +33,8 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
     boolean quickTurn = OI.getQuickTurn();
     boolean slowTurn = OI.jacket.getRawButton(OI.XBOX_B_PORT);
     boolean pixelCorrection = OI.getDocking();
-    NetworkTableEntry tx = Robot.table.getEntry("tx");
-    x = tx.getDouble(99);
+    // NetworkTableEntry tx = Robot.table.getEntry("tx");
+    // x = tx.getDouble(99);
     
 
 
@@ -44,7 +44,7 @@ public class DriveWithControllers extends edu.wpi.first.wpilibj.command.Command 
     if (!quickTurn && !slowTurn) {
       //steering = org.usfirst.frc.team2485.util.ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(0), 0.2, 0.0, 1.0);
       
-      steering /= 27;
+      steering /= 40;
     }
 
     if (slowTurn) {

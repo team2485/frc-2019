@@ -271,115 +271,23 @@ public class DriveTrain extends Subsystem {
     public void WarlordsDrive(double throttle, double steering, boolean quickTurn) {
 		double left = 0;
 		double right = 0;
-
-		boolean pixelCorrection = OI.getDocking();
-
-		anglePID.enable();
-		limelightPID.enable();
-		
-		
-		// if(steering != 0 && !pixelCorrection) {
-			
-		// 	normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
-		// 	anglePID.setSetpoint(normalSteerSetpoint);
-		// }
+		if(steering != 0) {
+			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+			anglePID.resetIntegrator();
+		}
         if(quickTurn) {
-			docking = false;
-			//System.out.println("Source 1");
-            teleopSetpointLeftTN.setOutput(steering/1.2);
-			teleopSetpointRightTN.setOutput(-steering/1.2);
-			
-			normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
-			firstTargetDetection = false; // it's gucci - ag :)
-		} else if(pixelCorrection && Robot.table.getEntry("tv").getDouble(0.0) == 1) {
-			// System.out.println("Source 2");
-			// System.out.println("Limelighting");
-			if(!firstTargetDetection){
-				limelightPID.resetIntegrator();
-				RobotMap.gyroAngleWrapper.reset(); //change to init
-				firstTargetDetection = true;
-			}
-			docking = true;
-
-			if(throttle == 0) {
-				if(init) {
-					limelightPID.resetIntegrator();
-					init = false;
-				}
-				// System.out.println("Stationary");
-				limelightPID.setPID(ConstantsIO.kP_LimelightStationaryAngle, ConstantsIO.kI_LimelightStationaryAngle, ConstantsIO.kD_LimelightStationaryAngle);
-			} else {
-				init = true;
-				// System.out.println("Not stationary");
-				limelightPID.setPID(ConstantsIO.kP_LimelightAngle, ConstantsIO.kI_LimelightAngle, ConstantsIO.kD_LimelightAngle);
-			}
-			
-			
-			
-			limelightPID.setSetpoint(limelightPIDSource.pidGet());
-			
-			double pixelSteerCorrection = RobotMap.driveTrain.limelightPID.getOutput();
-			//System.out.println("pixelSteerCorrection" + pixelSteerCorrection);
-			//double sign = pixelSteerCorrection >= 0 ? 1 : -1;
-			left = throttle - pixelSteerCorrection * ConstantsIO.kP_PixelCorrection;
-			right = throttle + pixelSteerCorrection * ConstantsIO.kP_PixelCorrection; 
-			//System.out.println("Left: " + left);
-			//System.out.println("Right: " + right);
-			
-
-			if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
-                right /= Math.abs(left);
-				left /= Math.abs(left);
-				right *= ConstantsIO.driveTrainIMax;
-				left *= ConstantsIO.driveTrainIMax;
-            } else if (Math.abs(right) > ConstantsIO.driveTrainIMax) {
-                left /= Math.abs(right);
-				right /= Math.abs(right);
-				right *= ConstantsIO.driveTrainIMax;
-				left *= ConstantsIO.driveTrainIMax;
-			}
-
-			teleopSetpointLeftTN.setOutput(throttle + motorSetterSetterSourceLeft.pidGet());
-			teleopSetpointRightTN.setOutput(throttle - motorSetterSetterSourceRight.pidGet());
-		} else if(pixelCorrection) {
-			//System.out.println("Source 3");
-
-			docking = false;
-			firstTargetDetection = true;
-			normalSteerSetpoint = limelightPIDSource.pidGet();
-			anglePID.setSetpoint(normalSteerSetpoint);
-			double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
-			double sign = steerCorrection >= 0 ? 1 : -1;
-			// if(Math.abs(throttle) <= 2){
-			// 	throttle = 2;
-			// }
-			left = throttle - sign * Math.abs(steerCorrection);
-			right = throttle + sign * Math.abs(steerCorrection);
-			// System.out.println("Left: " + left);
-			// System.out.println("Right: " + right);
-			if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
-                right /= Math.abs(left);
-				left /= Math.abs(left);
-				right *= ConstantsIO.driveTrainIMax;
-				left *= ConstantsIO.driveTrainIMax;
-            } else if (Math.abs(right) > ConstantsIO.driveTrainIMax) {
-                left /= Math.abs(right);
-				right /= Math.abs(right);
-				right *= ConstantsIO.driveTrainIMax;
-				left *= ConstantsIO.driveTrainIMax;
-			}
-
-			teleopSetpointLeftTN.setOutput(left);
-			teleopSetpointRightTN.setOutput(right);
+            teleopSetpointLeftTN.setOutput(steering/2);
+			teleopSetpointRightTN.setOutput(-steering/2);
+			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+			anglePID.resetIntegrator();
 		} else if (throttle != 0 || steering != 0){
 			//System.out.println("Source 4");
 			limelightSteerSetpoint = normalSteerSetpoint;
 			docking = false;
 			firstTargetDetection = false;
 			if (steering == 0) {
-				anglePID.setSetpoint(normalSteerSetpoint);
-				
-				double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet();
+				double steerCorrection = RobotMap.driveTrain.angVelOutputTN.pidGet(); //Omnis
+				// double steerCorrection = 0; //Kolson
 				double sign = steerCorrection >= 0 ? 1 : -1;
 				// if(Math.abs(throttle) <= 2){
 				// 	throttle = 2;
@@ -391,8 +299,9 @@ public class DriveTrain extends Subsystem {
 				sign *= throttle < 0 ? 1 : 1;
 				left = throttle + sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
 				right = throttle - sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
-				anglePID.setSetpoint(normalSteerSetpoint);
-				normalSteerSetpoint = RobotMap.gyroAngleWrapper.pidGet();
+				anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
+				System.out.println(RobotMap.gyroAngleWrapper.pidGet());
+				anglePID.resetIntegrator();
 
 			}
 			if(Math.abs(left) > ConstantsIO.driveTrainIMax) {
