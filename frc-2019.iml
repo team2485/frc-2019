@@ -1,32 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="frc-2019" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
-  <component name="EclipseModuleManager">
-    <varelement var="file://$wpilib$" value="wpilib" />
-    <varelement var="file://$wpilib.sources$" kind="src:" value="wpilib.sources" />
-    <varelement var="file://$networktables$" value="networktables" />
-    <varelement var="file://$networktables.sources$" kind="src:" value="networktables.sources" />
-    <varelement var="file://$opencv$" value="opencv" />
-    <varelement var="file://$opencv.sources$" kind="src:" value="opencv.sources" />
-    <varelement var="file://$cscore$" value="cscore" />
-    <varelement var="file://$cscore.sources$" kind="src:" value="cscore.sources" />
-    <varelement var="file://$wpiutil$" value="wpiutil" />
-    <varelement var="file://$wpiutil.sources$" kind="src:" value="wpiutil.sources" />
-    <varelement var="file://$USERLIBS_DIR$/CTRE_Phoenix-sources.jar" value="USERLIBS_DIR/CTRE_Phoenix-sources.jar" />
-    <varelement var="file://$USERLIBS_DIR$/CTRE_Phoenix.jar" value="USERLIBS_DIR/CTRE_Phoenix.jar" />
-    <varelement var="file://$USERLIBS_DIR$/CTRLib.jar" value="USERLIBS_DIR/CTRLib.jar" />
-    <conelement value="org.eclipse.buildship.core.gradleclasspathcontainer" />
-    <src_description expected_position="8">
-      <src_folder value="file://$MODULE_DIR$/src/main/java" expected_position="8" />
-    </src_description>
-  </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.gradle" />
-      <excludeFolder url="file://$MODULE_DIR$/build" />
-      <excludeFolder url="file://$MODULE_DIR$/out" />
-    </content>
-    <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="inheritedJdk" />
-  </component>
+<module version="4">
+  <component name="ExternalSystem" externalSystem="GRADLE" externalSystemModuleGroup="" externalSystemModuleVersion="unspecified" linkedProjectId="frc-2019" linkedProjectPath="$MODULE_DIR$" rootProjectPath="$MODULE_DIR$" />
 </module>
