@@ -234,7 +234,7 @@ public class ConstantsIO {
 
     private static String findConstantsFile() {
         File curFolder = new File(ConstantsIO.class.getResource("").getPath());
-        while (!curFolder.getName().equals("frc-2017")) {
+        while (!curFolder.getName().equals("frc-2019")) {
             curFolder = curFolder.getParentFile();
             System.out.println("Backed out to: " + curFolder.getPath());
         }

@@ -93,9 +93,9 @@ extends TimedRobot {
 
 
 		
-        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-        VideoMode videoMode = new VideoMode(PixelFormat.kYUYV, IMG_WIDTH, IMG_HEIGHT, 15);
-        camera.setVideoMode(videoMode);
+//        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+//        VideoMode videoMode = new VideoMode(PixelFormat.kYUYV, IMG_WIDTH, IMG_HEIGHT, 15);
+//        camera.setVideoMode(videoMode);
         // camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
         // camera.setFPS(10);
 
