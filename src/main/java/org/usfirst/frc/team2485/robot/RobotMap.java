@@ -79,7 +79,7 @@ public class RobotMap {
 
 	public static int gyroTalonPort = 1;
 
-	public static int cargoArmTalonPort = 9;
+	public static int cargoArmTalonPort = 11;
 
 	public static int cargoRollersTalonPort = 8;
 

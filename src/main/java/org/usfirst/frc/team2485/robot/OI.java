@@ -262,51 +262,26 @@ public class OI {
 		// SURAJ_Y_BACKUP.whenPressed(rocketLevelThree);
 		// SURAJ_Y_BACKUP.whenReleased(new CancelCommand(rocketLevelThree));
 
-		
-		
-		// SURAJ_A.whenPressed(new SetElevatorPosition(ElevatorLevel.FLOOR));
-		// // SURAJ_A.whenReleased(new CancelCommand(floor));
-		
-		// SURAJ_X.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE));
-		// SURAJ_B.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO));
-		// SURAJ_Y.whenPressed(new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE));
-		
-		
-		// SURAJ_RYJOYSTICK_BACKUP.whenPressed(new CargoArmWithControllers());
-		//SURAJ_RYJOYSTICK.whenPressed(new CancelCommand(Robot.auto));
 
-		
-		SURAJ_START_BUTTON.whenPressed(new Lift(true));
-		// SURAJ_START_BUTTON_BACKUP.whenPressed(new Lift(true));
-		// SURAJ_START_BUTTON.whenPressed(new CancelCommand(Robot.auto));
-		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.4));
+//		SURAJ_START_BUTTON.whenPressed(new Lift(true));
+		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.8));
 		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));
-		// SURAJ_LTRIGGER_BUTTON.whenPressed(new C/\@
-		// ancelCommand(Robot.auto));
 
-		// SURAJ_LTRIGGER_BUTTON_BACKUP.whenPressed(new SetRollers(-0.4));
-		// SURAJ_LTRIGGER_BUTTON_BACKUP.whenReleased(new SetRollers(0));
+//		SURAJ_RBUMPER.whenPressed(new PrepareToIntake());
+		SURAJ_START_BUTTON.whenPressed(new PrepareToIntake());
 
-		// JACKET_A.whenPressed(new SetRollers(0.4));
-		// JACKET_B.whenPressed(new SetRollers(0));
-		// JACKET_Y.whenPressed(new SetRollers(-0.4));
-		// JACKET_RBUMPER.whenPressed(new CargoRollersIntake(0.4));
-	
-		//SURAJ_BACK_BUTTON.whenPressed(new Lift(false));
+//		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new PlaceHatch());
 
-		SURAJ_RBUMPER.whenPressed(new PrepareToIntake());
-		
-		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
+		SURAJ_LBUMPER.whenPressed(new CargoIntake(0.5));
+		SURAJ_LBUMPER.whenPressed(new SetRollersCurrent());
+//		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9)); //hatchrollersintake for spiking detection
+//		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
 
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9)); //hatchrollersintake for spiking detection
-		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
+		SURAJ_RBUMPER.whenPressed(new SetHatchRollersPWM(-0.9)); //hatchrollersintake for spiking detection
+		SURAJ_RBUMPER.whenReleased(new SetHatchRollersPWM(-0.2));
 
-
-		SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());
-
-		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Lift(false));
-		// SURAJ_RYJOYSTICK_TRIGGERBUTTON.whenPressed(new Slide(false));
-
+//		SURAJ_BACK_BUTTON.whenPressed();
 	}
 
 	public static boolean getQuickTurn() {
