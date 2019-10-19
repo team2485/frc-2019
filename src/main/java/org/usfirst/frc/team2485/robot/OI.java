@@ -193,95 +193,44 @@ public class OI {
 
 		SURAJ_RYJOYSTICK_TRIGGERBUTTON = new TriggerButton(suraj, XBOX_RYJOYSTICK_PORT, 0.2, true);
 
-
 		JACKET_RBUMPER.whenPressed(new SetHatchRollersPWM(0));
-		// JACKET_RBUMPER_BACKUP.whenPressed(new Hook(false));
-		// JACKET_RBUMPER.whenPressed(new 
-		// CancelCommand(Robot.auto));
 
 		JACKET_A.whenPressed(new CargoIntake(0.5));
 		JACKET_A.whenPressed(new SetRollersCurrent()); //ummmm
-		// JACKET_A_BACKUP.whenPressed(new CargoIntake(0.4));
-		// JACKET_A.whenPressed(new CancelCommand(Robot.auto));
-
-		// JACKET_LTRIGGER_BUTTON.whenPressed(new CancelCommand(Robot.auto));
-		// JACKET_RTRIGGER_BUTTON.whenPressed(new CancelCommand(Robot.auto));
-		//temporary
-
-
-		// SURAJ_START_BUTTON_BACKUP = new JoystickButton(surajBackup, XBOX_START_BUTTON);
-		// SURAJ_LTRIGGER_BUTTON_BACKUP = new TriggerButton(surajBackup, XBOX_LTRIGGER_PORT, 0.2);
-
-
-
-		// SURAJ_A.whenPressed(new Lift(false));
-		// SURAJ_B.whenPressed(new Hook(true));
-		// SURAJ_X.whenPressed(new Pushers(true));
-		// SURAJ_Y.whenPressed(new Slide(true));
-
-		// CommandGroup placeHatch = new PlaceHatch();
-		// SURAJ_LBUMPER.whenPressed(placeHatch);
-		//SURAJ_LBUMPER.whenPressed(new CancelCommand(Robot.auto));
-		// SURAJ_LBUMPER_BACKUP.whenPressed(placeHatch);
-		// SURAJ_LBUMPER_BACKUP.whenPressed(new CancelCommand(Robot.auto));
-		
-		// SURAJ_LYJOYSTICK_BACKUP.whenPressed(new CancelCommand(placeHatch));
-		// SURAJ_LYJOYSTICK_BACKUP.whenPressed(new CancelCommand(Robot.auto));
-		// SURAJ_RBUMPER.whenPressed(new Hook(false));
-		// SURAJ_START_BUTTON.whenPressed(new Pushers(false));
-		// SURAJ_RBUMPER_BACKUP.whenPressed(new LoadingStationIntake());
-		// SURAJ_RBUMPER.whenPressed(new CancelCommand(Robot.auto));
-		// SURAJ_RBUMPER.whenPressed(new CancelCommand()
 
 		Command floor = new SetElevatorPosition(ElevatorLevel.FLOOR);
 		SURAJ_A.whenPressed(floor);
-		// SURAJ_A.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_A.whenReleased(new CancelCommand(floor));
-		// SURAJ_A_BACKUP.whenPressed(floor);
-		// SURAJ_A_BACKUP.whenReleased(new CancelCommand(floor));
 		
 		Command rocketLevelOne = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_ONE); 
 		SURAJ_X.whenPressed(rocketLevelOne);
-		// SURAJ_X.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_X.whenReleased(new CancelCommand(rocketLevelOne));
-		// SURAJ_X_BACKUP.whenPressed(rocketLevelOne);
-		// SURAJ_X_BACKUP.whenReleased(new CancelCommand(rocketLevelOne));
 
 		Command rocketLevelTwo = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_TWO); 
 		SURAJ_B.whenPressed(rocketLevelTwo);
-		// SURAJ_B.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_B.whenReleased(new CancelCommand(rocketLevelTwo));
-		// SURAJ_B_BACKUP.whenPressed(rocketLevelTwo);
-		// SURAJ_B_BACKUP.whenReleased(new CancelCommand(rocketLevelTwo));
-
 		
 		Command rocketLevelThree = new SetElevatorPosition(ElevatorLevel.ROCKET_LEVEL_THREE); 
 		SURAJ_Y.whenPressed(rocketLevelThree);
-		// SURAJ_Y.whenPressed(new CancelCommand(Robot.auto));
 		SURAJ_Y.whenReleased(new CancelCommand(rocketLevelThree));
-		// SURAJ_Y_BACKUP.whenPressed(rocketLevelThree);
-		// SURAJ_Y_BACKUP.whenReleased(new CancelCommand(rocketLevelThree));
 
-
-//		SURAJ_START_BUTTON.whenPressed(new Lift(true));
 		SURAJ_LTRIGGER_BUTTON.whenPressed(new SetRollers(-0.8));
 		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));
 
-//		SURAJ_RBUMPER.whenPressed(new PrepareToIntake());
-		SURAJ_START_BUTTON.whenPressed(new PrepareToIntake());
-
-//		SURAJ_LBUMPER.whenPressed(new PlaceHatch());
-		SURAJ_RTRIGGER_BUTTON.whenPressed(new PlaceHatch());
-
 		SURAJ_LBUMPER.whenPressed(new CargoIntake(0.5));
 		SURAJ_LBUMPER.whenPressed(new SetRollersCurrent());
-//		SURAJ_RTRIGGER_BUTTON.whenPressed(new SetHatchRollersPWM(-0.9)); //hatchrollersintake for spiking detection
-//		SURAJ_RTRIGGER_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
+
+		SURAJ_RTRIGGER_BUTTON.whenPressed(new PlaceHatch());
+
+		SURAJ_BACK_BUTTON.whenPressed(new IntakeHatch());
+//		SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());
+		SURAJ_BACK_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
+
+		SURAJ_START_BUTTON.whenPressed(new PrepareToIntake());
 
 		SURAJ_RBUMPER.whenPressed(new SetHatchRollersPWM(-0.9)); //hatchrollersintake for spiking detection
 		SURAJ_RBUMPER.whenReleased(new SetHatchRollersPWM(-0.2));
 
-//		SURAJ_BACK_BUTTON.whenPressed();
 	}
 
 	public static boolean getQuickTurn() {
@@ -292,11 +241,17 @@ public class OI {
 		return OI.jacket.getRawButton(OI.XBOX_B_PORT);
 	}
 
+	/**
+	 * Scales by driveTrainIMax/2
+	 */
 	public static double getDriveThrottle() {
 		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_RTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax/2) 
 		- ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LTRIGGER_PORT), 0.2, 0, ConstantsIO.driveTrainIMax/2);
 	}
 
+	/**
+	 * Scales by driveTrainIMax/2
+	 */
 	public static double getDriveSteering() {
 		return ThresholdHandler.deadbandAndScale(OI.jacket.getRawAxis(OI.XBOX_LXJOSYSTICK_PORT), 0.2, 0, ConstantsIO.driveTrainIMax/2);
 	}
