@@ -2,6 +2,7 @@ package org.usfirst.frc.team2485.robot.subsystems;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2485.robot.OI;
 import org.usfirst.frc.team2485.robot.Robot;
 import org.usfirst.frc.team2485.robot.RobotMap;
@@ -166,7 +167,7 @@ public class DriveTrain extends Subsystem {
     public void WarlordsDrive(double throttle, double steering, boolean quickTurn) {
 		double left = 0;
 		double right = 0;
-		if(steering != 0) {
+		if(throttle == 0) {
 			anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
 			anglePID.resetIntegrator();
 		}
@@ -183,18 +184,24 @@ public class DriveTrain extends Subsystem {
 				// if(Math.abs(throttle) <= 2){
 				// 	throttle = 2;
 				// }
+//				left = throttle + sign * Math.abs(steerCorrection) * Math.abs(throttle) / (ConstantsIO.driveTrainIMax / 2) ;
+//				right = throttle - sign * Math.abs(steerCorrection) * Math.abs(throttle) / (ConstantsIO.driveTrainIMax / 2) ;
 				left = throttle + sign * Math.abs(steerCorrection);
 				right = throttle - sign * Math.abs(steerCorrection);
+				SmartDashboard.putNumber("steer correction", steerCorrection);
 			} else {
 				double sign = steering >= 0 ? 1 : -1;
 				sign *= throttle < 0 ? 1 : 1;
 				left = throttle + sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
 				right = throttle - sign * Math.abs(throttle) * Math.sqrt(Math.abs(steering));
 				anglePID.setSetpoint(RobotMap.gyroAngleWrapper.pidGet());
-				System.out.println(RobotMap.gyroAngleWrapper.pidGet());
 				anglePID.resetIntegrator();
+//				System.out.println(RobotMap.gyroAngleWrapper.pidGet());
 
 		}
+
+			SmartDashboard.putNumber("left", left);
+			SmartDashboard.putNumber("right", right);
 
 		
 			
@@ -220,6 +227,9 @@ public class DriveTrain extends Subsystem {
 			teleopSetpointRightTN.setOutput(0);
 			teleopSetpointLeftRampedTN.setOutput(0);
 			teleopSetpointRightRampedTN.setOutput(0);
+
+//			anglePID.setSetpoint(RobotM
+
 		}
 
 		lastSteering = steering;
