@@ -74,6 +74,7 @@ public class CargoArmWithControllers extends Command {
                     power = -ThresholdHandler.deadbandAndScale(OI.suraj.getRawAxis(OI.XBOX_RYJOYSTICK_PORT), 0.2, -RobotMap.cargoArmEncoderWrapperDistance.pidGet(), 1.85);
                     RobotMap.hatchIntake.slideIn();
                     RobotMap.hatchIntake.stow();
+                    RobotMap.hatchRollers.hatchRollersManual(0);
                     // if(RobotMap.cargoArmEncoderWrapperDistance.pidGet() <= -1.3 ){
                     //     RobotMap.cargoArm.downVelocityPID.setSetpoint(ConstantsIO.cargoArmMinVelocityClose);
                     // } else {

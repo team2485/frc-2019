@@ -218,12 +218,12 @@ public class OI {
 		SURAJ_LTRIGGER_BUTTON.whenReleased(new SetRollers(0));
 
 		SURAJ_LBUMPER.whenPressed(new CargoIntake(0.5));
-		SURAJ_LBUMPER.whenPressed(new SetRollersCurrent());
+		SURAJ_LBUMPER.whenReleased(new CargoIntake(0.3)); //check this later
 
 		SURAJ_RTRIGGER_BUTTON.whenPressed(new PlaceHatch());
 
 		SURAJ_BACK_BUTTON.whenPressed(new IntakeHatch());
-//		SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());
+		//SURAJ_BACK_BUTTON.whenPressed(new SandstormHatchClaimer());
 		SURAJ_BACK_BUTTON.whenReleased(new SetHatchRollersPWM(-0.2));
 
 		SURAJ_START_BUTTON.whenPressed(new PrepareToIntake());

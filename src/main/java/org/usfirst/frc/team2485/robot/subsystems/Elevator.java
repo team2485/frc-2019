@@ -154,7 +154,7 @@ public class Elevator extends Subsystem {
                     return 0.0;
                 }
                 case ROCKET_LEVEL_ONE: {
-                    return 5.5;
+                    return 4.5;
                 }
                 case ROCKET_LEVEL_TWO: {
                     return 30;
